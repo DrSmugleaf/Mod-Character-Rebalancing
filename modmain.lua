@@ -1,0 +1,1044 @@
+local require = GLOBAL.require
+local STRINGS = GLOBAL.STRINGS
+
+local enableStartingItems = GetModConfigData("ENABLE_STARTING_ITEMS") -- Load starting items config
+	local amountOfFlint = GetModConfigData("AMOUNT_OF_FLINT")
+	local amountOfGrass = GetModConfigData("AMOUNT_OF_GRASS")
+	local amountOfLogs = GetModConfigData("AMOUNT_OF_LOGS")
+	local amountOfMeat = GetModConfigData("AMOUNT_OF_MEAT")
+	local amountOfTwigs = GetModConfigData("AMOUNT_OF_TWIGS")
+	local giveThermalStone = GetModConfigData("GIVE_THERMAL_STONE")
+	
+	local startingItems = {}
+	
+local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED") -- Load mod balancing config
+	local crashBandicootBalanced = GetModConfigData("CRASHBANDICOOT_BALANCED")
+	--local devonBalanced = GetModConfigData("DEVON_BALANCED")
+	local drokBalanced = GetModConfigData("DROK_BALANCED")
+	local endiaBalanced = GetModConfigData("ENDIA_BALANCED")
+	local farozBalanced = GetModConfigData("FAROZ_BALANCED")
+	--local fionnaBalanced = GetModConfigData("FIONNA_BALANCED")
+	local freeSpiritBalanced = GetModConfigData("FREESPIRIT_BALANCED")
+	--local gabenBalanced = GetModConfigData("GABEN_BALANCED")
+	--local girBalanced = GetModConfigData("GIR_BALANCED")
+	local haruzBalanced = GetModConfigData("HARUZ_BALANCED")
+	--local hellaMerdurialBalanced = GetModConfigData("HELLAMERDURIAL_BALANCED")
+	--local luffyBalanced = GetModConfigData("LUFFY_BALANCED")
+	local madeleineBalanced = GetModConfigData("MADELEINE_BALANCED")
+	local michaelTheFoxBalanced = GetModConfigData("MICHAELTHEFOX_BALANCED")
+	--local mikuHatsuneBalanced = GetModConfigData("MIKUHATSUNE_BALANCED")
+	local mitsuruBalanced = GetModConfigData("MITSURU_BALANCED")
+	--local neptuniaBalanced = GetModConfigData("NEPTUNIA_BALANCED")
+	local serasBalanced = GetModConfigData("SERAS_BALANCED")
+	local sollyzBalanced = GetModConfigData("SOLLYZ_BALANCED")
+	local shovelKnightBalanced = GetModConfigData("SHOVELKNIGHT_BALANCED")
+	--local thanaBalanced = GetModConfigData("THANA_BALANCED")
+	--local theMedicBalanced = GetModConfigData("THEMEDIC_BALANCED")
+	local warkBalanced = GetModConfigData("WARK_BALANCED")
+	local wolfBalanced = GetModConfigData("WOLF_BALANCED")
+	local woodieBalanced = GetModConfigData("WOODIE_BALANCED")
+	--local zimBalanced = GetModConfigData("ZIM_BALANCED")
+local levelSetting = GetModConfigData("LEVEL_SETTING")
+	if levelSetting == 0 then
+	elseif levelSetting == 1 then
+		levelDifficulty = 30
+	elseif levelSetting == 2 then
+		levelDifficulty = 50
+	elseif levelSetting == 3 then
+		levelDifficulty = 75
+	elseif levelSetting == 4 then
+		levelDifficulty = 100
+	end
+local nerfSpeed = GetModConfigData("NERF_SPEED")
+local hardcoreMode = GetModConfigData("HARDCORE_MODE")
+
+if enableStartingItems == 1 then -- Starting Items' config loading
+	
+	print("Starting Items enabled")
+	
+	for _= 1, amountOfFlint do
+		table.insert(startingItems, "flint")
+	end
+	for _= 1, amountOfGrass do
+		table.insert(startingItems, "cutgrass")
+	end
+	for _= 1, amountOfLogs do
+		table.insert(startingItems, "log")
+	end
+	for _= 1, amountOfMeat do
+		table.insert(startingItems, "meat")
+	end
+	for _= 1, amountOfTwigs do
+		table.insert(startingItems, "twigs")
+	end
+	
+	if giveThermalStone == 1 then
+	table.insert(startingItems, "heatrock")
+	end
+	
+else
+	print("Starting Items disabled")
+end
+
+
+AddPlayerPostInit(function(inst) -- Starting Items' item spawning
+    if inst.OnNewSpawn then
+        inst.old_OnNewSpawn = inst.OnNewSpawn
+    end
+     
+    inst.OnNewSpawn = function(inst)
+        if inst.components.inventory ~= nil then
+            inst.components.inventory.ignoresound = true
+            for i, v in ipairs(startingItems) do
+                inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v))
+            end
+            inst.components.inventory.ignoresound = false
+        end
+        if inst.old_OnNewSpawn then
+            return inst:old_OnNewSpawn(inst)
+        end
+    end
+end)
+
+
+local function changeStartingInventory(inst, start_inv) -- Change a character's inventory
+	local oldSpawn = inst.OnNewSpawn
+	start_inv = start_inv or {}
+	for _,v in pairs(startingItems) do -- Load starting items since this deletes inventories
+		table.insert(start_inv, v)
+	end
+	inst.OnNewSpawn = function()
+	if oldSpawn ~= nil then oldSpawn() end
+	if inst.components.inventory ~= nil then
+		inst.components.inventory.ignoresound = true
+		for i = 1, inst.components.inventory:GetNumSlots() do
+			inst.components.inventory:RemoveItemBySlot(i) -- Remove all items
+		end
+		for _, v in ipairs(start_inv) do
+			inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give new items
+		end
+		inst.components.inventory.ignoresound = false
+	end
+	end
+end
+
+
+local function addLevelingSystem(inst, stats) -- to do, fix max_upgrades to maxUpgrades
+
+--[[Parameters to use:
+local changeHealth = 
+local changeHunger = 
+local changeSanity = 
+local changeDamage = 
+local changeInsulation = 
+
+local levelNerf = 
+
+local foodtypeLeveling = 
+	local foodType = 
+OR
+local foodprefabLeveling = 
+	local foodPrefab1 = 
+	local foodPrefab2 = 
+	local foodPrefab3 = 
+	local foodPrefab4 = 
+	local foodPrefab5 = 
+		local levelPerFood1 = 
+		local levelPerFood2 = 
+		local levelPerFood3 = 
+		local levelPerFood4 = 
+		local levelPerFood5 = 
+OR
+	local function newEat(inst, food)
+		oldEat(inst, food)
+	if food and food.components.edible and food.components.edible.foodtype=="MEAT" then
+		newUpg(inst)
+	end
+	end
+
+local InitialMaxHealth = 
+local InitialMaxHunger = 
+local InitialMaxSanity = 
+--local InitialMaxDamage = 
+local InitialMaxInsulation = 
+
+local FinalMaxHealth = 
+local FinalMaxHunger = 
+local FinalMaxSanity = 
+--local FinalMaxDamage = 
+local FinalMaxInsulation = 
+]]
+
+
+local changeHealth = stats.changeHealth
+local changeHunger = stats.changeHunger
+local changeSanity = stats.changeSanity
+local changeDamage = stats.changeDamage
+local changeInsulation = stats.changeInsulation
+
+local levelNerf = stats.levelNerf
+
+local foodtypeLeveling = stats.foodtypeLeveling
+	local foodType = stats.foodType
+
+local foodprefabLeveling = stats.foodprefabLeveling
+	local foodPrefab1 = stats.foodPrefab1
+	local foodPrefab2 = stats.foodPrefab2
+	local foodPrefab3 = stats.foodPrefab3
+	local foodPrefab4 = stats.foodPrefab4
+	local foodPrefab5 = stats.foodPrefab5
+		local levelPerFood1 = stats.levelPerFood1
+		local levelPerFood2 = stats.levelPerFood2
+		local levelPerFood3 = stats.levelPerFood3
+		local levelPerFood4 = stats.levelPerFood4
+		local levelPerFood5 = stats.levelPerFood5
+
+local InitialMaxHealth = stats.InitialMaxHealth
+local InitialMaxHunger = stats.InitialMaxHunger
+local InitialMaxSanity = stats.InitialMaxSanity
+--local InitialMaxDamage = stats.InitialMaxDamage
+local InitialMaxInsulation = stats.InitialMaxInsulation
+
+local FinalMaxHealth = stats.FinalMaxHealth
+local FinalMaxHunger = stats.FinalMaxHunger
+local FinalMaxSanity = stats.FinalMaxSanity
+--local FinalMaxDamage = stats.FinalMaxDamage
+local FinalMaxInsulation = stats.FinalMaxInsulation
+
+if levelSetting > 0 then
+	
+	if not levelNerf then
+		levelNerf = 0
+	end
+	
+	maxUpgrades = levelSetting+levelNerf
+	
+	function applyUpgrades(inst)
+
+		local upgrades = math.min(inst.level, maxUpgrades)
+ 
+		local hunger_percent = inst.components.hunger:GetPercent()
+		local health_percent = inst.components.health:GetPercent()
+		local sanity_percent = inst.components.sanity:GetPercent()
+		
+		if changeHealth == true then
+		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / maxUpgrades)		
+		end
+		if changeHunger == true then
+		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / maxUpgrades)
+		end
+		if changeSanity == true then
+		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / maxUpgrades)
+		end
+		--[[if changeDamage == 1 then
+		inst.components.combat.damagemultiplier = math.ceil (InitialMaxDamage + upgrades * (FinalMaxDamage - InitialMaxDamage) / maxUpgrades)
+		end]]
+		-- Doesn't work
+		if changeInsulation == true then
+		inst.components.temperature.inherentinsulation = math.ceil (InitialMaxInsulation + upgrades * (FinalMaxInsulation - InitialMaxInsulation) / maxUpgrades)
+		end
+		
+		inst.components.talker:Say("Level : ".. (inst.level))
+		
+		if inst.level > math.ceil (maxUpgrades-1) then
+			inst.components.talker:Say("Level : Max!")
+		end
+	
+		inst.components.hunger:SetPercent(hunger_percent)
+		inst.components.health:SetPercent(health_percent)
+		inst.components.sanity:SetPercent(sanity_percent)
+	end
+	
+	--[[
+	if foodtypeLeveling == true then
+		local function oneat(inst, food)
+			if food and food.components.edible and food.components.edible.foodtype=="foodToLevelUp" then
+				inst.level = inst.level + 1
+				applyUpgrades(inst)
+				inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+			end
+		end
+	end]]
+	
+	--local oneat
+	--if foodprefabLeveling == true then
+		function oneat(inst, food)
+			if foodPrefab1 and levelPerFood1 then
+				if food and food.components.edible and food.prefab == foodPrefab1 then --or food.prefab == foodPrefab2.prefab or food.prefab == foodPrefab3.prefab or food.prefab == foodPrefab4.prefab or food.prefab == foodPrefab5.prefab then
+					inst.level = inst.level + levelPerFood1
+					applyUpgrades(inst)
+					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+				end
+			end
+			if foodPrefab2 and levelPerFood2 then
+				if food and food.components.edible and food.prefab == foodPrefab2 then
+					inst.level = inst.level + levelPerFood2
+					applyUpgrades(inst)
+					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+				end
+			end
+			if foodPrefab3 and levelPerFood3 then
+				if food and food.components.edible and food.prefab == foodPrefab3 then
+					inst.level = inst.level + levelPerFood3
+					applyUpgrades(inst)
+					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+				end
+			end
+			if foodPrefab4 and levelPerFood4 then
+				if food and food.components.edible and food.prefab == foodPrefab4 then
+					inst.level = inst.level + levelPerFood4
+					applyUpgrades(inst)
+					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+				end
+			end
+			if foodPrefab5 and levelPerFood5 then
+				if food and food.components.edible and food.prefab == foodPrefab5 then
+					inst.level = inst.level + levelPerFood5
+					applyUpgrades(inst)
+					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+				end
+			end
+		end
+	--end
+
+	
+	local function onpreload(inst, data)
+		if data then
+			if data.level then
+				inst.level = data.level
+				applyUpgrades(inst)
+				if data.health and data.health.health then inst.components.health.currenthealth = data.health.health end
+				if data.hunger and data.hunger.hunger then inst.components.hunger.current = data.hunger.hunger end
+				if data.sanity and data.sanity.current then inst.components.sanity.current = data.sanity.current end
+				inst.components.health:DoDelta(0)
+				inst.components.hunger:DoDelta(0)
+				inst.components.sanity:DoDelta(0)
+			end
+		end
+	end
+	
+	local function onsave(inst, data)
+		data.level = inst.level
+		data.charge_time = inst.charge_time
+	end
+	
+	inst.level = 0
+	inst.components.eater:SetOnEatFn(oneat)
+	applyUpgrades(inst)
+		
+	inst.OnSave = onsave
+	inst.OnPreLoad = onpreload
+end
+end
+
+AddComponentPostInit("inventory", function(self)
+	local DropItem_base = self.DropItem
+	function self:DropItem(item, ...)
+		if item:HasTag("undroppable") then
+			return false
+		else
+			return DropItem_base(self, item, ...)
+		end
+	end
+end)
+
+AddComponentPostInit("inventory", function(self)
+	local old_Equip = self.Equip -- store old function
+	function self:Equip(item, ...)
+		-- checks if item is character specific, and if the player isn't the owner, make it say so.
+		if item.components.characterspecific and item.components.characterspecific.character ~= self.inst.prefab then
+			self.inst.components.talker:Say("This isn't mine")
+			self:DropItem(item)
+			return false -- prevents item from being got
+		end
+		return old_Equip(self, item, ...) -- normal function execution
+	end
+end)
+--[[Add the characterspecific component to the items:
+inst:AddComponent("characterspecific")
+inst.components.characterspecific:SetOwner(inst.prefab)
+]]
+
+
+local function balanceCrashBandicootStats(inst)
+
+	local crashBandicootStats = {
+									changeHealth =  true,
+									changeHunger =  true,
+									changeSanity =  true,
+									changeDamage =  false,
+									changeInsulation =  false,
+
+									levelNerf =  50,
+
+									--foodtypeLeveling =  false,
+									--foodType =  noType,
+
+									foodprefabLeveling =  true,
+									foodPrefab1 =  "wumpa",
+									foodPrefab2 =  "wumpa_cooked",
+									foodPrefab3 =  "carrot",
+									--foodPrefab4 =  noPrefab,
+									--foodPrefab5 =  noPrefab,
+									levelPerFood1 = 2,
+									levelPerFood2 = 2,
+									levelPerFood3 = 1,
+									
+									InitialMaxHealth =  75,
+									InitialMaxHunger =  75,
+									InitialMaxSanity =  100,
+									InitialMaxDamage =  0,
+									InitialMaxInsulation =  0,
+
+									FinalMaxHealth =  100,
+									FinalMaxHunger =  125,
+									FinalMaxSanity =  150,
+									FinalMaxDamage =  0,
+									FinalMaxInsulation =  0,
+								}
+
+	addLevelingSystem(inst, crashBandicootStats)
+	
+end
+
+
+--local function balanceDevonStats(inst)
+--end
+
+
+local function balanceDrokStats(inst)
+	inst.components.health:SetMaxHealth(175)
+	inst.components.hunger:SetMax(200)
+	inst.components.combat.damagemultiplier = 1.5
+end
+
+
+local function balanceEndiaStats(inst)
+	inst.components.health:SetMaxHealth(75)
+	inst.components.hunger:SetMax(100)
+	inst.components.sanity:SetMax(75)
+end
+
+
+local function balanceFarozStats(inst)
+	inst.components.sanity.dapperness = -0.25
+	inst.components.sanity.night_drain_mult = 1.25
+	inst.components.sanity.neg_aura_mult = 1.25
+end
+
+local function balanceFarozGlasses(inst)
+
+	inst:AddTag("undroppable")
+	
+	inst:AddComponent("characterspecific")
+	inst.components.characterspecific:SetOwner("faroz")
+	
+end
+
+
+--local function balanceFionnaStats(inst)
+--end
+
+
+local function balanceFreeSpiritStats(inst)
+	inst.components.health:SetMaxHealth(150)
+	inst.components.hunger:SetMax(100)
+	inst.components.sanity:SetMax(150)
+end
+
+
+--local function balanceGabenStats(inst)
+--end
+
+
+--local function balanceGirStats(inst)
+--end
+
+
+local function balanceHaruzStats(inst)
+	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
+
+if levelSetting > 0 then
+
+	local oldPreLoad = inst.OnPreLoad
+	local oldEat = inst.components.eater.oneatfn
+	
+	local levelNerf = 25
+	
+	local InitialMaxHealth = 75
+	local InitialMaxHunger = 75
+	local InitialMaxSanity = 75
+	
+	local FinalMaxHealth = 150
+	local FinalMaxHunger = 200
+	local FinalMaxSanity = 125
+	
+	inst.components.health:SetMaxHealth(InitialMaxHealth)
+	inst.components.hunger:SetMax(InitialMaxHunger)
+	inst.components.sanity:SetMax(InitialMaxSanity)
+			
+			
+	local function newUpg(inst)
+
+		max_upgrades = levelSetting+levelNerf
+		
+		local upgrades = math.min(inst.level, max_upgrades)
+ 
+		local hunger_percent = inst.components.hunger:GetPercent()
+		local health_percent = inst.components.health:GetPercent()
+		local sanity_percent = inst.components.sanity:GetPercent()
+		
+
+		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / max_upgrades)		
+		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / max_upgrades)
+		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / max_upgrades)
+		
+		inst.components.talker:Say("Level : ".. (inst.level))
+		if inst.level > math.ceil (max_upgrades-1) then
+			inst.components.talker:Say("Level : Max!")
+		end
+	
+		inst.components.hunger:SetPercent(hunger_percent)
+		inst.components.health:SetPercent(health_percent)
+		inst.components.sanity:SetPercent(sanity_percent)
+	end
+	
+	local function newEat(inst, food)
+		oldEat(inst, food)
+	if food and food.components.edible and food.components.edible.foodtype=="MEAT" then
+		newUpg(inst)
+	end
+end
+	
+	local function newPreLoad(inst, data)
+		oldPreLoad(inst, data)
+		newUpg(inst)
+		inst.components.health:DoDelta(0)
+		inst.components.hunger:DoDelta(0)
+		inst.components.sanity:DoDelta(0)
+	end
+	
+	inst.components.eater:SetOnEatFn(newEat)
+	inst.OnPreLoad = newPreLoad
+end
+end
+
+
+--local function balanceHellaMerdurialStats(inst)
+--end
+
+
+--local function balanceLuffyStats(inst)
+--end
+
+
+local function balanceMadeleineStats(inst)
+	changeStartingInventory(inst, {"goldnugget", "redgem", "redgem", "bluegem", "bluegem", "purplegem"})
+end
+
+
+local function balanceMichaelTheFoxStats(inst)
+	inst.components.health:SetMaxHealth(75)
+	inst.components.hunger:SetMax(125)
+	inst.components.sanity:SetMax(75)
+	inst.components.combat.damagemultiplier = 0.75
+	inst.components.sanity.night_drain_mult = 1.25
+	inst.components.sanity.neg_aura_mult = 1.25
+	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
+	inst:AddTag("insomniac")
+		--inst.components.locomotor.walkspeed = 1.0
+    	--inst.components.locomotor.runspeed = 1.5
+end
+
+
+--local function balanceMikuHatsuneStats(inst)
+--end
+
+
+local function balanceMitsuruStats(inst)
+	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
+
+if levelSetting > 0 then
+
+	local oldPreLoad = inst.OnPreLoad
+	local oldEat = inst.components.eater.oneatfn
+	
+	local levelNerf = 50
+	
+	local InitialMaxHealth = 75
+	local InitialMaxHunger = 75
+	local InitialMaxSanity = 50
+	local InitialMaxDamage = 1.0
+	local InitialMaxInsulation = 0
+	
+	local FinalMaxHealth = 100
+	local FinalMaxHunger = 150
+	local FinalMaxSanity = 125
+	local FinalMaxDamage = 1.5
+	local FinalMaxInsulation = 75
+	
+	inst.components.health:SetMaxHealth(InitialMaxHealth)
+	inst.components.hunger:SetMax(InitialMaxHunger)
+	inst.components.sanity:SetMax(InitialMaxSanity)
+	
+	local function newUpg(inst)
+	
+		max_upgrades = levelSetting+levelNerf
+			
+		local upgrades = math.min(inst.level, max_upgrades)
+ 
+		local hunger_percent = inst.components.hunger:GetPercent()
+		local health_percent = inst.components.health:GetPercent()
+		local sanity_percent = inst.components.sanity:GetPercent()
+		
+
+		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / max_upgrades)		
+		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / max_upgrades)
+		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / max_upgrades)
+		
+		inst.components.combat.damagemultiplier = math.ceil (InitialMaxDamage + upgrades * (FinalMaxDamage - InitialMaxDamage) / max_upgrades)
+		inst.components.temperature.inherentinsulation = math.ceil (InitialMaxInsulation + upgrades * (FinalMaxInsulation - InitialMaxInsulation) / max_upgrades)
+
+		inst.components.talker:Say("Level : ".. (inst.level))
+		
+		if inst.level > math.ceil (max_upgrades-1) then
+			inst.components.talker:Say("Level : Max!")
+		end
+	
+		inst.components.hunger:SetPercent(hunger_percent)
+		inst.components.health:SetPercent(health_percent)
+		inst.components.sanity:SetPercent(sanity_percent)
+	end
+	
+	local function newEat(inst, food)
+		oldEat(inst, food)
+	if food and food.components.edible and food.prefab == "corn" or food.prefab == "carrot" or food.prefab == "eggplant" or food.prefab == "dragonfruit" then
+			newUpg(inst)
+		end
+	end
+	
+	local function newPreLoad(inst, data)
+		oldPreLoad(inst, data)
+		newUpg(inst)
+		inst.components.health:DoDelta(0)
+		inst.components.hunger:DoDelta(0)
+		inst.components.sanity:DoDelta(0)
+	end
+	
+	inst.components.eater:SetOnEatFn(newEat)
+	inst.OnPreLoad = newPreLoad
+end
+end
+
+
+--local function balanceNeptuniaStats(inst)
+--end
+
+
+local function balanceSerasStats(inst)
+	changeStartingInventory(inst, {"smallmeat", "smallmeat"})
+end
+
+
+local function balanceShovelKnightStats(inst)
+
+end
+
+local function balanceShovelKnightBlades(inst)
+	
+    inst:AddTag("undroppable")
+	
+	inst:AddComponent("characterspecific")
+	inst.components.characterspecific:SetOwner("winston")
+	
+end
+
+
+local function balanceSollyzStats(inst)
+
+if levelSetting > 0 then
+
+	local oldPreLoad = inst.OnPreLoad
+	local oldEat = inst.components.eater.oneatfn
+	
+	local levelNerf = 0
+	
+	local InitialMaxHealth = 50
+	local InitialMaxHunger = 75
+	local InitialMaxSanity = 50
+	
+	local FinalMaxHealth = 100
+	local FinalMaxHunger = 150
+	local FinalMaxSanity = 90
+	
+	inst.components.health:SetMaxHealth(InitialMaxHealth)
+	inst.components.hunger:SetMax(InitialMaxHunger)
+	inst.components.sanity:SetMax(InitialMaxSanity)
+	
+	local function newUpg(inst)
+
+		max_upgrades = levelSetting+levelNerf
+		
+		local upgrades = math.min(inst.level, max_upgrades)
+ 
+		local hunger_percent = inst.components.hunger:GetPercent()
+		local health_percent = inst.components.health:GetPercent()
+		local sanity_percent = inst.components.sanity:GetPercent()
+		
+
+		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / max_upgrades)		
+		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / max_upgrades)
+		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / max_upgrades)
+		
+		inst.components.talker:Say("Level : ".. (inst.level))
+		if inst.level > math.ceil (max_upgrades-1) then
+			inst.components.talker:Say("Level : Max!")
+		end
+	
+		inst.components.hunger:SetPercent(hunger_percent)
+		inst.components.health:SetPercent(health_percent)
+		inst.components.sanity:SetPercent(sanity_percent)
+	end
+	
+	local function newEat(inst, food)
+		oldEat(inst, food)
+	if food and food.components.edible and food.prefab == "fish"  then
+			newUpg(inst)
+		end
+	end
+	
+	local function newPreLoad(inst, data)
+		oldPreLoad(inst, data)
+		newUpg(inst)
+		inst.components.health:DoDelta(0)
+		inst.components.hunger:DoDelta(0)
+		inst.components.sanity:DoDelta(0)
+	end
+	
+	inst.components.eater:SetOnEatFn(newEat)
+	inst.OnPreLoad = newPreLoad
+end
+end
+
+
+--local function balanceThanaStats(inst)
+--end
+
+
+--local function balanceTheMedicStats(inst)
+--end
+
+
+local function balanceWarkStats(inst)
+	inst.components.health:SetMaxHealth(125)
+	inst.components.hunger:SetMax(150)
+	inst.components.combat.damagemultiplier = 0.8
+end
+
+
+local function balanceWolfStats(inst)
+	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-0.75
+end
+
+
+local function balanceWoodieStats(inst)
+
+	local woodieStats = {
+							changeHealth =  true,
+							changeHunger =  true,
+							changeSanity =  true,
+							changeDamage =  false,
+							changeInsulation =  false,
+
+							levelNerf =  0,
+
+							--foodtypeLeveling =  false,
+							--foodType =  noType,
+
+							foodprefabLeveling =  true,
+							foodPrefab1 =  "butterflymuffin",
+							--foodPrefab2 =  noPrefab,
+							--foodPrefab3 =  noPrefab,
+							--foodPrefab4 =  noPrefab,
+							--foodPrefab5 =  noPrefab,
+							levelPerFood1 = 1,
+								
+							InitialMaxHealth =  75,
+							InitialMaxHunger =  100,
+							InitialMaxSanity =  100,
+							InitialMaxDamage =  0,
+							InitialMaxInsulation =  0,
+
+							FinalMaxHealth =  175,
+							FinalMaxHunger =  200,
+							FinalMaxSanity =  175,
+							FinalMaxDamage =  0,
+							FinalMaxInsulation =  0,
+						}
+
+	addLevelingSystem(inst, woodieStats)
+	
+end
+
+local function balanceWoodieAxe(inst)
+	
+    inst:AddTag("undroppable")
+	
+	inst:AddComponent("characterspecific")
+	inst.components.characterspecific:SetOwner("woodie")
+	
+end
+
+
+--[[local function balanceZimStats(inst)
+end]]
+
+
+--if not GLOBAL.TheNet:GetIsClient() then
+
+	if modBalancingEnabled == 1 then
+		print("Mod Balancing enabled")
+	
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-382501575") then
+			if crashBandicootBalanced == 1 then
+				AddPrefabPostInit("crashbandi", balanceCrashBandicootStats)
+				print("Balancing Crash Bandicoot")
+			else
+				print("Ignoring Crash Bandicoot")
+			end
+		end
+		
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-366048578") then
+			if devonBalanced == 1 then
+				AddPrefabPostInit("devon", balanceDevonStats)
+				print("Balancing Devon")
+			else
+				print("Ignoring Devon")
+			end
+		end]]
+		
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-373622746") then
+			if drokBalanced == 1 then
+				AddPrefabPostInit("drok", balanceDrokStats)
+				print("Balancing Drok the Caveman")
+			else
+				print("Ignoring Drok the Caveman")
+			end
+		end
+	
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-363966651") then
+			if endiaBalanced == 1 then
+				AddPrefabPostInit("endia", balanceEndiaStats)
+				print("Balancing Endia")
+			else
+				print("Ignoring Endia")
+			end
+		end
+
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-364491382") then
+			if farozBalanced == 1 then
+				AddPrefabPostInit("faroz", balanceFarozStats)
+				AddPrefabPostInit("faroz_gls", balanceFarozGlasses)
+				print("Balancing Faroz")
+			else
+				print("Ignoring Faroz")
+			end
+		end
+		
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-374341561") then
+			if fionnaBalanced == 1 then
+				AddPrefabPostInit("fionna", balanceFionnaStats)
+				print("Balancing Fionna")
+			else
+				print("Ignoring Fionna")
+			end
+		end]]
+		
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-359318959") then
+			if freeSpiritBalanced == 1 then
+				AddPrefabPostInit("freebre", balanceFreeSpiritStats)
+				print("Balancing FreeSpirit the Umbreon")
+			else
+				print("Ignoring FreeSpirit the Umbreon")
+			end
+		end
+		
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-381660473") then
+			if gabenBalanced == 1 then
+				AddPrefabPostInit("gbe", balanceGabenStats)
+				print("Releasing HL3")
+			else
+				print("Delaying HL3")
+			end
+		end]]		
+	
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-363819976") then
+			if girBalanced == 1 then
+				AddPrefabPostInit("gir", balanceGirStats)
+				print("Balancing Gir")
+			else
+				print("Ignoring Gir")
+			end
+		end]]
+	
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-359821133") then
+			if haruzBalanced == 1 then	
+				AddPrefabPostInit("haruz", balanceHaruzStats)
+				print("Balancing Haruz")
+			else
+				print("Ignoring Haruz")
+			end
+		end
+	
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-369898161") then
+			if hellaMerdurialBalanced == 1 then	
+				AddPrefabPostInit("hella", balanceHellaMerdurialStats)
+				print("Balancing Hella")
+			else
+				print("Ignoring Hella")
+			end
+		end]]
+		
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-380079744") then
+			if luffyBalanced == 1 then
+				AddPrefabPostInit("luffy", balanceLuffyStats)
+				print("Balancing Luffy")
+			else
+				print("Ignoring Luffy")
+			end
+		end]]			
+		
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-369228986") then
+			if madeleineBalanced == 1 then	
+				AddPrefabPostInit("madeleine", balanceMadeleineStats)
+				print("Balancing Madeleine")
+			else
+				print("Ignoring Madeleine")
+			end
+		end
+	
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-357013795") then
+			if michaelTheFoxBalanced == 1 then	
+				AddPrefabPostInit("fox", balanceMichaelTheFoxStats)
+				print("Balancing Michael the Fox")
+			else
+				print("Ignoring Michael the Fox")
+			end
+		end
+		
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-368321978") then
+			if mikuHatsuneBalanced == 1 then
+				AddPrefabPostInit("miku", balanceMikuHatsuneStats)
+				print("Balancing Miku Hatsune")
+			else
+				print("Ignoring Miku Hatsune")
+			end
+		end]]			
+	
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-364189966") then
+			if mitsuruBalanced == 1 then	
+				AddPrefabPostInit("mitsuru", balanceMitsuruStats)
+				print("Balancing Mitsuru")
+			else
+				print("Ignoring Mitsuru")
+			end
+		end
+		
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-351877222") then
+			if neptuniaBalanced == 1 then
+				AddPrefabPostInit("nep", balanceNeptuniaStats)
+				print("Balancing Neptunia")
+			else
+				print("Ignoring Neptunia")
+			end
+		end]]			
+	
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-360319890") then
+			if serasBalanced == 1 then	
+				AddPrefabPostInit("seras", balanceSerasStats)
+				print("Balancing Seras")
+			else
+				print("Ignoring Seras")
+			end
+		end
+		
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-359479220") then
+			if sollyzBalanced == 1 then	
+				AddPrefabPostInit("sollyz", balanceSollyzStats)
+				print("Balancing Sollyz")
+			else
+				print("Ignoring Sollyz")
+			end
+		end
+		
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-369544255") then
+			if shovelKnightBalanced == 1 then
+				AddPrefabPostInit("winston", balanceShovelKnightStats)
+				AddPrefabPostInit("skweaponshovelbladebasic", balanceShovelKnightBlades)
+				AddPrefabPostInit("skweaponshovelbladechargehandle", balanceShovelKnightBlades)
+				AddPrefabPostInit("skweaponshovelbladetrenchblade", balanceShovelKnightBlades)
+				AddPrefabPostInit("skweaponshovelbladedropspark", balanceShovelKnightBlades)
+				print("Balancing Shovel Knight")
+			else
+				print("Ignoring Shovel Knight")
+			end
+		end
+		
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-368541793") then
+			if thanaBalanced == 1 then	
+				AddPrefabPostInit("thana", balanceThanaStats)
+				print("Balancing Thana")
+			else
+				print("Ignoring Thana")
+			end
+		end]]
+		
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-379628839") then
+			if theMedicBalanced == 1 then
+				AddPrefabPostInit("medic", balanceTheMedicStats)
+				print("Balancing The Medic")
+			else
+				print("Ignoring The Medic")
+			end
+		end]]			
+		
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-369518979") then
+			if warkBalanced == 1 then	
+				AddPrefabPostInit("wark", balanceWarkStats)
+				print("Balancing Wark")
+			else
+				print("Ignoring Wark")
+			end
+		end
+		
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-369435452") then
+			if wolfBalanced == 1 then	
+				AddPrefabPostInit("wolft", balanceWolfStats)
+				print("Balancing Wolf")
+			else
+				print("Ignoring Wolf")
+			end
+		end
+		
+		if GLOBAL.KnownModIndex:IsModEnabled("workshop-384633033") then
+			if woodieBalanced == 1 then	
+				AddPrefabPostInit("woodie", balanceWoodieStats)
+				AddPrefabPostInit("lucy", balanceWoodieAxe)
+				print("Balancing PrzemoLSZ's Woodie")
+			else
+				print("Ignoring PrszemoLSZ's Woodie")
+			end
+		end
+		
+		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-357209437") then
+			if zimBalanced == 1 then	
+				AddPrefabPostInit("izim", balanceZimStats)
+				print("Balancing Zim")
+			else
+				print("Ignoring Zim")
+			end
+		end]]
+	else
+	print("Mod Balancing disabled")
+	end
+	
