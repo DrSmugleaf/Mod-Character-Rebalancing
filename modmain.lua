@@ -123,14 +123,14 @@ local function changeStartingInventory(inst, start_inv) -- Change a character's 
 end
 
 
-local function addLevelingSystem(inst, stats)
+local function modifyPrefab(inst, stats)
+
+end
+
+
+local function addLevelingSystem(inst, stats) -- to do, fix max_upgrades to maxUpgrades
 
 --[[Parameters to use:
-local changeHealth = 
-local changeHunger = 
-local changeSanity = 
-local changeDamage = 
-local changeInsulation = 
 
 local levelNerf = 
 
@@ -170,11 +170,22 @@ local FinalMaxInsulation =
 ]]
 
 
-local changeHealth = stats.changeHealth
+--[[local changeHealth = stats.changeHealth
 local changeHunger = stats.changeHunger
 local changeSanity = stats.changeSanity
 local changeDamage = stats.changeDamage
-local changeInsulation = stats.changeInsulation
+local changeInsulation = stats.changeInsulation]]
+
+local health = stats.health
+local hunger = stats.hunger
+local sanity = stats.sanity
+local damage = stats.damage
+local insulation = stats.insulation
+local walkSpeed = stats.walkSpeed
+local runSpeed = stats.runSpeed
+local dapperness = stats.dapperness
+local nightDrain = stats.nightDrain
+local monsterDrain = stats.monsterDrain
 
 local levelNerf = stats.levelNerf
 
@@ -196,16 +207,16 @@ local foodprefabLeveling = stats.foodprefabLeveling
 local InitialMaxHealth = stats.InitialMaxHealth
 local InitialMaxHunger = stats.InitialMaxHunger
 local InitialMaxSanity = stats.InitialMaxSanity
---local InitialMaxDamage = stats.InitialMaxDamage
+local InitialMaxDamage = stats.InitialMaxDamage
 local InitialMaxInsulation = stats.InitialMaxInsulation
 
 local FinalMaxHealth = stats.FinalMaxHealth
 local FinalMaxHunger = stats.FinalMaxHunger
 local FinalMaxSanity = stats.FinalMaxSanity
---local FinalMaxDamage = stats.FinalMaxDamage
+local FinalMaxDamage = stats.FinalMaxDamage
 local FinalMaxInsulation = stats.FinalMaxInsulation
 
-if levelSetting > 0 then
+if levelSetting > 0 and InitialMaxHealth or InitialMaxHunger or InitialMaxSanity or InitialMaxDamage or InitialMaxInsulation then
 	
 	if not levelNerf then
 		levelNerf = 0
@@ -221,20 +232,19 @@ if levelSetting > 0 then
 		local health_percent = inst.components.health:GetPercent()
 		local sanity_percent = inst.components.sanity:GetPercent()
 		
-		if changeHealth == true then
+		if InitialMaxHealth and FinalMaxHealth and upgrades and maxUpgrades then
 		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / maxUpgrades)		
 		end
-		if changeHunger == true then
+		if InitialMaxHunger and FinalMaxHunger and upgrades and maxUpgrades then
 		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / maxUpgrades)
 		end
-		if changeSanity == true then
+		if InitialMaxSanity and FinalMaxSanity and upgrades and maxUpgrades then
 		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / maxUpgrades)
 		end
-		--[[if changeDamage == 1 then
+		if InitialMaxDamage and FinalMaxDamage and upgrades and maxUpgrades then then
 		inst.components.combat.damagemultiplier = math.ceil (InitialMaxDamage + upgrades * (FinalMaxDamage - InitialMaxDamage) / maxUpgrades)
-		end]]
-		-- Doesn't work
-		if changeInsulation == true then
+		end
+		if InitialMaxInsulation and FinalMaxInsulation and upgrades and maxUpgrades then
 		inst.components.temperature.inherentinsulation = math.ceil (InitialMaxInsulation + upgrades * (FinalMaxInsulation - InitialMaxInsulation) / maxUpgrades)
 		end
 		
@@ -328,19 +338,49 @@ if levelSetting > 0 then
 		
 	inst.OnSave = onsave
 	inst.OnPreLoad = onpreload
+	
+else
+
+	if health then
+		inst.components.health:SetMaxHealth(health)
+	end
+	if hunger then
+		inst.components.hunger:SetMax(hunger)
+	end
+	if sanity then
+		inst.components.sanity:SetMax(sanity)
+	end
+	if damage then
+		inst.components.combat.damagemultiplier = damage
+	end
+	if insulation then
+	inst.components.temperature.inherentinsulation = insulation
+	end
+	if walkSpeed and runSpeed then
+	inst.components.locomotor.walkspeed = walkSpeed
+	inst.components.locomotor.runspeed = runSpeed
+	end
+	if dapperness then
+	inst.components.sanity.dapperness = dapperness
+	end
+	if nightDrain then
+	inst.components.sanity.night_drain_mult = nightDrain
+	end
+	if monsterDrain then
+	inst.components.sanity.neg_aura_mult = monsterDrain
+	end
+	
 end
 end
 
 AddComponentPostInit("inventory", function(self)
 	local DropItem_base = self.DropItem
-	if item then
 	function self:DropItem(item, ...)
 		if item:HasTag("undroppable") then
 			return false
 		else
 			return DropItem_base(self, item, ...)
 		end
-	end
 	end
 end)
 
@@ -364,13 +404,12 @@ inst.components.characterspecific:SetOwner(inst.prefab)
 
 local function balanceCrashBandicootStats(inst)
 
-	if hardcoreMode == 0 then
-		crashBandicootStats = 	{
-									changeHealth =  true,
-									changeHunger =  true,
-									changeSanity =  true,
-									changeDamage =  false,
-									changeInsulation =  false,
+	local crashBandicootStats = {
+									--changeHealth =  true,
+									--changeHunger =  true,
+									--changeSanity =  true,
+									--changeDamage =  false,
+									--changeInsulation =  false,
 
 									levelNerf =  50,
 
@@ -399,111 +438,34 @@ local function balanceCrashBandicootStats(inst)
 									FinalMaxDamage =  0,
 									FinalMaxInsulation =  0,
 								}
-								
-	else
-		crashBandicootStats =	{
-									changeHealth =  true,
-									changeHunger =  true,
-									changeSanity =  true,
-									changeDamage =  false,
-									changeInsulation =  false,
-
-									levelNerf =  250,
-
-									--foodtypeLeveling =  false,
-									--foodType =  noType,
-
-									foodprefabLeveling =  true,
-									foodPrefab1 =  "wumpa",
-									foodPrefab2 =  "wumpa_cooked",
-									foodPrefab3 =  "carrot",
-									--foodPrefab4 =  noPrefab,
-									--foodPrefab5 =  noPrefab,
-									levelPerFood1 = 2,
-									levelPerFood2 = 2,
-									levelPerFood3 = 1,
-									
-									InitialMaxHealth =  75,
-									InitialMaxHunger =  75,
-									InitialMaxSanity =  100,
-									InitialMaxDamage =  0,
-									InitialMaxInsulation =  0,
-
-									FinalMaxHealth =  100,
-									FinalMaxHunger =  125,
-									FinalMaxSanity =  150,
-									FinalMaxDamage =  0,
-									FinalMaxInsulation =  0,
-								}
-								
-	end
 
 	addLevelingSystem(inst, crashBandicootStats)
 	
 end
 
 
-local function balanceDevonStats(inst)
-end
-
-local function balanceDevonBird(inst)
-end
+--local function balanceDevonStats(inst)
+--end
 
 
 local function balanceDrokStats(inst)
-
-	if hardcoreMode == 0 then
-	
-		inst.components.health:SetMaxHealth(175)
-		inst.components.hunger:SetMax(200)
-		inst.components.combat.damagemultiplier = 1.5
-		
-	else
-	
-		inst.components.health:SetMaxHealth(175)
-		inst.components.hunger:SetMax(150)
-		inst.components.combat.damagemultiplier = 1.0
-		
-	end
-
+	inst.components.health:SetMaxHealth(175)
+	inst.components.hunger:SetMax(200)
+	inst.components.combat.damagemultiplier = 1.5
 end
 
 
 local function balanceEndiaStats(inst)
-
-	if hardcoreMode == 0 then
-	
-		inst.components.health:SetMaxHealth(75)
-		inst.components.hunger:SetMax(100)
-		inst.components.sanity:SetMax(75)
-	
-	else
-	
-		inst.components.health:SetMaxHealth(50)
-		inst.components.hunger:SetMax(75)
-		inst.components.sanity:SetMax(50)
-		
-	end
-		
+	inst.components.health:SetMaxHealth(75)
+	inst.components.hunger:SetMax(100)
+	inst.components.sanity:SetMax(75)
 end
 
 
 local function balanceFarozStats(inst)
-
-	if hardcoreMode == 0 then
-	
-		inst.components.sanity.dapperness = -0.25
-		inst.components.sanity.night_drain_mult = 1.25
-		inst.components.sanity.neg_aura_mult = 1.25
-		
-	else
-	
-		inst.components.sanity.dapperness = -0.50
-		inst.components.sanity.night_drain_mult = 1.50
-		inst.components.sanity.neg_aura_mult = 1.50
-		
-	end
-	
+	inst.components.sanity.dapperness = -0.25
+	inst.components.sanity.night_drain_mult = 1.25
+	inst.components.sanity.neg_aura_mult = 1.25
 end
 
 local function balanceFarozGlasses(inst)
@@ -521,21 +483,9 @@ end
 
 
 local function balanceFreeSpiritStats(inst)
-
-	if hardcoreMode == 0 then
-	
-		inst.components.health:SetMaxHealth(150)
-		inst.components.hunger:SetMax(100)
-		inst.components.sanity:SetMax(150)
-		
-	else
-	
-		inst.components.health:SetMaxHealth(100)
-		inst.components.hunger:SetMax(100)
-		inst.components.sanity:SetMax(150)
-		
-	end
-	
+	inst.components.health:SetMaxHealth(150)
+	inst.components.hunger:SetMax(100)
+	inst.components.sanity:SetMax(150)
 end
 
 
@@ -548,25 +498,14 @@ end
 
 
 local function balanceHaruzStats(inst)
-
 	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
-
-	if hardcoreMode == 0 then
-	
-		levelNerf = 25
-		
-	else
-	
-		levelNerf = 200
-	
-	end
 
 if levelSetting > 0 then
 
 	local oldPreLoad = inst.OnPreLoad
 	local oldEat = inst.components.eater.oneatfn
 	
-	--local levelNerf = 25
+	local levelNerf = 25
 	
 	local InitialMaxHealth = 75
 	local InitialMaxHunger = 75
@@ -641,44 +580,16 @@ end
 
 
 local function balanceMichaelTheFoxStats(inst)
-
-	if nerfSpeed == 0 then
-	
-		movementSpeed = "defaulte"
-	
-	else
-	
-		movementSpeed = 1.25
-	
-	end
-	
-	
-	if movementSpeed == "defaulte" then
-	
-		inst.components.health:SetMaxHealth(75)
-		inst.components.hunger:SetMax(125)
-		inst.components.sanity:SetMax(75)
-		inst.components.combat.damagemultiplier = 0.75
-		inst.components.sanity.night_drain_mult = 1.25
-		inst.components.sanity.neg_aura_mult = 1.25
-		inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
-		inst:AddTag("insomniac")
-	
-	else
-	
-		inst.components.locomotor.walkspeed = movementSpeed
-		inst.components.locomotor.runspeed = movementSpeed+movementSpeed/2
-		inst.components.health:SetMaxHealth(125)
-		inst.components.hunger:SetMax(125)
-		inst.components.sanity:SetMax(75)
-		inst.components.combat.damagemultiplier = 0.80
-		inst.components.sanity.night_drain_mult = 1.10
-		inst.components.sanity.neg_aura_mult = 1.10
-		inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
-		inst:AddTag("insomniac")
-	
-	end
-	
+	inst.components.health:SetMaxHealth(75)
+	inst.components.hunger:SetMax(125)
+	inst.components.sanity:SetMax(75)
+	inst.components.combat.damagemultiplier = 0.75
+	inst.components.sanity.night_drain_mult = 1.25
+	inst.components.sanity.neg_aura_mult = 1.25
+	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
+	inst:AddTag("insomniac")
+		--inst.components.locomotor.walkspeed = 1.0
+    	--inst.components.locomotor.runspeed = 1.5
 end
 
 
@@ -687,23 +598,14 @@ end
 
 
 local function balanceMitsuruStats(inst)
-
 	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
-	
-	if hardcoreMode == 0 then
-	
-		local levelNerf = 50
-		
-	else
-	
-		local levelNerf = 300
-		
-	end
 
 if levelSetting > 0 then
 
 	local oldPreLoad = inst.OnPreLoad
 	local oldEat = inst.components.eater.oneatfn
+	
+	local levelNerf = 50
 	
 	local InitialMaxHealth = 75
 	local InitialMaxHunger = 75
@@ -731,6 +633,7 @@ if levelSetting > 0 then
 		local health_percent = inst.components.health:GetPercent()
 		local sanity_percent = inst.components.sanity:GetPercent()
 		
+
 		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / max_upgrades)		
 		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / max_upgrades)
 		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / max_upgrades)
@@ -809,16 +712,17 @@ if levelSetting > 0 then
 	local FinalMaxHealth = 100
 	local FinalMaxHunger = 150
 	local FinalMaxSanity = 90
-
+	
 	inst.components.health:SetMaxHealth(InitialMaxHealth)
 	inst.components.hunger:SetMax(InitialMaxHunger)
 	inst.components.sanity:SetMax(InitialMaxSanity)
 	
 	local function newUpg(inst)
 
-	local max_upgrades = levelSetting+levelNerf
-	local upgrades = math.min(inst.level, max_upgrades)
-	
+		max_upgrades = levelSetting+levelNerf
+		
+		local upgrades = math.min(inst.level, max_upgrades)
+ 
 		local hunger_percent = inst.components.hunger:GetPercent()
 		local health_percent = inst.components.health:GetPercent()
 		local sanity_percent = inst.components.sanity:GetPercent()
@@ -882,11 +786,11 @@ end
 local function balanceWoodieStats(inst)
 
 	local woodieStats = {
-							changeHealth =  true,
-							changeHunger =  true,
-							changeSanity =  true,
-							changeDamage =  false,
-							changeInsulation =  false,
+							--changeHealth =  true,
+							--changeHunger =  true,
+							--changeSanity =  true,
+							--changeDamage =  false,
+							--changeInsulation =  false,
 
 							levelNerf =  0,
 
@@ -894,7 +798,7 @@ local function balanceWoodieStats(inst)
 							--foodType =  noType,
 
 							foodprefabLeveling =  true,
-							foodPrefab1 =  "livinglog",
+							foodPrefab1 =  "butterflymuffin",
 							--foodPrefab2 =  noPrefab,
 							--foodPrefab3 =  noPrefab,
 							--foodPrefab4 =  noPrefab,
