@@ -21,6 +21,8 @@ all_clients_require_mod = true
 icon_atlas = "modicon.xml"
 icon = "modicon.tex"
 
+server_filter_tags = {"mod character rebalancing"}
+
 configuration_options =
 {
 

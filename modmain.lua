@@ -123,21 +123,20 @@ local function changeStartingInventory(inst, start_inv) -- Change a character's 
 end
 
 
-local function addLevelingSystem(inst, stats) -- to do, fix max_upgrades to maxUpgrades
+local function modifyPrefab(inst, stats)
+
+end
+
+
+local function modifyStats(inst, stats)
 
 --[[Parameters to use:
-local changeHealth = 
-local changeHunger = 
-local changeSanity = 
-local changeDamage = 
-local changeInsulation = 
 
 local levelNerf = 
 
-local foodtypeLeveling = 
+
 	local foodType = 
 OR
-local foodprefabLeveling = 
 	local foodPrefab1 = 
 	local foodPrefab2 = 
 	local foodPrefab3 = 
@@ -170,11 +169,23 @@ local FinalMaxInsulation =
 ]]
 
 
-local changeHealth = stats.changeHealth
+--[[local changeHealth = stats.changeHealth
 local changeHunger = stats.changeHunger
 local changeSanity = stats.changeSanity
 local changeDamage = stats.changeDamage
-local changeInsulation = stats.changeInsulation
+local changeInsulation = stats.changeInsulation]]
+
+local health = stats.health
+local hunger = stats.hunger
+local sanity = stats.sanity
+local damage = stats.damage
+local insulation = stats.insulation
+local walkSpeed = stats.walkSpeed
+local runSpeed = stats.runSpeed
+local dapperness = stats.dapperness
+local nightDrain = stats.nightDrain
+local monsterDrain = stats.monsterDrain
+local strongStomach = stats.strongStomach
 
 local levelNerf = stats.levelNerf
 
@@ -196,16 +207,16 @@ local foodprefabLeveling = stats.foodprefabLeveling
 local InitialMaxHealth = stats.InitialMaxHealth
 local InitialMaxHunger = stats.InitialMaxHunger
 local InitialMaxSanity = stats.InitialMaxSanity
---local InitialMaxDamage = stats.InitialMaxDamage
+local InitialMaxDamage = stats.InitialMaxDamage
 local InitialMaxInsulation = stats.InitialMaxInsulation
 
 local FinalMaxHealth = stats.FinalMaxHealth
 local FinalMaxHunger = stats.FinalMaxHunger
 local FinalMaxSanity = stats.FinalMaxSanity
---local FinalMaxDamage = stats.FinalMaxDamage
+local FinalMaxDamage = stats.FinalMaxDamage
 local FinalMaxInsulation = stats.FinalMaxInsulation
 
-if levelSetting > 0 then
+if levelSetting > 0 and InitialMaxHealth or InitialMaxHunger or InitialMaxSanity or InitialMaxDamage or InitialMaxInsulation then
 	
 	if not levelNerf then
 		levelNerf = 0
@@ -221,20 +232,19 @@ if levelSetting > 0 then
 		local health_percent = inst.components.health:GetPercent()
 		local sanity_percent = inst.components.sanity:GetPercent()
 		
-		if changeHealth == true then
+		if InitialMaxHealth and FinalMaxHealth and upgrades and maxUpgrades then
 		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / maxUpgrades)		
 		end
-		if changeHunger == true then
+		if InitialMaxHunger and FinalMaxHunger and upgrades and maxUpgrades then
 		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / maxUpgrades)
 		end
-		if changeSanity == true then
+		if InitialMaxSanity and FinalMaxSanity and upgrades and maxUpgrades then
 		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / maxUpgrades)
 		end
-		--[[if changeDamage == 1 then
+		if InitialMaxDamage and FinalMaxDamage and upgrades and maxUpgrades then
 		inst.components.combat.damagemultiplier = math.ceil (InitialMaxDamage + upgrades * (FinalMaxDamage - InitialMaxDamage) / maxUpgrades)
-		end]]
-		-- Doesn't work
-		if changeInsulation == true then
+		end
+		if InitialMaxInsulation and FinalMaxInsulation and upgrades and maxUpgrades then
 		inst.components.temperature.inherentinsulation = math.ceil (InitialMaxInsulation + upgrades * (FinalMaxInsulation - InitialMaxInsulation) / maxUpgrades)
 		end
 		
@@ -250,9 +260,9 @@ if levelSetting > 0 then
 	end
 	
 	--[[
-	if foodtypeLeveling == true then
+	if foodType then
 		local function oneat(inst, food)
-			if food and food.components.edible and food.components.edible.foodtype=="foodToLevelUp" then
+			if food and food.components.edible and food.components.edible.foodtype=="foodType" then
 				inst.level = inst.level + 1
 				applyUpgrades(inst)
 				inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
@@ -261,7 +271,7 @@ if levelSetting > 0 then
 	end]]
 	
 	--local oneat
-	--if foodprefabLeveling == true then
+	--if foodPrefab1 and levelPerFood1 then
 		function oneat(inst, food)
 			if foodPrefab1 and levelPerFood1 then
 				if food and food.components.edible and food.prefab == foodPrefab1 then --or food.prefab == foodPrefab2.prefab or food.prefab == foodPrefab3.prefab or food.prefab == foodPrefab4.prefab or food.prefab == foodPrefab5.prefab then
@@ -328,6 +338,42 @@ if levelSetting > 0 then
 		
 	inst.OnSave = onsave
 	inst.OnPreLoad = onpreload
+	
+else
+
+	if health then
+		inst.components.health:SetMaxHealth(health)
+	end
+	if hunger then
+		inst.components.hunger:SetMax(hunger)
+	end
+	if sanity then
+		inst.components.sanity:SetMax(sanity)
+	end
+	if damage then
+		inst.components.combat.damagemultiplier = damage
+	end
+	if insulation then
+		inst.components.temperature.inherentinsulation = insulation
+	end
+	if walkSpeed and runSpeed then
+		inst.components.locomotor.walkspeed = walkSpeed
+		inst.components.locomotor.runspeed = runSpeed
+	end
+	if dapperness then
+		inst.components.sanity.dapperness = dapperness
+	end
+	if nightDrain then
+		inst.components.sanity.night_drain_mult = nightDrain
+	end
+	if monsterDrain then
+		inst.components.sanity.neg_aura_mult = monsterDrain
+	end
+	if strongStomach then
+		inst.components.eater.strongstomach = strongStomach
+	end
+	
+	
 end
 end
 
@@ -363,11 +409,11 @@ inst.components.characterspecific:SetOwner(inst.prefab)
 local function balanceCrashBandicootStats(inst)
 
 	local crashBandicootStats = {
-									changeHealth =  true,
-									changeHunger =  true,
-									changeSanity =  true,
-									changeDamage =  false,
-									changeInsulation =  false,
+									--changeHealth =  true,
+									--changeHunger =  true,
+									--changeSanity =  true,
+									--changeDamage =  false,
+									--changeInsulation =  false,
 
 									levelNerf =  50,
 
@@ -387,17 +433,13 @@ local function balanceCrashBandicootStats(inst)
 									InitialMaxHealth =  75,
 									InitialMaxHunger =  75,
 									InitialMaxSanity =  100,
-									InitialMaxDamage =  0,
-									InitialMaxInsulation =  0,
 
 									FinalMaxHealth =  100,
 									FinalMaxHunger =  125,
 									FinalMaxSanity =  150,
-									FinalMaxDamage =  0,
-									FinalMaxInsulation =  0,
 								}
 
-	addLevelingSystem(inst, crashBandicootStats)
+	modifyStats(inst, crashBandicootStats)
 	
 end
 
@@ -414,9 +456,21 @@ end
 
 
 local function balanceEndiaStats(inst)
+
+	local endiaStats =	{
+							health = 75,
+							hunger = 100,
+							sanity = 75,
+						}
+						
+	modifyStats(inst, endiaStats)
+
+
+--[[
 	inst.components.health:SetMaxHealth(75)
 	inst.components.hunger:SetMax(100)
 	inst.components.sanity:SetMax(75)
+	]]
 end
 
 
@@ -744,11 +798,11 @@ end
 local function balanceWoodieStats(inst)
 
 	local woodieStats = {
-							changeHealth =  true,
-							changeHunger =  true,
-							changeSanity =  true,
-							changeDamage =  false,
-							changeInsulation =  false,
+							--changeHealth =  true,
+							--changeHunger =  true,
+							--changeSanity =  true,
+							--changeDamage =  false,
+							--changeInsulation =  false,
 
 							levelNerf =  0,
 
@@ -766,17 +820,13 @@ local function balanceWoodieStats(inst)
 							InitialMaxHealth =  75,
 							InitialMaxHunger =  100,
 							InitialMaxSanity =  100,
-							InitialMaxDamage =  0,
-							InitialMaxInsulation =  0,
 
 							FinalMaxHealth =  175,
 							FinalMaxHunger =  200,
 							FinalMaxSanity =  175,
-							FinalMaxDamage =  0,
-							FinalMaxInsulation =  0,
 						}
 
-	addLevelingSystem(inst, woodieStats)
+	modifyStats(inst, woodieStats)
 	
 end
 
