@@ -232,21 +232,27 @@ if levelSetting > 0 and InitialMaxHealth or InitialMaxHunger or InitialMaxSanity
 		local health_percent = inst.components.health:GetPercent()
 		local sanity_percent = inst.components.sanity:GetPercent()
 		
+		
 		if InitialMaxHealth and FinalMaxHealth and upgrades and maxUpgrades then
 		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / maxUpgrades)		
 		end
+		
 		if InitialMaxHunger and FinalMaxHunger and upgrades and maxUpgrades then
 		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / maxUpgrades)
 		end
+		
 		if InitialMaxSanity and FinalMaxSanity and upgrades and maxUpgrades then
 		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / maxUpgrades)
 		end
+		
 		if InitialMaxDamage and FinalMaxDamage and upgrades and maxUpgrades then
 		inst.components.combat.damagemultiplier = math.ceil (InitialMaxDamage + upgrades * (FinalMaxDamage - InitialMaxDamage) / maxUpgrades)
 		end
+		
 		if InitialMaxInsulation and FinalMaxInsulation and upgrades and maxUpgrades then
 		inst.components.temperature.inherentinsulation = math.ceil (InitialMaxInsulation + upgrades * (FinalMaxInsulation - InitialMaxInsulation) / maxUpgrades)
 		end
+		
 		
 		inst.components.talker:Say("Level : ".. (inst.level))
 		
@@ -409,34 +415,23 @@ inst.components.characterspecific:SetOwner(inst.prefab)
 local function balanceCrashBandicootStats(inst)
 
 	local crashBandicootStats = {
-									--changeHealth =  true,
-									--changeHunger =  true,
-									--changeSanity =  true,
-									--changeDamage =  false,
-									--changeInsulation =  false,
-
 									levelNerf =  50,
 
-									--foodtypeLeveling =  false,
-									--foodType =  noType,
-
-									foodprefabLeveling =  true,
-									foodPrefab1 =  "wumpa",
-									foodPrefab2 =  "wumpa_cooked",
-									foodPrefab3 =  "carrot",
-									--foodPrefab4 =  noPrefab,
-									--foodPrefab5 =  noPrefab,
+									foodprefabLeveling = true,
+									foodPrefab1 = "wumpa",
+									foodPrefab2 = "wumpa_cooked",
+									foodPrefab3 = "carrot",
 									levelPerFood1 = 2,
 									levelPerFood2 = 2,
 									levelPerFood3 = 1,
 									
-									InitialMaxHealth =  75,
-									InitialMaxHunger =  75,
-									InitialMaxSanity =  100,
+									InitialMaxHealth = 75,
+									InitialMaxHunger = 75,
+									InitialMaxSanity = 100,
 
-									FinalMaxHealth =  100,
-									FinalMaxHunger =  125,
-									FinalMaxSanity =  150,
+									FinalMaxHealth = 100,
+									FinalMaxHunger = 125,
+									FinalMaxSanity = 150,
 								}
 
 	modifyStats(inst, crashBandicootStats)
@@ -449,9 +444,15 @@ end
 
 
 local function balanceDrokStats(inst)
-	inst.components.health:SetMaxHealth(175)
-	inst.components.hunger:SetMax(200)
-	inst.components.combat.damagemultiplier = 1.5
+
+	local drokStats =	{
+							health = 175,
+							hunger = 200,
+							damage = 1.5,
+						}
+	
+	modifyStats(inst, drokStats)
+	
 end
 
 
@@ -464,20 +465,20 @@ local function balanceEndiaStats(inst)
 						}
 						
 	modifyStats(inst, endiaStats)
-
-
---[[
-	inst.components.health:SetMaxHealth(75)
-	inst.components.hunger:SetMax(100)
-	inst.components.sanity:SetMax(75)
-	]]
+	
 end
 
 
 local function balanceFarozStats(inst)
-	inst.components.sanity.dapperness = -0.25
-	inst.components.sanity.night_drain_mult = 1.25
-	inst.components.sanity.neg_aura_mult = 1.25
+
+	local farozStats =	{
+							dapperness = -0.25,
+							nightDrain = 1.25,
+							monsterDrain = 1.25,
+						}
+						
+	modifyStats(inst, farozStats)
+	
 end
 
 local function balanceFarozGlasses(inst)
@@ -495,9 +496,15 @@ end
 
 
 local function balanceFreeSpiritStats(inst)
-	inst.components.health:SetMaxHealth(150)
-	inst.components.hunger:SetMax(100)
-	inst.components.sanity:SetMax(150)
+
+	local freeSpiritStats =	{
+								health = 150,
+								hunger = 100,
+								sanity = 150,
+							}
+	
+	modifyStats(inst, freeSpiritStats)
+	
 end
 
 
@@ -510,6 +517,7 @@ end
 
 
 local function balanceHaruzStats(inst)
+
 	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
 
 if levelSetting > 0 then
@@ -587,21 +595,27 @@ end
 
 
 local function balanceMadeleineStats(inst)
+
 	changeStartingInventory(inst, {"goldnugget", "redgem", "redgem", "bluegem", "bluegem", "purplegem"})
+
 end
 
 
 local function balanceMichaelTheFoxStats(inst)
-	inst.components.health:SetMaxHealth(75)
-	inst.components.hunger:SetMax(125)
-	inst.components.sanity:SetMax(75)
-	inst.components.combat.damagemultiplier = 0.75
-	inst.components.sanity.night_drain_mult = 1.25
-	inst.components.sanity.neg_aura_mult = 1.25
-	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
+
+	local michaelTheFoxStats =	{
+									health = 75,
+									hunger = 125,
+									sanity = 75,
+									damage = 0.75,
+									nightDrain = 1.25,
+									monsterDrain = 1.25,
+									dapperness = TUNING.DAPPERNESS_TINY*-1,
+								}
+
+	modifyStats(inst, michaelTheFoxStats)
 	inst:AddTag("insomniac")
-		--inst.components.locomotor.walkspeed = 1.0
-    	--inst.components.locomotor.runspeed = 1.5
+
 end
 
 
@@ -610,6 +624,7 @@ end
 
 
 local function balanceMitsuruStats(inst)
+
 	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
 
 if levelSetting > 0 then
@@ -690,7 +705,9 @@ end
 
 
 local function balanceSerasStats(inst)
+
 	changeStartingInventory(inst, {"smallmeat", "smallmeat"})
+	
 end
 
 
@@ -784,46 +801,42 @@ end
 
 
 local function balanceWarkStats(inst)
-	inst.components.health:SetMaxHealth(125)
-	inst.components.hunger:SetMax(150)
-	inst.components.combat.damagemultiplier = 0.8
+
+	local warkStats =	{
+							health = 125,
+							hunger = 150,
+							damage = 0.8,
+						}
+	
+	modifyStats(inst, warkStats)
+	
 end
 
 
 local function balanceWolfStats(inst)
+
 	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-0.75
+	
 end
 
 
 local function balanceWoodieStats(inst)
 
 	local woodieStats = {
-							--changeHealth =  true,
-							--changeHunger =  true,
-							--changeSanity =  true,
-							--changeDamage =  false,
-							--changeInsulation =  false,
 
 							levelNerf =  0,
 
-							--foodtypeLeveling =  false,
-							--foodType =  noType,
-
-							foodprefabLeveling =  true,
+							foodprefabLeveling = true,
 							foodPrefab1 =  "butterflymuffin",
-							--foodPrefab2 =  noPrefab,
-							--foodPrefab3 =  noPrefab,
-							--foodPrefab4 =  noPrefab,
-							--foodPrefab5 =  noPrefab,
 							levelPerFood1 = 1,
 								
-							InitialMaxHealth =  75,
-							InitialMaxHunger =  100,
-							InitialMaxSanity =  100,
+							InitialMaxHealth = 75,
+							InitialMaxHunger = 100,
+							InitialMaxSanity = 100,
 
-							FinalMaxHealth =  175,
-							FinalMaxHunger =  200,
-							FinalMaxSanity =  175,
+							FinalMaxHealth = 175,
+							FinalMaxHunger = 200,
+							FinalMaxSanity = 175,
 						}
 
 	modifyStats(inst, woodieStats)
