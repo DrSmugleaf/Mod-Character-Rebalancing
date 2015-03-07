@@ -1,7 +1,10 @@
 local require = GLOBAL.require
 local STRINGS = GLOBAL.STRINGS
 
-local enableStartingItems = GetModConfigData("ENABLE_STARTING_ITEMS") -- Load starting items config
+--------------------------------
+-- Load Starting Items config --
+--------------------------------
+local enableStartingItems = GetModConfigData("ENABLE_STARTING_ITEMS")
 	local amountOfFlint = GetModConfigData("AMOUNT_OF_FLINT")
 	local amountOfGrass = GetModConfigData("AMOUNT_OF_GRASS")
 	local amountOfLogs = GetModConfigData("AMOUNT_OF_LOGS")
@@ -11,7 +14,11 @@ local enableStartingItems = GetModConfigData("ENABLE_STARTING_ITEMS") -- Load st
 	
 	local startingItems = {}
 	
-local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED") -- Load mod balancing config
+	
+-------------------------------------
+-- Load Character Balancing config --
+-------------------------------------
+local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED")
 	local crashBandicootBalanced = GetModConfigData("CRASHBANDICOOT_BALANCED")
 	local darkSakuraBalanced = GetModConfigData("DARKSAKURA_BALANCED")
 	--local devonBalanced = GetModConfigData("DEVON_BALANCED")
@@ -39,57 +46,82 @@ local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED") -- Load mo
 	local wolfBalanced = GetModConfigData("WOLF_BALANCED")
 	local woodieBalanced = GetModConfigData("WOODIE_BALANCED")
 	--local zimBalanced = GetModConfigData("ZIM_BALANCED")
+	
+-------------------------------------------------------------------------
+-- Load Leveling System config and assign base max levels difficulties --
+-------------------------------------------------------------------------
 local levelSetting = GetModConfigData("LEVEL_SETTING")
-	if levelSetting == 0 then
-	elseif levelSetting == 1 then
-		levelDifficulty = 30
-	elseif levelSetting == 2 then
-		levelDifficulty = 50
-	elseif levelSetting == 3 then
-		levelDifficulty = 75
-	elseif levelSetting == 4 then
-		levelDifficulty = 100
+
+if levelSetting then
+
+	if levelSetting == 1 then levelDifficulty = 30
+	
+	elseif levelSetting == 2 then levelDifficulty = 50
+		
+	elseif levelSetting == 3 then levelDifficulty = 75
+		
+	elseif levelSetting == 4 then levelDifficulty = 100
+	
 	end
+	
+end
+	
+-------------------------------
+-- Load Special Modes config --
+-------------------------------
 local nerfSpeed = GetModConfigData("NERF_SPEED")
 local hardcoreMode = GetModConfigData("HARDCORE_MODE")
 
+
+--------------------------------------------------------------
+-- Printing to console functions with mod name and prefixes --
+--------------------------------------------------------------
 local function printDebug(message)
-
+	
+	if message then
 	print("[Mod Character Rebalancing] [DEBUG]".. (message))
+	end
 	
 end
-
 local function printError(message)
-
+	
+	if message then
 	print("[Mod Character Rebalancing] [ERROR]".. (message))
+	end
 	
 end
-
 local function printFatal(message)
-
+	
+	if message then
 	print("[Mod Character Rebalancing] [FATAL]".. (message))
+	end
 	
 end
-
 local function printInfo(message)
-
+	
+	if message then
 	print("[Mod Character Balancing] [INFO] ".. (message))
+	end
 	
 end
-
 local function printWarn(message)
 
+	if message then
 	print("[Mod Character Rebalancing] [WARN]".. (message))
+	end
 	
 end
 
 
-if enableStartingItems == 1 then -- Starting Items' config loading
+----------------------------------------------------
+-- Check config settings and add items to a table --
+----------------------------------------------------
+if enableStartingItems == 1 then -- If starting items is enabled
 	
 	printInfo("Starting Items enabled")
 	
-	for _= 1, amountOfFlint do
-		table.insert(startingItems, "flint")
+	for _= 1, amountOfFlint do -- For the amount of flint specified in the config
+		table.insert(startingItems, "flint") -- Insert it into the table "startingItems"
 	end
 	for _= 1, amountOfGrass do
 		table.insert(startingItems, "cutgrass")
@@ -105,217 +137,259 @@ if enableStartingItems == 1 then -- Starting Items' config loading
 	end
 	
 	if giveThermalStone == 1 then
-	table.insert(startingItems, "heatrock")
+		table.insert(startingItems, "heatrock")
 	end
 	
 else
+	
 	printInfo("Starting Items disabled")
+	
 end
 
 
-AddPlayerPostInit(function(inst) -- Starting Items' item spawning
-    if inst.OnNewSpawn then
+--------------------------------------------------
+-- Put starting items in the player's inventory --
+--------------------------------------------------
+AddPlayerPostInit(function(inst) -- Add to every player
+
+    if inst.OnNewSpawn then -- Store old function
         inst.old_OnNewSpawn = inst.OnNewSpawn
     end
      
-    inst.OnNewSpawn = function(inst)
+    inst.OnNewSpawn = function(inst) -- On spawn, do the following function
+	
         if inst.components.inventory ~= nil then
+		
             inst.components.inventory.ignoresound = true
-            for i, v in ipairs(startingItems) do
-                inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v))
+            for i, v in ipairs(startingItems) do -- For each value inserted above into the table
+                inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give that amount of items to the player
             end
             inst.components.inventory.ignoresound = false
+			
         end
+		
         if inst.old_OnNewSpawn then
+		
             return inst:old_OnNewSpawn(inst)
+			
         end
     end
 end)
 
 
-local function changeStartingInventory(inst, start_inv) -- Change a character's inventory
+--------------------------------------------------
+-- Delete and add items to a player's inventory --
+--------------------------------------------------
+local function changeStartingInventory(inst, start_inv)
+
 	local oldSpawn = inst.OnNewSpawn
 	start_inv = start_inv or {}
-	for _,v in pairs(startingItems) do -- Load starting items since this deletes inventories
+	
+	for _,v in pairs(startingItems) do -- Load starting items too since this deletes inventories
 		table.insert(start_inv, v)
 	end
+	
 	inst.OnNewSpawn = function()
+	
 	if oldSpawn ~= nil then oldSpawn() end
+	
 	if inst.components.inventory ~= nil then
 		inst.components.inventory.ignoresound = true
+		
 		for i = 1, inst.components.inventory:GetNumSlots() do
 			inst.components.inventory:RemoveItemBySlot(i) -- Remove all items
 		end
+		
 		for _, v in ipairs(start_inv) do
 			inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give new items
 		end
+		
 		inst.components.inventory.ignoresound = false
 	end
+	
 	end
+	
 end
 
 
-local function modifyPrefab(inst, stats)
+--local function modifyPrefab(inst, stats)
 
-end
+--end
 
+
+-----------------------------------------------------------------------
+-- Add a leveling system to a character or plainly modify it's stats --
+-----------------------------------------------------------------------
 local function modifyStats(inst, stats)
 
---[[Parameters to use:
+	--[[Parameters to use:
 
-local levelNerf = 
+	local levelNerf = 
 
 
-	local foodType = 
-OR
-	local foodPrefab1 = 
-	local foodPrefab2 = 
-	local foodPrefab3 = 
-	local foodPrefab4 = 
-	local foodPrefab5 = 
-		local levelPerFood1 = 
-		local levelPerFood2 = 
-		local levelPerFood3 = 
-		local levelPerFood4 = 
-		local levelPerFood5 = 
-OR
-	local function newEat(inst, food)
-		oldEat(inst, food)
-	if food and food.components.edible and food.components.edible.foodtype=="MEAT" then
-		newUpg(inst)
+		local foodType = 
+	OR
+		local foodPrefab1 = 
+		local foodPrefab2 = 
+		local foodPrefab3 = 
+		local foodPrefab4 = 
+		local foodPrefab5 = 
+			local levelPerFood1 = 
+			local levelPerFood2 = 
+			local levelPerFood3 = 
+			local levelPerFood4 = 
+			local levelPerFood5 = 
+	OR
+		local function newEat(inst, food)
+			oldEat(inst, food)
+		if food and food.components.edible and food.components.edible.foodtype=="MEAT" then
+			newUpg(inst)
+		end
+		end
+
+	local InitialMaxHealth = 
+	local InitialMaxHunger = 
+	local InitialMaxSanity = 
+	local InitialMaxDamage = 
+	local InitialMaxInsulation = 
+
+	local FinalMaxHealth = 
+	local FinalMaxHunger = 
+	local FinalMaxSanity = 
+	local FinalMaxDamage = 
+	local FinalMaxInsulation = 
+	]]
+	
+	-- Load the given stats
+	local health = stats.health
+	local hunger = stats.hunger
+	local sanity = stats.sanity
+	local damage = stats.damage
+	local insulation = stats.insulation
+	local walkSpeed = stats.walkSpeed
+	local runSpeed = stats.runSpeed
+	local dapperness = stats.dapperness
+	local nightDrain = stats.nightDrain
+	local monsterDrain = stats.monsterDrain
+	local strongStomach = stats.strongStomach
+	local hungerRate = stats.hungerRate
+
+	local levelNerf = stats.levelNerf
+
+		local foodType = stats.foodType
+
+		local foodPrefab1 = stats.foodPrefab1
+		local foodPrefab2 = stats.foodPrefab2
+		local foodPrefab3 = stats.foodPrefab3
+		local foodPrefab4 = stats.foodPrefab4
+		local foodPrefab5 = stats.foodPrefab5
+			local levelPerFood1 = stats.levelPerFood1
+			local levelPerFood2 = stats.levelPerFood2
+			local levelPerFood3 = stats.levelPerFood3
+			local levelPerFood4 = stats.levelPerFood4
+			local levelPerFood5 = stats.levelPerFood5
+
+	local InitialMaxHealth = stats.InitialMaxHealth
+	local InitialMaxHunger = stats.InitialMaxHunger
+	local InitialMaxSanity = stats.InitialMaxSanity
+	local InitialMaxDamage = stats.InitialMaxDamage
+	local InitialMaxInsulation = stats.InitialMaxInsulation
+	if nerfSpeed == 0 then
+		InitialMaxWalkSpeed = stats.InitialMaxWalkSpeed
+		InitialMaxRunSpeed = stats.InitialMaxRunSpeed
+	elseif nerfSpeed == 1 then
+		InitialMaxWalkSpeed = stats.InitialMaxWalkSpeedHardcore
+		InitialMaxRunSpeed = stats.InitialMaxRunSpeedHardcore
 	end
+
+	local FinalMaxHealth = stats.FinalMaxHealth
+	local FinalMaxHunger = stats.FinalMaxHunger
+	local FinalMaxSanity = stats.FinalMaxSanity
+	local FinalMaxDamage = stats.FinalMaxDamage
+	local FinalMaxInsulation = stats.FinalMaxInsulation
+	if nerfSpeed == 0 then
+		FinalMaxWalkSpeed = stats.FinalMaxWalkSpeed
+		FinalMaxRunSpeed = stats.FinalMaxRunSpeed
+	elseif nerfSpeed == 1 then
+		FinalMaxWalkSpeed = stats.FinalMaxWalkSpeedHardcore
+		FinalMaxRunSpeed = stats.FinalMaxRunSpeedHardcore
 	end
-
-local InitialMaxHealth = 
-local InitialMaxHunger = 
-local InitialMaxSanity = 
-local InitialMaxDamage = 
-local InitialMaxInsulation = 
-
-local FinalMaxHealth = 
-local FinalMaxHunger = 
-local FinalMaxSanity = 
-local FinalMaxDamage = 
-local FinalMaxInsulation = 
-]]
-
-
---[[local changeHealth = stats.changeHealth
-local changeHunger = stats.changeHunger
-local changeSanity = stats.changeSanity
-local changeDamage = stats.changeDamage
-local changeInsulation = stats.changeInsulation]]
-
-local health = stats.health
-local hunger = stats.hunger
-local sanity = stats.sanity
-local damage = stats.damage
-local insulation = stats.insulation
-local walkSpeed = stats.walkSpeed
-local runSpeed = stats.runSpeed
-local dapperness = stats.dapperness
-local nightDrain = stats.nightDrain
-local monsterDrain = stats.monsterDrain
-local strongStomach = stats.strongStomach
-local hungerRate = stats.hungerRate
-
-local levelNerf = stats.levelNerf
-
-local foodtypeLeveling = stats.foodtypeLeveling
-	local foodType = stats.foodType
-
-local foodprefabLeveling = stats.foodprefabLeveling
-	local foodPrefab1 = stats.foodPrefab1
-	local foodPrefab2 = stats.foodPrefab2
-	local foodPrefab3 = stats.foodPrefab3
-	local foodPrefab4 = stats.foodPrefab4
-	local foodPrefab5 = stats.foodPrefab5
-		local levelPerFood1 = stats.levelPerFood1
-		local levelPerFood2 = stats.levelPerFood2
-		local levelPerFood3 = stats.levelPerFood3
-		local levelPerFood4 = stats.levelPerFood4
-		local levelPerFood5 = stats.levelPerFood5
-
-local InitialMaxHealth = stats.InitialMaxHealth
-local InitialMaxHunger = stats.InitialMaxHunger
-local InitialMaxSanity = stats.InitialMaxSanity
-local InitialMaxDamage = stats.InitialMaxDamage
-local InitialMaxInsulation = stats.InitialMaxInsulation
-
-local FinalMaxHealth = stats.FinalMaxHealth
-local FinalMaxHunger = stats.FinalMaxHunger
-local FinalMaxSanity = stats.FinalMaxSanity
-local FinalMaxDamage = stats.FinalMaxDamage
-local FinalMaxInsulation = stats.FinalMaxInsulation
-
-if levelSetting > 0 and InitialMaxHealth or InitialMaxHunger or InitialMaxSanity or InitialMaxDamage or InitialMaxInsulation then
+	if not InitialMaxWalkSpeed then InitialMaxWalkSpeed = stats.InitialMaxWalkSpeed end
+	if not InitialMaxRunSpeed then InitialMaxRunSpeed = stats.InitialMaxRunSpeed end
+	if not FinalMaxWalkSpeed then FinalMaxWalkSpeed = stats.FinalMaxWalkSpeed end
+	if not FinalMaxRunSpeed then FinalMaxRunSpeed = stats.FinalMaxRunSpeed end
 	
-	if not levelNerf then
-		levelNerf = 0
-	end
-	
-	maxUpgrades = levelDifficulty+levelNerf
-	
-	function applyUpgrades(inst)
+	if levelSetting > 0 and InitialMaxHealth or InitialMaxHunger or InitialMaxSanity or InitialMaxDamage or InitialMaxInsulation then
+		
+		if not levelNerf then
+			levelNerf = 0
+		end
+		
+		maxUpgrades = levelDifficulty+levelNerf
+		
+		function applyUpgrades(inst)
 
-		local upgrades = math.min(inst.level, maxUpgrades)
- 
-		local hunger_percent = inst.components.hunger:GetPercent()
-		local health_percent = inst.components.health:GetPercent()
-		local sanity_percent = inst.components.sanity:GetPercent()
-		
-		
-		if InitialMaxHealth and FinalMaxHealth and upgrades and maxUpgrades then
-		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / maxUpgrades)		
-		end
-		
-		if InitialMaxHunger and FinalMaxHunger and upgrades and maxUpgrades then
-		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / maxUpgrades)
-		end
-		
-		if InitialMaxSanity and FinalMaxSanity and upgrades and maxUpgrades then
-		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / maxUpgrades)
-		end
-		
-		if InitialMaxDamage and FinalMaxDamage and upgrades and maxUpgrades then
-		inst.components.combat.damagemultiplier = math.ceil (InitialMaxDamage + upgrades * (FinalMaxDamage - InitialMaxDamage) / maxUpgrades)
-		end
-		
-		if InitialMaxInsulation and FinalMaxInsulation and upgrades and maxUpgrades then
-		inst.components.temperature.inherentinsulation = math.ceil (InitialMaxInsulation + upgrades * (FinalMaxInsulation - InitialMaxInsulation) / maxUpgrades)
-		end
-		
-		
-		inst.components.talker:Say("Level : ".. (inst.level))
-		
-		if inst.level > math.ceil (maxUpgrades-1) then
-			inst.components.talker:Say("Level : Max!")
-		end
-	
-		inst.components.hunger:SetPercent(hunger_percent)
-		inst.components.health:SetPercent(health_percent)
-		inst.components.sanity:SetPercent(sanity_percent)
-	end
-	
-	--[[
-	if foodType then
-		local function oneat(inst, food)
-			if food and food.components.edible and food.components.edible.foodtype=="foodType" then
-				inst.level = inst.level + 1
-				applyUpgrades(inst)
-				inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+			local upgrades = math.min(inst.level, maxUpgrades)
+	 
+			local hunger_percent = inst.components.hunger:GetPercent()
+			local health_percent = inst.components.health:GetPercent()
+			local sanity_percent = inst.components.sanity:GetPercent()
+			
+			
+			if InitialMaxHealth and FinalMaxHealth and upgrades and maxUpgrades then
+			inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / maxUpgrades)		
 			end
+			
+			if InitialMaxHunger and FinalMaxHunger and upgrades and maxUpgrades then
+			inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / maxUpgrades)
+			end
+			
+			if InitialMaxSanity and FinalMaxSanity and upgrades and maxUpgrades then
+			inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / maxUpgrades)
+			end
+			
+			if InitialMaxDamage and FinalMaxDamage and upgrades and maxUpgrades then
+			inst.components.combat.damagemultiplier = math.ceil (InitialMaxDamage + upgrades * (FinalMaxDamage - InitialMaxDamage) / maxUpgrades)
+			end
+			
+			if InitialMaxInsulation and FinalMaxInsulation and upgrades and maxUpgrades then
+			inst.components.temperature.inherentinsulation = math.ceil (InitialMaxInsulation + upgrades * (FinalMaxInsulation - InitialMaxInsulation) / maxUpgrades)
+			end
+			
+			if InitialMaxWalkSpeed and FinalMaxWalkSpeed and InitialMaxRunSpeed and FinalMaxRunSpeed and upgrades and maxUpgrades then
+			inst.components.locomotor.walkspeed =  math.ceil (TUNING.WILSON_WALK_SPEED * (InitialMaxWalkSpeed + upgrades * (FinalMaxWalkSpeed - InitialMaxWalkSpeed) / maxUpgrades))
+			inst.components.locomotor.runspeed = math.ceil (TUNING.WILSON_RUN_SPEED * (InitialMaxRunSpeed + upgrades * (FinalMaxRunSpeed - InitialMaxRunSpeed) / maxUpgrades))
+			end
+			
+			inst.components.talker:Say("Level : ".. (inst.level))
+			
+			if inst.level > math.ceil (maxUpgrades-1) then
+				inst.components.talker:Say("Level : Max!")
+			end
+			
+			inst.components.hunger:SetPercent(hunger_percent)
+			inst.components.health:SetPercent(health_percent)
+			inst.components.sanity:SetPercent(sanity_percent)
 		end
-	end]]
-	
-	--local oneat
-	--if foodPrefab1 and levelPerFood1 then
-		function oneat(inst, food)
-			if foodPrefab1 and levelPerFood1 then
-				if food and food.components.edible and food.prefab == foodPrefab1 then --or food.prefab == foodPrefab2.prefab or food.prefab == foodPrefab3.prefab or food.prefab == foodPrefab4.prefab or food.prefab == foodPrefab5.prefab then
-					inst.level = inst.level + levelPerFood1
+		
+		if foodType then
+			local function oneat(inst, food)
+			
+				if food and food.components.edible and food.components.edible.foodtype=="foodType" then
+					inst.level = inst.level + 1
 					applyUpgrades(inst)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+				end
+				
+			end
+		end
+		
+		function oneat(inst, food)
+			if foodPrefab1 and levelPerFood1 then -- If the variables exist
+				if food and food.components.edible and food.prefab == foodPrefab1 then -- If its a food, edible and has the specified prefab
+					inst.level = inst.level + levelPerFood1 -- Level up according to the variable levelPerFood
+					applyUpgrades(inst) -- Set the stats
+					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup") -- Play a sound
 				end
 			end
 			if foodPrefab2 and levelPerFood2 then
@@ -347,111 +421,130 @@ if levelSetting > 0 and InitialMaxHealth or InitialMaxHunger or InitialMaxSanity
 				end
 			end
 		end
-	--end
-
-	
-	local function onpreload(inst, data)
-		if data then
-			if data.level then
-				inst.level = data.level
-				applyUpgrades(inst)
-				if data.health and data.health.health then inst.components.health.currenthealth = data.health.health end
-				if data.hunger and data.hunger.hunger then inst.components.hunger.current = data.hunger.hunger end
-				if data.sanity and data.sanity.current then inst.components.sanity.current = data.sanity.current end
-				inst.components.health:DoDelta(0)
-				inst.components.hunger:DoDelta(0)
-				inst.components.sanity:DoDelta(0)
+			
+		local function onpreload(inst, data)
+			if data then
+				if data.level then
+					inst.level = data.level
+					applyUpgrades(inst)
+					if data.health and data.health.health then inst.components.health.currenthealth = data.health.health end
+					if data.hunger and data.hunger.hunger then inst.components.hunger.current = data.hunger.hunger end
+					if data.sanity and data.sanity.current then inst.components.sanity.current = data.sanity.current end
+					inst.components.health:DoDelta(0)
+					inst.components.hunger:DoDelta(0)
+					inst.components.sanity:DoDelta(0)
+				end
 			end
 		end
-	end
-	
-	local function onsave(inst, data)
-		data.level = inst.level
-		data.charge_time = inst.charge_time
-	end
-	
-	inst.level = 0
-	inst.components.eater:SetOnEatFn(oneat)
-	applyUpgrades(inst)
 		
-	inst.OnSave = onsave
-	inst.OnPreLoad = onpreload
-	
-else
+		local function onsave(inst, data)
+			data.level = inst.level
+			data.charge_time = inst.charge_time
+		end
+		
+		inst.level = 0
+		inst.components.eater:SetOnEatFn(oneat)
+		applyUpgrades(inst)
+			
+		inst.OnSave = onsave
+		inst.OnPreLoad = onpreload
+		
+	else
 
-	if health then
-		inst.components.health:SetMaxHealth(health)
+		if health then
+			inst.components.health:SetMaxHealth(health)
+		end
+		
+		if hunger then
+			inst.components.hunger:SetMax(hunger)
+		end
+		
+		if sanity then
+			inst.components.sanity:SetMax(sanity)
+		end
+		
+		if damage then
+			inst.components.combat.damagemultiplier = damage
+		end
+		
+		if insulation then
+			inst.components.temperature.inherentinsulation = insulation
+		end
+		
+		if walkSpeed and runSpeed then
+			inst.components.locomotor.walkspeed = TUNING.WILSON_WALK_SPEED * walkSpeed
+			inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED * runSpeed
+		end
+		
+		if dapperness then
+			inst.components.sanity.dapperness = dapperness
+		end
+		
+		if nightDrain then
+			inst.components.sanity.night_drain_mult = nightDrain
+		end
+		
+		if monsterDrain then
+			inst.components.sanity.neg_aura_mult = monsterDrain
+		end
+		
+		if strongStomach then
+			inst.components.eater.strongstomach = strongStomach
+		end
+		
+		if hungerRate then
+			inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE * hungerRate)
+		end
+		
 	end
-	if hunger then
-		inst.components.hunger:SetMax(hunger)
-	end
-	if sanity then
-		inst.components.sanity:SetMax(sanity)
-	end
-	if damage then
-		inst.components.combat.damagemultiplier = damage
-	end
-	if insulation then
-		inst.components.temperature.inherentinsulation = insulation
-	end
-	if walkSpeed and runSpeed then
-		inst.components.locomotor.walkspeed = walkSpeed
-		inst.components.locomotor.runspeed = runSpeed
-	end
-	if dapperness then
-		inst.components.sanity.dapperness = dapperness
-	end
-	if nightDrain then
-		inst.components.sanity.night_drain_mult = nightDrain
-	end
-	if monsterDrain then
-		inst.components.sanity.neg_aura_mult = monsterDrain
-	end
-	if strongStomach then
-		inst.components.eater.strongstomach = strongStomach
-	end
-	if hungerRate then
-		inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE * hungerRate)
-	end
-	
-end
 end
 
-AddComponentPostInit("inventory", function(self)
+
+--------------------------------------------------------------------------------
+-- Component to make certain items undroppable when given the tag undroppable --
+--------------------------------------------------------------------------------
+AddComponentPostInit("inventory", function(self) -- Add the function to the component inventory
 	local DropItem_base = self.DropItem
 	function self:DropItem(item, ...)
-		if item:HasTag("undroppable") then
-			return false
+		if item:HasTag("undroppable") then -- Check for the tag
+			return false -- Can't be dropped
 		else
 			return DropItem_base(self, item, ...)
 		end
 	end
 end)
 
+
+------------------------------------------------
+-- Component to make items character specific --
+------------------------------------------------
 AddComponentPostInit("inventory", function(self)
-	local old_Equip = self.Equip -- store old function
+	local old_Equip = self.Equip -- Store old function
 	function self:Equip(item, ...)
-		-- checks if item is character specific, and if the player isn't the owner, make it say so.
+		-- Checks if item is character specific, and if the player isn't the owner, make it say so
 		if item.components.characterspecific and item.components.characterspecific.character ~= self.inst.prefab then
 			self.inst.components.talker:Say("This isn't mine")
 			self:DropItem(item)
-			return false -- prevents item from being got
+			return false -- Prevents item from being obtained
 		end
-		return old_Equip(self, item, ...) -- normal function execution
+		return old_Equip(self, item, ...) -- Normal function execution
 	end
 end)
 --[[Add the characterspecific component to the items:
 inst:AddComponent("characterspecific")
 inst.components.characterspecific:SetOwner(inst.prefab)
-
 ]]
 
+
+-----------------------------------------------------
+-- Make functions to change each character's stats --
+-----------------------------------------------------
 local function balanceCrashBandicootStats(inst)
 
 	local crashBandicootStats = {
-									levelNerf =  50,
-
-									foodprefabLeveling = true,
+									levelNerf = 50,
+									levelNerfHardcore = 250,
+									
 									foodPrefab1 = "wumpa",
 									foodPrefab2 = "wumpa_cooked",
 									foodPrefab3 = "carrot",
@@ -462,12 +555,16 @@ local function balanceCrashBandicootStats(inst)
 									InitialMaxHealth = 75,
 									InitialMaxHunger = 75,
 									InitialMaxSanity = 100,
-
+									InitialMaxWalkSpeedHardcore = 0.5,
+									InitialMaxRunSpeedHardcore = 0.5,
+									
 									FinalMaxHealth = 100,
 									FinalMaxHunger = 125,
 									FinalMaxSanity = 150,
+									FinalMaxWalkSpeedHardcore = 0.5,
+									FinalMaxRunSpeedHardcore = 0.5,
 								}
-								
+	
 	modifyStats(inst, crashBandicootStats)
 	
 end
@@ -826,9 +923,6 @@ if levelSetting > 0 then
 		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / max_upgrades)
 		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / max_upgrades)
 		
-		inst.components.locomotor.walkspeed =  math.ceil (4 - upgrades / 7)
-		inst.components.locomotor.runspeed = math.ceil (6 - upgrades / 6)
-		
 		inst.components.talker:Say("Level : ".. (inst.level))
 		if inst.level > math.ceil (max_upgrades-1) then
 			inst.components.talker:Say("Level : Max!")
@@ -894,7 +988,6 @@ local function balanceWoodieStats(inst)
 
 							levelNerf =  0,
 
-							foodprefabLeveling = true,
 							foodPrefab1 =  "butterflymuffin",
 							levelPerFood1 = 1,
 								
@@ -926,9 +1019,10 @@ end]]
 
 
 --if not GLOBAL.TheNet:GetIsClient() then
-
--- Replace with a function
-if modBalancingEnabled == 1 then
+---------------------------------------------------------------------------------
+-- Add the previously set functions to each character or character item prefab --
+---------------------------------------------------------------------------------
+if modBalancingEnabled == 1 then -- TODO: Replace with a function
 	
 	printInfo("Mod Balancing enabled")
 		
@@ -1184,5 +1278,4 @@ if modBalancingEnabled == 1 then
 	
 	printInfo("Mod Balancing disabled")
 	
-	end
-	
+end
