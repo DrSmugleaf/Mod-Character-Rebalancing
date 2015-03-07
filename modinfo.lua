@@ -230,6 +230,18 @@ configuration_options =
 		default = 1,
 	},
 	
+	{
+		name = "DARKSAKURA_BALANCED",
+		label = "Dark Sakura",
+		hover = "Balance Dark Sakura Matou",
+		options =	{
+						{description = "Balanced", data = 1},
+						{description = "Ignored", data = 0},
+					},
+
+		default = 1,
+	},
+	
 	--[[{
 		name = "DEVON_BALANCED",
 		label = "Devon",
@@ -350,7 +362,7 @@ configuration_options =
 		default = 1,
 	},]]
 	
-	--[[{
+	{
 		name = "LUFFY_BALANCED",
 		label = "Luffy",
 		hover = "Balance Luffy",
@@ -360,7 +372,7 @@ configuration_options =
 					},
 
 		default = 1,
-	},]]
+	},
 	
 	{
 		name = "MADELEINE_BALANCED",
@@ -386,7 +398,7 @@ configuration_options =
 		default = 1,
 	},
 	
-	--[[{
+	{
 		name = "MIKUHATSUNE_BALANCED",
 		label = "Miku Hatsune",
 		hover = "Balance Miku Hatsune",
@@ -396,7 +408,7 @@ configuration_options =
 					},
 
 		default = 1,
-	},]]
+	},
 	
 	{
 		name = "MITSURU_BALANCED",

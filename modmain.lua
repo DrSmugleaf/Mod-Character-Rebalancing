@@ -13,6 +13,7 @@ local enableStartingItems = GetModConfigData("ENABLE_STARTING_ITEMS") -- Load st
 	
 local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED") -- Load mod balancing config
 	local crashBandicootBalanced = GetModConfigData("CRASHBANDICOOT_BALANCED")
+	local darkSakuraBalanced = GetModConfigData("DARKSAKURA_BALANCED")
 	--local devonBalanced = GetModConfigData("DEVON_BALANCED")
 	local drokBalanced = GetModConfigData("DROK_BALANCED")
 	local endiaBalanced = GetModConfigData("ENDIA_BALANCED")
@@ -23,10 +24,10 @@ local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED") -- Load mo
 	--local girBalanced = GetModConfigData("GIR_BALANCED")
 	local haruzBalanced = GetModConfigData("HARUZ_BALANCED")
 	--local hellaMerdurialBalanced = GetModConfigData("HELLAMERDURIAL_BALANCED")
-	--local luffyBalanced = GetModConfigData("LUFFY_BALANCED")
+	local luffyBalanced = GetModConfigData("LUFFY_BALANCED")
 	local madeleineBalanced = GetModConfigData("MADELEINE_BALANCED")
 	local michaelTheFoxBalanced = GetModConfigData("MICHAELTHEFOX_BALANCED")
-	--local mikuHatsuneBalanced = GetModConfigData("MIKUHATSUNE_BALANCED")
+	local mikuHatsuneBalanced = GetModConfigData("MIKUHATSUNE_BALANCED")
 	local mitsuruBalanced = GetModConfigData("MITSURU_BALANCED")
 	--local neptuniaBalanced = GetModConfigData("NEPTUNIA_BALANCED")
 	local serasBalanced = GetModConfigData("SERAS_BALANCED")
@@ -52,9 +53,40 @@ local levelSetting = GetModConfigData("LEVEL_SETTING")
 local nerfSpeed = GetModConfigData("NERF_SPEED")
 local hardcoreMode = GetModConfigData("HARDCORE_MODE")
 
+local function printDebug(message)
+
+	print("[Mod Character Rebalancing] [DEBUG]".. (message))
+	
+end
+
+local function printError(message)
+
+	print("[Mod Character Rebalancing] [ERROR]".. (message))
+	
+end
+
+local function printFatal(message)
+
+	print("[Mod Character Rebalancing] [FATAL]".. (message))
+	
+end
+
+local function printInfo(message)
+
+	print("[Mod Character Balancing] [INFO] ".. (message))
+	
+end
+
+local function printWarn(message)
+
+	print("[Mod Character Rebalancing] [WARN]".. (message))
+	
+end
+
+
 if enableStartingItems == 1 then -- Starting Items' config loading
 	
-	print("Starting Items enabled")
+	printInfo("Starting Items enabled")
 	
 	for _= 1, amountOfFlint do
 		table.insert(startingItems, "flint")
@@ -77,7 +109,7 @@ if enableStartingItems == 1 then -- Starting Items' config loading
 	end
 	
 else
-	print("Starting Items disabled")
+	printInfo("Starting Items disabled")
 end
 
 
@@ -127,7 +159,6 @@ local function modifyPrefab(inst, stats)
 
 end
 
-
 local function modifyStats(inst, stats)
 
 --[[Parameters to use:
@@ -158,13 +189,13 @@ OR
 local InitialMaxHealth = 
 local InitialMaxHunger = 
 local InitialMaxSanity = 
---local InitialMaxDamage = 
+local InitialMaxDamage = 
 local InitialMaxInsulation = 
 
 local FinalMaxHealth = 
 local FinalMaxHunger = 
 local FinalMaxSanity = 
---local FinalMaxDamage = 
+local FinalMaxDamage = 
 local FinalMaxInsulation = 
 ]]
 
@@ -186,6 +217,7 @@ local dapperness = stats.dapperness
 local nightDrain = stats.nightDrain
 local monsterDrain = stats.monsterDrain
 local strongStomach = stats.strongStomach
+local hungerRate = stats.hungerRate
 
 local levelNerf = stats.levelNerf
 
@@ -222,7 +254,7 @@ if levelSetting > 0 and InitialMaxHealth or InitialMaxHunger or InitialMaxSanity
 		levelNerf = 0
 	end
 	
-	maxUpgrades = levelSetting+levelNerf
+	maxUpgrades = levelDifficulty+levelNerf
 	
 	function applyUpgrades(inst)
 
@@ -378,7 +410,9 @@ else
 	if strongStomach then
 		inst.components.eater.strongstomach = strongStomach
 	end
-	
+	if hungerRate then
+		inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE * hungerRate)
+	end
 	
 end
 end
@@ -409,8 +443,8 @@ end)
 --[[Add the characterspecific component to the items:
 inst:AddComponent("characterspecific")
 inst.components.characterspecific:SetOwner(inst.prefab)
-]]
 
+]]
 
 local function balanceCrashBandicootStats(inst)
 
@@ -433,9 +467,21 @@ local function balanceCrashBandicootStats(inst)
 									FinalMaxHunger = 125,
 									FinalMaxSanity = 150,
 								}
-
+								
 	modifyStats(inst, crashBandicootStats)
 	
+end
+
+
+local function balanceDarkSakuraStats(inst)
+
+	local darkSakuraStats =	{
+								health = 75,
+								hunger = 100,
+							}
+
+	modifyStats(inst, darkSakuraStats)
+
 end
 
 
@@ -542,7 +588,7 @@ if levelSetting > 0 then
 			
 	local function newUpg(inst)
 
-		max_upgrades = levelSetting+levelNerf
+		max_upgrades = levelDifficulty+levelNerf
 		
 		local upgrades = math.min(inst.level, max_upgrades)
  
@@ -590,8 +636,17 @@ end
 --end
 
 
---local function balanceLuffyStats(inst)
---end
+local function balanceLuffyStats(inst)
+
+	local luffyStats =	{
+							health = 100,
+							sanity = 100,
+							hungerRate = 2.0,
+						}
+						
+	modifyStats(inst, luffyStats)
+
+end
 
 
 local function balanceMadeleineStats(inst)
@@ -619,8 +674,18 @@ local function balanceMichaelTheFoxStats(inst)
 end
 
 
---local function balanceMikuHatsuneStats(inst)
---end
+local function balanceMikuHatsuneStats(inst)
+
+	local mikuHatsuneStats =	{
+									health = 100,
+									hunger = 100,
+									sanity = 100,
+									damage = 0.75,
+								}
+								
+	modifyStats(inst, mikuHatsuneStats)
+
+end
 
 
 local function balanceMitsuruStats(inst)
@@ -652,7 +717,7 @@ if levelSetting > 0 then
 	
 	local function newUpg(inst)
 	
-		max_upgrades = levelSetting+levelNerf
+		max_upgrades = levelDifficulty+levelNerf
 			
 		local upgrades = math.min(inst.level, max_upgrades)
  
@@ -748,7 +813,7 @@ if levelSetting > 0 then
 	
 	local function newUpg(inst)
 
-		max_upgrades = levelSetting+levelNerf
+		max_upgrades = levelDifficulty+levelNerf
 		
 		local upgrades = math.min(inst.level, max_upgrades)
  
@@ -760,6 +825,9 @@ if levelSetting > 0 then
 		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / max_upgrades)		
 		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / max_upgrades)
 		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / max_upgrades)
+		
+		inst.components.locomotor.walkspeed =  math.ceil (4 - upgrades / 7)
+		inst.components.locomotor.runspeed = math.ceil (6 - upgrades / 6)
 		
 		inst.components.talker:Say("Level : ".. (inst.level))
 		if inst.level > math.ceil (max_upgrades-1) then
@@ -859,249 +927,262 @@ end]]
 
 --if not GLOBAL.TheNet:GetIsClient() then
 
-	if modBalancingEnabled == 1 then
-		print("Mod Balancing enabled")
+-- Replace with a function
+if modBalancingEnabled == 1 then
 	
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-382501575") then
-			if crashBandicootBalanced == 1 then
-				AddPrefabPostInit("crashbandi", balanceCrashBandicootStats)
-				print("Balancing Crash Bandicoot")
-			else
-				print("Ignoring Crash Bandicoot")
-			end
-		end
+	printInfo("Mod Balancing enabled")
 		
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-366048578") then
-			if devonBalanced == 1 then
-				AddPrefabPostInit("devon", balanceDevonStats)
-				print("Balancing Devon")
-			else
-				print("Ignoring Devon")
-			end
-		end]]
-		
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-373622746") then
-			if drokBalanced == 1 then
-				AddPrefabPostInit("drok", balanceDrokStats)
-				print("Balancing Drok the Caveman")
-			else
-				print("Ignoring Drok the Caveman")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-382501575") then
+		if crashBandicootBalanced == 1 then
+			AddPrefabPostInit("crashbandi", balanceCrashBandicootStats)
+			printInfo("Balancing Crash Bandicoot")
+		else
+			printInfo("Ignoring Crash Bandicoot")
 		end
+	end
+		
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-384048428") then
+		if devonBalanced == 1 then
+			AddPrefabPostInit("devon", balanceDarkSakuraStats)
+			printInfo("Balancing Dark Sakura Matou")
+		else
+			printInfo("Ignoring Dark Sakura Matou")
+		end
+	end
+		
+	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-366048578") then
+		if devonBalanced == 1 then
+			AddPrefabPostInit("devon", balanceDevonStats)
+			printInfo("Balancing Devon")
+		else
+			printInfo("Ignoring Devon")
+		end
+	end]]
+		
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-373622746") then
+		if drokBalanced == 1 then
+			AddPrefabPostInit("drok", balanceDrokStats)
+			printInfo("Balancing Drok the Caveman")
+		else
+			printInfo("Ignoring Drok the Caveman")
+		end
+	end
 	
 		if GLOBAL.KnownModIndex:IsModEnabled("workshop-363966651") then
 			if endiaBalanced == 1 then
 				AddPrefabPostInit("endia", balanceEndiaStats)
-				print("Balancing Endia")
-			else
-				print("Ignoring Endia")
+				printInfo("Balancing Endia")
+				--printInfoToConsole(info, "Balancing Endia")
 			end
 		end
 
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-364491382") then
-			if farozBalanced == 1 then
-				AddPrefabPostInit("faroz", balanceFarozStats)
-				AddPrefabPostInit("faroz_gls", balanceFarozGlasses)
-				print("Balancing Faroz")
-			else
-				print("Ignoring Faroz")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364491382") then
+		if farozBalanced == 1 then
+			AddPrefabPostInit("faroz", balanceFarozStats)
+			AddPrefabPostInit("faroz_gls", balanceFarozGlasses)
+			printInfo("Balancing Faroz")
+		else
+			printInfo("Ignoring Faroz")
 		end
+	end
 		
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-374341561") then
-			if fionnaBalanced == 1 then
-				AddPrefabPostInit("fionna", balanceFionnaStats)
-				print("Balancing Fionna")
-			else
-				print("Ignoring Fionna")
-			end
-		end]]
-		
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-359318959") then
-			if freeSpiritBalanced == 1 then
-				AddPrefabPostInit("freebre", balanceFreeSpiritStats)
-				print("Balancing FreeSpirit the Umbreon")
-			else
-				print("Ignoring FreeSpirit the Umbreon")
-			end
+	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-374341561") then
+		if fionnaBalanced == 1 then
+			AddPrefabPostInit("fionna", balanceFionnaStats)
+			printInfo("Balancing Fionna")
+		else
+			printInfo("Ignoring Fionna")
 		end
+	end]]
 		
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-381660473") then
-			if gabenBalanced == 1 then
-				AddPrefabPostInit("gbe", balanceGabenStats)
-				print("Releasing HL3")
-			else
-				print("Delaying HL3")
-			end
-		end]]		
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359318959") then
+		if freeSpiritBalanced == 1 then
+			AddPrefabPostInit("freebre", balanceFreeSpiritStats)
+			printInfo("Balancing FreeSpirit the Umbreon")
+		else
+			printInfo("Ignoring FreeSpirit the Umbreon")
+		end
+	end
+		
+	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-381660473") then
+		if gabenBalanced == 1 then
+			AddPrefabPostInit("gbe", balanceGabenStats)
+			printInfo("Releasing HL3")
+		else
+			printInfo("Delaying HL3")
+		end
+	end]]		
 	
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-363819976") then
-			if girBalanced == 1 then
-				AddPrefabPostInit("gir", balanceGirStats)
-				print("Balancing Gir")
-			else
-				print("Ignoring Gir")
-			end
-		end]]
+	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-363819976") then
+		if girBalanced == 1 then
+			AddPrefabPostInit("gir", balanceGirStats)
+			printInfo("Balancing Gir")
+		else
+			printInfo("Ignoring Gir")
+		end
+	end]]
 	
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-359821133") then
-			if haruzBalanced == 1 then	
-				AddPrefabPostInit("haruz", balanceHaruzStats)
-				print("Balancing Haruz")
-			else
-				print("Ignoring Haruz")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359821133") then
+		if haruzBalanced == 1 then	
+			AddPrefabPostInit("haruz", balanceHaruzStats)
+			printInfo("Balancing Haruz")
+		else
+			printInfo("Ignoring Haruz")
 		end
+	end
 	
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-369898161") then
-			if hellaMerdurialBalanced == 1 then	
-				AddPrefabPostInit("hella", balanceHellaMerdurialStats)
-				print("Balancing Hella")
-			else
-				print("Ignoring Hella")
-			end
-		end]]
-		
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-380079744") then
-			if luffyBalanced == 1 then
-				AddPrefabPostInit("luffy", balanceLuffyStats)
-				print("Balancing Luffy")
-			else
-				print("Ignoring Luffy")
-			end
-		end]]			
-		
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-369228986") then
-			if madeleineBalanced == 1 then	
-				AddPrefabPostInit("madeleine", balanceMadeleineStats)
-				print("Balancing Madeleine")
-			else
-				print("Ignoring Madeleine")
-			end
+	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-369898161") then
+		if hellaMerdurialBalanced == 1 then	
+			AddPrefabPostInit("hella", balanceHellaMerdurialStats)
+			printInfo("Balancing Hella")
+		else
+			printInfo("Ignoring Hella")
 		end
+	end]]
+		
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-380079744") then
+		if luffyBalanced == 1 then
+			AddPrefabPostInit("luffy", balanceLuffyStats)
+			printInfo("Balancing Luffy")
+		else
+			printInfo("Ignoring Luffy")
+		end
+	end		
+		
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369228986") then
+		if madeleineBalanced == 1 then	
+			AddPrefabPostInit("madeleine", balanceMadeleineStats)
+			printInfo("Balancing Madeleine")
+		else
+			printInfo("Ignoring Madeleine")
+		end
+	end
 	
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-357013795") then
-			if michaelTheFoxBalanced == 1 then	
-				AddPrefabPostInit("fox", balanceMichaelTheFoxStats)
-				print("Balancing Michael the Fox")
-			else
-				print("Ignoring Michael the Fox")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-357013795") then
+		if michaelTheFoxBalanced == 1 then	
+			AddPrefabPostInit("fox", balanceMichaelTheFoxStats)
+			printInfo("Balancing Michael the Fox")
+		else
+			printInfo("Ignoring Michael the Fox")
 		end
+	end
 		
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-368321978") then
-			if mikuHatsuneBalanced == 1 then
-				AddPrefabPostInit("miku", balanceMikuHatsuneStats)
-				print("Balancing Miku Hatsune")
-			else
-				print("Ignoring Miku Hatsune")
-			end
-		end]]			
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-368321978") then
+		if mikuHatsuneBalanced == 1 then
+			AddPrefabPostInit("miku", balanceMikuHatsuneStats)
+			printInfo("Balancing Miku Hatsune")
+		else
+			printInfo("Ignoring Miku Hatsune")
+		end
+	end
 	
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-364189966") then
-			if mitsuruBalanced == 1 then	
-				AddPrefabPostInit("mitsuru", balanceMitsuruStats)
-				print("Balancing Mitsuru")
-			else
-				print("Ignoring Mitsuru")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364189966") then
+		if mitsuruBalanced == 1 then	
+			AddPrefabPostInit("mitsuru", balanceMitsuruStats)
+			printInfo("Balancing Mitsuru")
+		else
+			printInfo("Ignoring Mitsuru")
 		end
+	end
 		
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-351877222") then
-			if neptuniaBalanced == 1 then
-				AddPrefabPostInit("nep", balanceNeptuniaStats)
-				print("Balancing Neptunia")
-			else
-				print("Ignoring Neptunia")
-			end
-		end]]			
+	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-351877222") then
+		if neptuniaBalanced == 1 then
+			AddPrefabPostInit("nep", balanceNeptuniaStats)
+			printInfo("Balancing Neptunia")
+		else
+			printInfo("Ignoring Neptunia")
+		end
+	end]]			
 	
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-360319890") then
-			if serasBalanced == 1 then	
-				AddPrefabPostInit("seras", balanceSerasStats)
-				print("Balancing Seras")
-			else
-				print("Ignoring Seras")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-360319890") then
+		if serasBalanced == 1 then	
+			AddPrefabPostInit("seras", balanceSerasStats)
+			printInfo("Balancing Seras")
+		else
+			printInfo("Ignoring Seras")
 		end
+	end
 		
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-359479220") then
-			if sollyzBalanced == 1 then	
-				AddPrefabPostInit("sollyz", balanceSollyzStats)
-				print("Balancing Sollyz")
-			else
-				print("Ignoring Sollyz")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359479220") then
+		if sollyzBalanced == 1 then	
+			AddPrefabPostInit("sollyz", balanceSollyzStats)
+			printInfo("Balancing Sollyz")
+		else
+			printInfo("Ignoring Sollyz")
 		end
+	end
 		
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-369544255") then
-			if shovelKnightBalanced == 1 then
-				AddPrefabPostInit("winston", balanceShovelKnightStats)
-				AddPrefabPostInit("skweaponshovelbladebasic", balanceShovelKnightBlades)
-				AddPrefabPostInit("skweaponshovelbladechargehandle", balanceShovelKnightBlades)
-				AddPrefabPostInit("skweaponshovelbladetrenchblade", balanceShovelKnightBlades)
-				AddPrefabPostInit("skweaponshovelbladedropspark", balanceShovelKnightBlades)
-				print("Balancing Shovel Knight")
-			else
-				print("Ignoring Shovel Knight")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369544255") then
+		if shovelKnightBalanced == 1 then
+			AddPrefabPostInit("winston", balanceShovelKnightStats)
+			AddPrefabPostInit("skweaponshovelbladebasic", balanceShovelKnightBlades)
+			AddPrefabPostInit("skweaponshovelbladechargehandle", balanceShovelKnightBlades)
+			AddPrefabPostInit("skweaponshovelbladetrenchblade", balanceShovelKnightBlades)
+			AddPrefabPostInit("skweaponshovelbladedropspark", balanceShovelKnightBlades)
+			printInfo("Balancing Shovel Knight")
+		else
+			printInfo("Ignoring Shovel Knight")
 		end
+	end
 		
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-368541793") then
-			if thanaBalanced == 1 then	
-				AddPrefabPostInit("thana", balanceThanaStats)
-				print("Balancing Thana")
-			else
-				print("Ignoring Thana")
-			end
-		end]]
-		
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-379628839") then
-			if theMedicBalanced == 1 then
-				AddPrefabPostInit("medic", balanceTheMedicStats)
-				print("Balancing The Medic")
-			else
-				print("Ignoring The Medic")
-			end
-		end]]			
-		
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-369518979") then
-			if warkBalanced == 1 then	
-				AddPrefabPostInit("wark", balanceWarkStats)
-				print("Balancing Wark")
-			else
-				print("Ignoring Wark")
-			end
+	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-368541793") then
+		if thanaBalanced == 1 then	
+			AddPrefabPostInit("thana", balanceThanaStats)
+			printInfo("Balancing Thana")
+		else
+			printInfo("Ignoring Thana")
 		end
+	end]]
 		
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-369435452") then
-			if wolfBalanced == 1 then	
-				AddPrefabPostInit("wolft", balanceWolfStats)
-				print("Balancing Wolf")
-			else
-				print("Ignoring Wolf")
-			end
+	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-379628839") then
+		if theMedicBalanced == 1 then
+			AddPrefabPostInit("medic", balanceTheMedicStats)
+			printInfo("Balancing The Medic")
+		else
+			printInfo("Ignoring The Medic")
 		end
+	end]]			
 		
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-384633033") then
-			if woodieBalanced == 1 then	
-				AddPrefabPostInit("woodie", balanceWoodieStats)
-				AddPrefabPostInit("lucy", balanceWoodieAxe)
-				print("Balancing PrzemoLSZ's Woodie")
-			else
-				print("Ignoring PrszemoLSZ's Woodie")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369518979") then
+		if warkBalanced == 1 then	
+			AddPrefabPostInit("wark", balanceWarkStats)
+			printInfo("Balancing Wark")
+		else
+			printInfo("Ignoring Wark")
 		end
+	end
 		
-		--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-357209437") then
-			if zimBalanced == 1 then	
-				AddPrefabPostInit("izim", balanceZimStats)
-				print("Balancing Zim")
-			else
-				print("Ignoring Zim")
-			end
-		end]]
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369435452") then
+		if wolfBalanced == 1 then	
+			AddPrefabPostInit("wolft", balanceWolfStats)
+			printInfo("Balancing Wolf")
+		else
+			printInfo("Ignoring Wolf")
+		end
+	end
+		
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-384633033") then
+		if woodieBalanced == 1 then	
+			AddPrefabPostInit("woodie", balanceWoodieStats)
+			AddPrefabPostInit("lucy", balanceWoodieAxe)
+			printInfo("Balancing PrzemoLSZ's Woodie")
+		else
+			printInfo("Ignoring PrszemoLSZ's Woodie")
+		end
+	end
+		
+	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-357209437") then
+		if zimBalanced == 1 then	
+			AddPrefabPostInit("izim", balanceZimStats)
+			printInfo("Balancing Zim")
+		else
+			printInfo("Ignoring Zim")
+		end
+	end]]
+	
 	else
-	print("Mod Balancing disabled")
+	
+	printInfo("Mod Balancing disabled")
+	
 	end
 	
