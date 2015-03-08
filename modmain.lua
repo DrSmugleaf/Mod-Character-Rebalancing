@@ -3,6 +3,8 @@ local STRINGS = GLOBAL.STRINGS
 
 local MOD_NAME = "Mod Character Rebalancing"
 
+
+
 --------------------------------
 -- Load Starting Items config --
 --------------------------------
@@ -189,31 +191,24 @@ local function changeStartingInventory(inst, start_inv)
 
 	local oldSpawn = inst.OnNewSpawn
 	start_inv = start_inv or {}
-	
 	for _,v in pairs(startingItems) do -- Load starting items too since this deletes inventories
 		table.insert(start_inv, v)
 	end
-	
 	inst.OnNewSpawn = function()
 	
 	if oldSpawn ~= nil then oldSpawn() end
 	
 	if inst.components.inventory ~= nil then
 		inst.components.inventory.ignoresound = true
-		
 		for i = 1, inst.components.inventory:GetNumSlots() do
 			inst.components.inventory:RemoveItemBySlot(i) -- Remove all items
 		end
-		
 		for _, v in ipairs(start_inv) do
 			inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give new items
 		end
-		
 		inst.components.inventory.ignoresound = false
 	end
-	
 	end
-	
 end
 
 
@@ -947,10 +942,64 @@ if levelSetting > 0 then
 end
 end
 
+	local FERAL = GLOBAL.Action()
+	FERAL.str = "Feral"
+	FERAL.id = "FERAL"
+	FERAL.fn = function(act)
+		local silent = true
+		--act.target.AnimState:SetBuild("tamamo_ball")
+		inst.Light:Enable(true)
+		if act.target.transformed then
+			--act.target.AnimState:SetBuild("tamamo")
+			inst.Light:Enable(false)
+		else
+			--act.target.AnimState:SetBuild("tamamo_ball")
+			inst.Light:Enable(true)
+		end
+		act.target.transformed = not act.target.transformed
+		-- act.target.components.health:SetCurrentHealth(1)
+		-- act.target.components.health:DoDelta(0)
+		return true
+	end
 
 local function balanceTamamoStats(inst)
+
+	local light = inst.entity:AddLight()
+	inst.Light:Enable(false)
+	inst.Light:SetRadius(15)
+	inst.Light:SetFalloff(0.75)
+	inst.Light:SetIntensity(.6)
+	inst.Light:SetColour(70/255,255/255,12/255)
+	
+	inst:AddComponent("CRkeyhandler")
+	inst:ListenForEvent("CRkeypressed", newOnKeyPressed)
 	
 	
+	local tamamoStats =	{
+							health = 50
+						}
+						
+	modifyStats(inst, tamamoStats)
+	
+	if OnKeyPressed then
+		oldOnKeyPressed = OnKeyPressed(inst, data)
+	end
+	local function newOnKeyPressed(inst, data)
+		if data.inst == ThePlayer then
+			if data.key == KEY_T then
+				printInfo("KEY_T has been pressed")
+				
+				if TheWorld.ismastersim then
+					BufferedAction(inst, inst, ACTIONS.FERAL):Do()
+					
+				else
+					SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.FERAL.code, inst, ACTIONS.FERAL.mod_name)
+				end
+			elseif data.key == KEY_Z then
+				oldOnKeyPressed(inst, data)
+			end
+		end
+	end
 	
 end
 
@@ -1227,7 +1276,7 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 	end
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-399799824") then
-		if thanaBalanced == 1 then	
+		if tamamoBalanced == 1 then	
 			AddPrefabPostInit("tamamo", balanceTamamoStats)
 			printInfo("Balancing Tamamo")
 		else
