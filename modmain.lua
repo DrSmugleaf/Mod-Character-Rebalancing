@@ -27,6 +27,7 @@ local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED")
 	local drokBalanced = GetModConfigData("DROK_BALANCED")
 	local endiaBalanced = GetModConfigData("ENDIA_BALANCED")
 	local farozBalanced = GetModConfigData("FAROZ_BALANCED")
+	local filiaBalanced = GetModConfigData("FILIA_BALANCED")
 	--local fionnaBalanced = GetModConfigData("FIONNA_BALANCED")
 	local freeSpiritBalanced = GetModConfigData("FREESPIRIT_BALANCED")
 	--local gabenBalanced = GetModConfigData("GABEN_BALANCED")
@@ -641,6 +642,22 @@ local function balanceFarozGlasses(inst)
 end
 
 
+local function balanceFiliaStats(inst)
+	
+	local filiaStats =	{
+							health = 75,
+							hunger = 100,
+							sanity = 150,
+							damage = 1.5,
+							walkSpeed = 1.5,
+							runSpeed = 1.5,
+						}
+						
+	modifyStats(inst, filiaStats)
+	
+end
+
+
 --local function balanceFionnaStats(inst)
 --end
 
@@ -971,8 +988,8 @@ end
 end
 
 
-
 local function balanceTamamoStats(inst)
+	
 	local DefaultEater = require("components/eater")
 	local FERAL = GLOBAL.Action()
 	FERAL.str = "Feral"
@@ -983,14 +1000,24 @@ local function balanceTamamoStats(inst)
 		if act.target.transformed then
 			--act.target.Light:Enable(false)
 			tamamoStats =	{
-								
+								health = 125,
+								damage = 1,
+								walkSpeed = 1,
+								runSpeed = 1,
+								dapperness = 0,
+								hungerRate = 1,
 							}
 			
 			modifyStats(act.target, tamamoStats)
 		else
 			--act.target.Light:Enable(true)
 			tamamoStats =	{
-								
+								health = 125,
+								damage = 1.5,
+								walkSpeed = 1.5,
+								runSpeed = 1.5,
+								dapperness = -2*TUNING.DAPPERNESS_LARGE,
+								hungerRate = 1.5,
 							}
 							
 			modifyStats(act.target, tamamoStats)
@@ -1002,20 +1029,26 @@ local function balanceTamamoStats(inst)
 	AddAction(FERAL)
 	
 	local tamamoStats =	{
-							
+							health = 125,
+							walkSpeed = 1,
+							runSpeed = 1,
+							damage = 1,
+							dapperness = 0,
+							hungerRate = 1,
 						}
 	
 	modifyStats(inst, tamamoStats)
 	
-	CRAddMode(inst, GLOBAL.KEY_T, "FERAL")
+	CRAddMode(inst, GLOBAL.KEY_X, "FERAL")
 	
 	inst:RemoveTag('<span class="searchlite">birdwhisperer</span>')
 	inst:AddTag("scarytoprey")
 	
 	inst.components.eater.ignorespoilage = false
 	function inst.components.eater:Eat(food)
-    return DefaultEater.Eat(self, food)
+		return DefaultEater.Eat(self, food)
 	end
+	
 end
 
 
@@ -1153,6 +1186,15 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 		end
 	end
 		
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-398833909") then
+		if filiaBalanced == 1 then
+			AddPrefabPostInit("filia", balanceFiliaStats)
+			printInfo("Balancing Filia")
+		else
+			printInfo("Ignoring Filia")
+		end
+	end
+	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-374341561") then
 		if fionnaBalanced == 1 then
 			AddPrefabPostInit("fionna", balanceFionnaStats)

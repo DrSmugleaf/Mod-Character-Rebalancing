@@ -2,7 +2,7 @@
 name = "Mod Character Balancing"
 description = "Configure everything! Balance your characters, new leveling systems, items for new players, customize your experience. Basically GregTech."
 author = "DrSmugleaf"
-version = "1.4.1"
+version = "2.0"
 
 priority = -100
 
@@ -282,6 +282,18 @@ configuration_options =
 		name = "FAROZ_BALANCED",
 		label = "Faroz",
 		hover = "Balance Faroz, the Little Scholar",
+		options =	{
+						{description = "Balanced", data = 1},
+						{description = "Ignored", data = 0},
+					},
+
+		default = 1,
+	},
+	
+	{
+		name = "FILIA_BALANCED",
+		label = "Filia",
+		hover = "Balance Filia, the forgetful schoolgirl",
 		options =	{
 						{description = "Balanced", data = 1},
 						{description = "Ignored", data = 0},
