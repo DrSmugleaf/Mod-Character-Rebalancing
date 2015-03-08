@@ -1,6 +1,8 @@
 local require = GLOBAL.require
 local STRINGS = GLOBAL.STRINGS
 
+local MOD_NAME = "Mod Character Rebalancing"
+
 --------------------------------
 -- Load Starting Items config --
 --------------------------------
@@ -47,6 +49,7 @@ local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED")
 	local woodieBalanced = GetModConfigData("WOODIE_BALANCED")
 	--local zimBalanced = GetModConfigData("ZIM_BALANCED")
 	
+	
 -------------------------------------------------------------------------
 -- Load Leveling System config and assign base max levels difficulties --
 -------------------------------------------------------------------------
@@ -66,6 +69,7 @@ if levelSetting then
 	
 end
 	
+	
 -------------------------------
 -- Load Special Modes config --
 -------------------------------
@@ -79,35 +83,35 @@ local hardcoreMode = GetModConfigData("HARDCORE_MODE")
 local function printDebug(message)
 	
 	if message then
-	print("[Mod Character Rebalancing] [DEBUG]".. (message))
+	print("[".. (MOD_NAME).. "] ".. "[DEBUG] ".. (message))
 	end
 	
 end
 local function printError(message)
 	
 	if message then
-	print("[Mod Character Rebalancing] [ERROR]".. (message))
+	print("[".. (MOD_NAME).. "] ".. "[ERROR] ".. (message))
 	end
 	
 end
 local function printFatal(message)
 	
 	if message then
-	print("[Mod Character Rebalancing] [FATAL]".. (message))
+	print("[".. (MOD_NAME).. "] ".. "[FATAL] ".. (message))
 	end
 	
 end
 local function printInfo(message)
 	
 	if message then
-	print("[Mod Character Balancing] [INFO] ".. (message))
+	print("[".. (MOD_NAME).. "] ".. "[INFO] ".. (message))
 	end
 	
 end
 local function printWarn(message)
 
 	if message then
-	print("[Mod Character Rebalancing] [WARN]".. (message))
+	print("[".. (MOD_NAME).. "] ".. "[WARN] ".. (message))
 	end
 	
 end
@@ -247,17 +251,17 @@ local function modifyStats(inst, stats)
 		end
 		end
 
-	local InitialMaxHealth = 
-	local InitialMaxHunger = 
-	local InitialMaxSanity = 
-	local InitialMaxDamage = 
-	local InitialMaxInsulation = 
+	local initialHealth = 
+	local initialHunger = 
+	local initialSanity = 
+	local initialDamage = 
+	local initialInsulation = 
 
-	local FinalMaxHealth = 
-	local FinalMaxHunger = 
-	local FinalMaxSanity = 
-	local FinalMaxDamage = 
-	local FinalMaxInsulation = 
+	local finalHealth = 
+	local finalHunger = 
+	local finalSanity = 
+	local finalDamage = 
+	local finalInsulation = 
 	]]
 	
 	-- Load the given stats
@@ -289,37 +293,37 @@ local function modifyStats(inst, stats)
 			local levelPerFood4 = stats.levelPerFood4
 			local levelPerFood5 = stats.levelPerFood5
 
-	local InitialMaxHealth = stats.InitialMaxHealth
-	local InitialMaxHunger = stats.InitialMaxHunger
-	local InitialMaxSanity = stats.InitialMaxSanity
-	local InitialMaxDamage = stats.InitialMaxDamage
-	local InitialMaxInsulation = stats.InitialMaxInsulation
+	local initialHealth = stats.initialHealth
+	local initialHunger = stats.initialHunger
+	local initialSanity = stats.initialSanity
+	local initialDamage = stats.initialDamage
+	local initialInsulation = stats.initialInsulation
 	if nerfSpeed == 0 then
-		InitialMaxWalkSpeed = stats.InitialMaxWalkSpeed
-		InitialMaxRunSpeed = stats.InitialMaxRunSpeed
+		initialWalk = stats.initialWalk
+		initialRun = stats.initialRun
 	elseif nerfSpeed == 1 then
-		InitialMaxWalkSpeed = stats.InitialMaxWalkSpeedHardcore
-		InitialMaxRunSpeed = stats.InitialMaxRunSpeedHardcore
+		initialWalk = stats.initialWalkNerf
+		initialRun = stats.initialRunNerf
 	end
 
-	local FinalMaxHealth = stats.FinalMaxHealth
-	local FinalMaxHunger = stats.FinalMaxHunger
-	local FinalMaxSanity = stats.FinalMaxSanity
-	local FinalMaxDamage = stats.FinalMaxDamage
-	local FinalMaxInsulation = stats.FinalMaxInsulation
+	local finalHealth = stats.finalHealth
+	local finalHunger = stats.finalHunger
+	local finalSanity = stats.finalSanity
+	local finalDamage = stats.finalDamage
+	local finalInsulation = stats.finalInsulation
 	if nerfSpeed == 0 then
-		FinalMaxWalkSpeed = stats.FinalMaxWalkSpeed
-		FinalMaxRunSpeed = stats.FinalMaxRunSpeed
+		finalWalk = stats.finalWalk
+		finalRun = stats.finalRun
 	elseif nerfSpeed == 1 then
-		FinalMaxWalkSpeed = stats.FinalMaxWalkSpeedHardcore
-		FinalMaxRunSpeed = stats.FinalMaxRunSpeedHardcore
+		finalWalk = stats.finalWalkHardcore
+		finalRun = stats.finalRunHardcore
 	end
-	if not InitialMaxWalkSpeed then InitialMaxWalkSpeed = stats.InitialMaxWalkSpeed end
-	if not InitialMaxRunSpeed then InitialMaxRunSpeed = stats.InitialMaxRunSpeed end
-	if not FinalMaxWalkSpeed then FinalMaxWalkSpeed = stats.FinalMaxWalkSpeed end
-	if not FinalMaxRunSpeed then FinalMaxRunSpeed = stats.FinalMaxRunSpeed end
+	if not initialWalk then initialWalk = stats.initialWalk end
+	if not initialRun then initialRun = stats.initialRun end
+	if not finalWalk then finalWalk = stats.finalWalk end
+	if not finalRun then finalRun = stats.finalRun end
 	
-	if levelSetting > 0 and InitialMaxHealth or InitialMaxHunger or InitialMaxSanity or InitialMaxDamage or InitialMaxInsulation then
+	if levelSetting > 0 and initialHealth or initialHunger or initialSanity or initialDamage or initialInsulation or initialWalk or initialRun then
 		
 		if not levelNerf then
 			levelNerf = 0
@@ -336,29 +340,29 @@ local function modifyStats(inst, stats)
 			local sanity_percent = inst.components.sanity:GetPercent()
 			
 			
-			if InitialMaxHealth and FinalMaxHealth and upgrades and maxUpgrades then
-			inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / maxUpgrades)		
+			if initialHealth and finalHealth and upgrades and maxUpgrades then
+			inst.components.health.maxhealth = math.ceil (initialHealth + upgrades * (finalHealth - initialHealth) / maxUpgrades)		
 			end
 			
-			if InitialMaxHunger and FinalMaxHunger and upgrades and maxUpgrades then
-			inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / maxUpgrades)
+			if initialHunger and finalHunger and upgrades and maxUpgrades then
+			inst.components.hunger.max = math.ceil (initialHunger + upgrades * (finalHunger - initialHunger) / maxUpgrades)
 			end
 			
-			if InitialMaxSanity and FinalMaxSanity and upgrades and maxUpgrades then
-			inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / maxUpgrades)
+			if initialSanity and finalSanity and upgrades and maxUpgrades then
+			inst.components.sanity.max = math.ceil (initialSanity + upgrades * (finalSanity - initialSanity) / maxUpgrades)
 			end
 			
-			if InitialMaxDamage and FinalMaxDamage and upgrades and maxUpgrades then
-			inst.components.combat.damagemultiplier = math.ceil (InitialMaxDamage + upgrades * (FinalMaxDamage - InitialMaxDamage) / maxUpgrades)
+			if initialDamage and finalDamage and upgrades and maxUpgrades then
+			inst.components.combat.damagemultiplier = math.ceil (initialDamage + upgrades * (finalDamage - initialDamage) / maxUpgrades)
 			end
 			
-			if InitialMaxInsulation and FinalMaxInsulation and upgrades and maxUpgrades then
-			inst.components.temperature.inherentinsulation = math.ceil (InitialMaxInsulation + upgrades * (FinalMaxInsulation - InitialMaxInsulation) / maxUpgrades)
+			if initialInsulation and finalInsulation and upgrades and maxUpgrades then
+			inst.components.temperature.inherentinsulation = math.ceil (initialInsulation + upgrades * (finalInsulation - initialInsulation) / maxUpgrades)
 			end
 			
-			if InitialMaxWalkSpeed and FinalMaxWalkSpeed and InitialMaxRunSpeed and FinalMaxRunSpeed and upgrades and maxUpgrades then
-			inst.components.locomotor.walkspeed =  math.ceil (TUNING.WILSON_WALK_SPEED * (InitialMaxWalkSpeed + upgrades * (FinalMaxWalkSpeed - InitialMaxWalkSpeed) / maxUpgrades))
-			inst.components.locomotor.runspeed = math.ceil (TUNING.WILSON_RUN_SPEED * (InitialMaxRunSpeed + upgrades * (FinalMaxRunSpeed - InitialMaxRunSpeed) / maxUpgrades))
+			if initialWalk and finalWalk and initialRun and finalRun and upgrades and maxUpgrades then
+			inst.components.locomotor.walkspeed =  math.ceil (TUNING.WILSON_WALK_SPEED * (initialWalk + upgrades * (finalWalk - initialWalk) / maxUpgrades))
+			inst.components.locomotor.runspeed = math.ceil (TUNING.WILSON_RUN_SPEED * (initialRun + upgrades * (finalRun - initialRun) / maxUpgrades))
 			end
 			
 			inst.components.talker:Say("Level : ".. (inst.level))
@@ -448,8 +452,7 @@ local function modifyStats(inst, stats)
 			
 		inst.OnSave = onsave
 		inst.OnPreLoad = onpreload
-		
-	else
+	end
 
 		if health then
 			inst.components.health:SetMaxHealth(health)
@@ -496,7 +499,6 @@ local function modifyStats(inst, stats)
 			inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE * hungerRate)
 		end
 		
-	end
 end
 
 
@@ -552,17 +554,17 @@ local function balanceCrashBandicootStats(inst)
 									levelPerFood2 = 2,
 									levelPerFood3 = 1,
 									
-									InitialMaxHealth = 75,
-									InitialMaxHunger = 75,
-									InitialMaxSanity = 100,
-									InitialMaxWalkSpeedHardcore = 0.5,
-									InitialMaxRunSpeedHardcore = 0.5,
+									initialHealth = 75,
+									initialHunger = 75,
+									initialSanity = 100,
+									initialWalkNerf = 1,
+									initialRunNerf = 1,
 									
-									FinalMaxHealth = 100,
-									FinalMaxHunger = 125,
-									FinalMaxSanity = 150,
-									FinalMaxWalkSpeedHardcore = 0.5,
-									FinalMaxRunSpeedHardcore = 0.5,
+									finalHealth = 100,
+									finalHunger = 125,
+									finalSanity = 150,
+									finalRunHardcore = 1,
+									finalWalkHardcore = 1,
 								}
 	
 	modifyStats(inst, crashBandicootStats)
@@ -670,17 +672,17 @@ if levelSetting > 0 then
 	
 	local levelNerf = 25
 	
-	local InitialMaxHealth = 75
-	local InitialMaxHunger = 75
-	local InitialMaxSanity = 75
+	local initialHealth = 75
+	local initialHunger = 75
+	local initialSanity = 75
 	
-	local FinalMaxHealth = 150
-	local FinalMaxHunger = 200
-	local FinalMaxSanity = 125
+	local finalHealth = 150
+	local finalHunger = 200
+	local finalSanity = 125
 	
-	inst.components.health:SetMaxHealth(InitialMaxHealth)
-	inst.components.hunger:SetMax(InitialMaxHunger)
-	inst.components.sanity:SetMax(InitialMaxSanity)
+	inst.components.health:SetMaxHealth(initialHealth)
+	inst.components.hunger:SetMax(initialHunger)
+	inst.components.sanity:SetMax(initialSanity)
 			
 			
 	local function newUpg(inst)
@@ -694,9 +696,9 @@ if levelSetting > 0 then
 		local sanity_percent = inst.components.sanity:GetPercent()
 		
 
-		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / max_upgrades)		
-		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / max_upgrades)
-		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / max_upgrades)
+		inst.components.health.maxhealth = math.ceil (initialHealth + upgrades * (finalHealth - initialHealth) / max_upgrades)		
+		inst.components.hunger.max = math.ceil (initialHunger + upgrades * (finalHunger - initialHunger) / max_upgrades)
+		inst.components.sanity.max = math.ceil (initialSanity + upgrades * (finalSanity - initialSanity) / max_upgrades)
 		
 		inst.components.talker:Say("Level : ".. (inst.level))
 		if inst.level > math.ceil (max_upgrades-1) then
@@ -796,21 +798,21 @@ if levelSetting > 0 then
 	
 	local levelNerf = 50
 	
-	local InitialMaxHealth = 75
-	local InitialMaxHunger = 75
-	local InitialMaxSanity = 50
-	local InitialMaxDamage = 1.0
-	local InitialMaxInsulation = 0
+	local initialHealth = 75
+	local initialHunger = 75
+	local initialSanity = 50
+	local initialDamage = 1.0
+	local initialInsulation = 0
 	
-	local FinalMaxHealth = 100
-	local FinalMaxHunger = 150
-	local FinalMaxSanity = 125
-	local FinalMaxDamage = 1.5
-	local FinalMaxInsulation = 75
+	local finalHealth = 100
+	local finalHunger = 150
+	local finalSanity = 125
+	local finalDamage = 1.5
+	local finalInsulation = 75
 	
-	inst.components.health:SetMaxHealth(InitialMaxHealth)
-	inst.components.hunger:SetMax(InitialMaxHunger)
-	inst.components.sanity:SetMax(InitialMaxSanity)
+	inst.components.health:SetMaxHealth(initialHealth)
+	inst.components.hunger:SetMax(initialHunger)
+	inst.components.sanity:SetMax(initialSanity)
 	
 	local function newUpg(inst)
 	
@@ -823,12 +825,12 @@ if levelSetting > 0 then
 		local sanity_percent = inst.components.sanity:GetPercent()
 		
 
-		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / max_upgrades)		
-		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / max_upgrades)
-		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / max_upgrades)
+		inst.components.health.maxhealth = math.ceil (initialHealth + upgrades * (finalHealth - initialHealth) / max_upgrades)		
+		inst.components.hunger.max = math.ceil (initialHunger + upgrades * (finalHunger - initialHunger) / max_upgrades)
+		inst.components.sanity.max = math.ceil (initialSanity + upgrades * (finalSanity - initialSanity) / max_upgrades)
 		
-		inst.components.combat.damagemultiplier = math.ceil (InitialMaxDamage + upgrades * (FinalMaxDamage - InitialMaxDamage) / max_upgrades)
-		inst.components.temperature.inherentinsulation = math.ceil (InitialMaxInsulation + upgrades * (FinalMaxInsulation - InitialMaxInsulation) / max_upgrades)
+		inst.components.combat.damagemultiplier = math.ceil (initialDamage + upgrades * (finalDamage - initialDamage) / max_upgrades)
+		inst.components.temperature.inherentinsulation = math.ceil (initialInsulation + upgrades * (finalInsulation - initialInsulation) / max_upgrades)
 
 		inst.components.talker:Say("Level : ".. (inst.level))
 		
@@ -896,17 +898,17 @@ if levelSetting > 0 then
 	
 	local levelNerf = 0
 	
-	local InitialMaxHealth = 50
-	local InitialMaxHunger = 75
-	local InitialMaxSanity = 50
+	local initialHealth = 50
+	local initialHunger = 75
+	local initialSanity = 50
 	
-	local FinalMaxHealth = 100
-	local FinalMaxHunger = 150
-	local FinalMaxSanity = 90
+	local finalHealth = 100
+	local finalHunger = 150
+	local finalSanity = 90
 	
-	inst.components.health:SetMaxHealth(InitialMaxHealth)
-	inst.components.hunger:SetMax(InitialMaxHunger)
-	inst.components.sanity:SetMax(InitialMaxSanity)
+	inst.components.health:SetMaxHealth(initialHealth)
+	inst.components.hunger:SetMax(initialHunger)
+	inst.components.sanity:SetMax(initialSanity)
 	
 	local function newUpg(inst)
 
@@ -919,9 +921,9 @@ if levelSetting > 0 then
 		local sanity_percent = inst.components.sanity:GetPercent()
 		
 
-		inst.components.health.maxhealth = math.ceil (InitialMaxHealth + upgrades * (FinalMaxHealth - InitialMaxHealth) / max_upgrades)		
-		inst.components.hunger.max = math.ceil (InitialMaxHunger + upgrades * (FinalMaxHunger - InitialMaxHunger) / max_upgrades)
-		inst.components.sanity.max = math.ceil (InitialMaxSanity + upgrades * (FinalMaxSanity - InitialMaxSanity) / max_upgrades)
+		inst.components.health.maxhealth = math.ceil (initialHealth + upgrades * (finalHealth - initialHealth) / max_upgrades)		
+		inst.components.hunger.max = math.ceil (initialHunger + upgrades * (finalHunger - initialHunger) / max_upgrades)
+		inst.components.sanity.max = math.ceil (initialSanity + upgrades * (finalSanity - initialSanity) / max_upgrades)
 		
 		inst.components.talker:Say("Level : ".. (inst.level))
 		if inst.level > math.ceil (max_upgrades-1) then
@@ -991,13 +993,13 @@ local function balanceWoodieStats(inst)
 							foodPrefab1 =  "butterflymuffin",
 							levelPerFood1 = 1,
 								
-							InitialMaxHealth = 75,
-							InitialMaxHunger = 100,
-							InitialMaxSanity = 100,
+							initialHealth = 75,
+							initialHunger = 100,
+							initialSanity = 100,
 
-							FinalMaxHealth = 175,
-							FinalMaxHunger = 200,
-							FinalMaxSanity = 175,
+							finalHealth = 175,
+							finalHunger = 200,
+							finalSanity = 175,
 						}
 
 	modifyStats(inst, woodieStats)
