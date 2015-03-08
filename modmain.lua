@@ -979,16 +979,16 @@ local function balanceTamamoStats(inst)
 	FERAL.id = "FERAL"
 	FERAL.fn = function(act)
 		local silent = true
-		act.target.Light:Enable(true) --inst. -> not assigned act.target is.
+		--act.target.Light:Enable(true) --inst. -> not assigned act.target is.
 		if act.target.transformed then
-			act.target.Light:Enable(false)
+			--act.target.Light:Enable(false)
 			tamamoStats =	{
 								
 							}
 			
 			modifyStats(act.target, tamamoStats)
 		else
-			act.target.Light:Enable(true)
+			--act.target.Light:Enable(true)
 			tamamoStats =	{
 								
 							}
@@ -1002,12 +1002,26 @@ local function balanceTamamoStats(inst)
 	AddAction(FERAL)
 	
 	local tamamoStats =	{
-							health = 50
+							
 						}
-						
+	
 	modifyStats(inst, tamamoStats)
 	
 	CRAddMode(inst, GLOBAL.KEY_T, "FERAL")
+	
+	inst:RemoveTag('<span class="searchlite">birdwhisperer</span>')
+	inst:AddTag("scarytoprey")
+	
+	local eater = inst.components.eater
+	eater.ignorespoilage = false
+	inst.components.eater.Eat_orig = inst.components.eater.Eat
+	function inst.components.eater:Eat(food)
+		if self:CanEat(food) then
+			if food.components.edible.sanityvalue < 0 then end
+			if food.components.edible.healthvalue < 0 then end
+		end
+		return inst.components.eater:Eat_orig(food)
+	end
 	
 end
 
