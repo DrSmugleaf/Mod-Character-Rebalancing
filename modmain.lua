@@ -1142,8 +1142,8 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-384048428") then
-		if devonBalanced == 1 then
-			AddPrefabPostInit("devon", balanceDarkSakuraStats)
+		if darkSakuraBalanced == 1 then
+			AddPrefabPostInit("sakura", balanceDarkSakuraStats)
 			printInfo("Balancing Dark Sakura Matou")
 		else
 			printInfo("Ignoring Dark Sakura Matou")
@@ -1168,13 +1168,14 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 		end
 	end
 	
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-363966651") then
-			if endiaBalanced == 1 then
-				AddPrefabPostInit("endia", balanceEndiaStats)
-				printInfo("Balancing Endia")
-				--printInfoToConsole(info, "Balancing Endia")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-363966651") then
+		if endiaBalanced == 1 then
+			AddPrefabPostInit("endia", balanceEndiaStats)
+			printInfo("Balancing Endia")
+		else
+			printInfo("Ignoring Endia")
 		end
+	end
 
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364491382") then
 		if farozBalanced == 1 then
