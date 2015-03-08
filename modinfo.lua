@@ -2,7 +2,7 @@
 name = "Mod Character Balancing"
 description = "Configure everything! Balance your characters, new leveling systems, items for new players, customize your experience. Basically GregTech."
 author = "DrSmugleaf"
-version = "2.0"
+version = "2.0.0"
 
 priority = -100
 
