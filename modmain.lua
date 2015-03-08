@@ -3,8 +3,6 @@ local STRINGS = GLOBAL.STRINGS
 
 local MOD_NAME = "Mod Character Rebalancing"
 
-
-
 --------------------------------
 -- Load Starting Items config --
 --------------------------------
@@ -948,19 +946,20 @@ end
 	FERAL.fn = function(act)
 		local silent = true
 		--act.target.AnimState:SetBuild("tamamo_ball")
-		inst.Light:Enable(true)
+		act.target.Light:Enable(true) --inst. -> not assigned act.target is.
 		if act.target.transformed then
 			--act.target.AnimState:SetBuild("tamamo")
-			inst.Light:Enable(false)
+			act.target.Light:Enable(false)
 		else
 			--act.target.AnimState:SetBuild("tamamo_ball")
-			inst.Light:Enable(true)
+			act.target.Light:Enable(true)
 		end
 		act.target.transformed = not act.target.transformed
 		-- act.target.components.health:SetCurrentHealth(1)
 		-- act.target.components.health:DoDelta(0)
 		return true
 	end
+AddAction(FERAL)
 
 local function balanceTamamoStats(inst)
 
@@ -972,7 +971,6 @@ local function balanceTamamoStats(inst)
 	inst.Light:SetColour(70/255,255/255,12/255)
 	
 	inst:AddComponent("CRkeyhandler")
-	inst:ListenForEvent("CRkeypressed", newOnKeyPressed)
 	
 	
 	local tamamoStats =	{
@@ -985,22 +983,21 @@ local function balanceTamamoStats(inst)
 		oldOnKeyPressed = OnKeyPressed(inst, data)
 	end
 	local function newOnKeyPressed(inst, data)
-		if data.inst == ThePlayer then
-			if data.key == KEY_T then
+		if data.inst == GLOBAL.ThePlayer then
+			if data.key == GLOBAL.KEY_T then --Welcome to GLOBAL ville
 				printInfo("KEY_T has been pressed")
-				
-				if TheWorld.ismastersim then
-					BufferedAction(inst, inst, ACTIONS.FERAL):Do()
-					
+				if GLOBAL.TheWorld.ismastersim then
+					GLOBAL.BufferedAction(inst, inst, GLOBAL.ACTIONS.FERAL):Do()
 				else
-					SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.FERAL.code, inst, ACTIONS.FERAL.mod_name)
+					GLOBAL.SendRPCToServer(GLOBAL.RPC.DoWidgetButtonAction, GLOBAL.ACTIONS.FERAL.code, inst, GLOBAL.ACTIONS.FERAL.mod_name)
 				end
-			elseif data.key == KEY_Z then
+			elseif data.key == GLOBAL.KEY_Z then
 				oldOnKeyPressed(inst, data)
 			end
 		end
 	end
 	
+	inst:ListenForEvent("CRkeypressed", newOnKeyPressed)
 end
 
 
