@@ -973,7 +973,7 @@ end
 
 
 local function balanceTamamoStats(inst)
-	
+	local DefaultEater = require("components/eater")
 	local FERAL = GLOBAL.Action()
 	FERAL.str = "Feral"
 	FERAL.id = "FERAL"
@@ -1012,17 +1012,10 @@ local function balanceTamamoStats(inst)
 	inst:RemoveTag('<span class="searchlite">birdwhisperer</span>')
 	inst:AddTag("scarytoprey")
 	
-	local eater = inst.components.eater
-	eater.ignorespoilage = false
-	inst.components.eater.Eat_orig = inst.components.eater.Eat
+	inst.components.eater.ignorespoilage = false
 	function inst.components.eater:Eat(food)
-		if self:CanEat(food) then
-			if food.components.edible.sanityvalue < 0 then end
-			if food.components.edible.healthvalue < 0 then end
-		end
-		return inst.components.eater:Eat_orig(food)
+    return DefaultEater.Eat(self, food)
 	end
-	
 end
 
 
