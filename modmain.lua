@@ -248,6 +248,8 @@ local function modifyStats(inst, stats)
 		strongStomach = stats.strongStomachNerf
 		hungerRate = stats.hungerRateNerf
 	end
+  
+  
 
 	if hardcoreMode == 0 then levelNerf = stats.levelNerf
 	elseif hardcoreMode == 1 then levelNerf = stats.hardcoreMode end
@@ -474,6 +476,23 @@ local function modifyStats(inst, stats)
 			inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE * hungerRate)
 		end
 		
+end
+
+
+local function CRAddMode(inst, CRKey, CRAction)
+  local function OnKeyPressed(inst, data)
+		if data.inst == GLOBAL.ThePlayer then
+			if data.key == CRKey then --Welcome to GLOBAL ville
+				if GLOBAL.TheWorld.ismastersim then
+					GLOBAL.BufferedAction(inst, inst, GLOBAL.ACTIONS[CRAction]):Do()
+				else
+					GLOBAL.SendRPCToServer(GLOBAL.RPC.DoWidgetButtonAction, GLOBAL.ACTIONS[CRAction].code, inst, GLOBAL.ACTIONS[CRAction].mod_name)
+				end
+			end
+		end
+	end
+	inst:AddComponent("CRkeyhandler")
+	inst:ListenForEvent("CRkeypressed", OnKeyPressed)
 end
 
 
@@ -970,7 +989,7 @@ local function balanceTamamoStats(inst)
 	inst.Light:SetIntensity(.6)
 	inst.Light:SetColour(70/255,255/255,12/255)
 	
-	inst:AddComponent("CRkeyhandler")
+	
 	
 	
 	local tamamoStats =	{
@@ -979,26 +998,10 @@ local function balanceTamamoStats(inst)
 						
 	modifyStats(inst, tamamoStats)
 	
-	if OnKeyPressed then
-		oldOnKeyPressed = OnKeyPressed(inst, data)
-	end
-	local function newOnKeyPressed(inst, data)
-		if data.inst == GLOBAL.ThePlayer then
-			if data.key == GLOBAL.KEY_T then --Welcome to GLOBAL ville
-				printInfo("KEY_T has been pressed")
-				if GLOBAL.TheWorld.ismastersim then
-					GLOBAL.BufferedAction(inst, inst, GLOBAL.ACTIONS.FERAL):Do()
-				else
-					GLOBAL.SendRPCToServer(GLOBAL.RPC.DoWidgetButtonAction, GLOBAL.ACTIONS.FERAL.code, inst, GLOBAL.ACTIONS.FERAL.mod_name)
-				end
-			elseif data.key == GLOBAL.KEY_Z then
-				oldOnKeyPressed(inst, data)
-			end
-		end
-	end
+	CRAddMode(inst, GLOBAL.KEY_T, "FERAL")
 	
-	inst:ListenForEvent("CRkeypressed", newOnKeyPressed)
 end
+
 
 
 --local function balanceThanaStats(inst)
