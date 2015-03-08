@@ -2,7 +2,7 @@
 name = "Mod Character Balancing"
 description = "Configure everything! Balance your characters, new leveling systems, items for new players, customize your experience. Basically GregTech."
 author = "DrSmugleaf"
-version = "1.4.1"
+version = "2.0.0"
 
 priority = -100
 
@@ -290,6 +290,18 @@ configuration_options =
 		default = 1,
 	},
 	
+	{
+		name = "FILIA_BALANCED",
+		label = "Filia",
+		hover = "Balance Filia, the forgetful schoolgirl",
+		options =	{
+						{description = "Balanced", data = 1},
+						{description = "Ignored", data = 0},
+					},
+
+		default = 1,
+	},
+	
 	--[[{
 		name = "FIONNA_BALANCED",
 		label = "Fionna",
@@ -462,6 +474,18 @@ configuration_options =
 		name = "SHOVELKNIGHT_BALANCED",
 		label = "Shovel Knight",
 		hover = "Balance Shovel Knight, the Blue Burrower",
+		options =	{
+						{description = "Balanced", data = 1},
+						{description = "Ignored", data = 0},
+					},
+
+		default = 1,
+	},
+	
+	{
+		name = "TAMAMO_BALANCED",
+		label = "Tamamo",
+		hover = "Balance Tamamo, Queen of Kitsunes",
 		options =	{
 						{description = "Balanced", data = 1},
 						{description = "Ignored", data = 0},

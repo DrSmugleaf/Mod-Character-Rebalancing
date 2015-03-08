@@ -27,6 +27,7 @@ local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED")
 	local drokBalanced = GetModConfigData("DROK_BALANCED")
 	local endiaBalanced = GetModConfigData("ENDIA_BALANCED")
 	local farozBalanced = GetModConfigData("FAROZ_BALANCED")
+	local filiaBalanced = GetModConfigData("FILIA_BALANCED")
 	--local fionnaBalanced = GetModConfigData("FIONNA_BALANCED")
 	local freeSpiritBalanced = GetModConfigData("FREESPIRIT_BALANCED")
 	--local gabenBalanced = GetModConfigData("GABEN_BALANCED")
@@ -42,6 +43,7 @@ local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED")
 	local serasBalanced = GetModConfigData("SERAS_BALANCED")
 	local sollyzBalanced = GetModConfigData("SOLLYZ_BALANCED")
 	local shovelKnightBalanced = GetModConfigData("SHOVELKNIGHT_BALANCED")
+	local tamamoBalanced = GetModConfigData("TAMAMO_BALANCED")
 	--local thanaBalanced = GetModConfigData("THANA_BALANCED")
 	--local theMedicBalanced = GetModConfigData("THEMEDIC_BALANCED")
 	local warkBalanced = GetModConfigData("WARK_BALANCED")
@@ -188,31 +190,24 @@ local function changeStartingInventory(inst, start_inv)
 
 	local oldSpawn = inst.OnNewSpawn
 	start_inv = start_inv or {}
-	
 	for _,v in pairs(startingItems) do -- Load starting items too since this deletes inventories
 		table.insert(start_inv, v)
 	end
-	
 	inst.OnNewSpawn = function()
 	
 	if oldSpawn ~= nil then oldSpawn() end
 	
 	if inst.components.inventory ~= nil then
 		inst.components.inventory.ignoresound = true
-		
 		for i = 1, inst.components.inventory:GetNumSlots() do
 			inst.components.inventory:RemoveItemBySlot(i) -- Remove all items
 		end
-		
 		for _, v in ipairs(start_inv) do
 			inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give new items
 		end
-		
 		inst.components.inventory.ignoresound = false
 	end
-	
 	end
-	
 end
 
 
@@ -226,102 +221,89 @@ end
 -----------------------------------------------------------------------
 local function modifyStats(inst, stats)
 
-	--[[Parameters to use:
-
-	local levelNerf = 
-
-
-		local foodType = 
-	OR
-		local foodPrefab1 = 
-		local foodPrefab2 = 
-		local foodPrefab3 = 
-		local foodPrefab4 = 
-		local foodPrefab5 = 
-			local levelPerFood1 = 
-			local levelPerFood2 = 
-			local levelPerFood3 = 
-			local levelPerFood4 = 
-			local levelPerFood5 = 
-	OR
-		local function newEat(inst, food)
-			oldEat(inst, food)
-		if food and food.components.edible and food.components.edible.foodtype=="MEAT" then
-			newUpg(inst)
-		end
-		end
-
-	local initialHealth = 
-	local initialHunger = 
-	local initialSanity = 
-	local initialDamage = 
-	local initialInsulation = 
-
-	local finalHealth = 
-	local finalHunger = 
-	local finalSanity = 
-	local finalDamage = 
-	local finalInsulation = 
-	]]
-	
 	-- Load the given stats
-	local health = stats.health
-	local hunger = stats.hunger
-	local sanity = stats.sanity
-	local damage = stats.damage
-	local insulation = stats.insulation
-	local walkSpeed = stats.walkSpeed
-	local runSpeed = stats.runSpeed
-	local dapperness = stats.dapperness
-	local nightDrain = stats.nightDrain
-	local monsterDrain = stats.monsterDrain
-	local strongStomach = stats.strongStomach
-	local hungerRate = stats.hungerRate
-
-	local levelNerf = stats.levelNerf
-
-		local foodType = stats.foodType
-
-		local foodPrefab1 = stats.foodPrefab1
-		local foodPrefab2 = stats.foodPrefab2
-		local foodPrefab3 = stats.foodPrefab3
-		local foodPrefab4 = stats.foodPrefab4
-		local foodPrefab5 = stats.foodPrefab5
-			local levelPerFood1 = stats.levelPerFood1
-			local levelPerFood2 = stats.levelPerFood2
-			local levelPerFood3 = stats.levelPerFood3
-			local levelPerFood4 = stats.levelPerFood4
-			local levelPerFood5 = stats.levelPerFood5
-
-	local initialHealth = stats.initialHealth
-	local initialHunger = stats.initialHunger
-	local initialSanity = stats.initialSanity
-	local initialDamage = stats.initialDamage
-	local initialInsulation = stats.initialInsulation
 	if nerfSpeed == 0 then
+		health = stats.health
+		hunger = stats.hunger
+		sanity = stats.sanity
+		damage = stats.damage
+		insulation = stats.insulation
+		walkSpeed = stats.walkSpeed
+		runSpeed = stats.runSpeed
+		dapperness = stats.dapperness
+		nightDrain = stats.nightDrain
+		monsterDrain = stats.monsterDrain
+		strongStomach = stats.strongStomach
+		hungerRate = stats.hungerRate
+	elseif nerfSpeed == 1 then
+		health = stats.healthNerf
+		hunger = stats.hungerNerf
+		sanity = stats.sanityNerf
+		damage = stats.damageNerf
+		insulation = stats.insulationNerf
+		walkSpeed = stats.walkSpeedNerf
+		runSpeed = stats.runSpeedNerf
+		dapperness = stats.dappernessNerf
+		nightDrain = stats.nightDrainNerf
+		monsterDrain = stats.monsterDrainNerf
+		strongStomach = stats.strongStomachNerf
+		hungerRate = stats.hungerRateNerf
+	end
+  
+  
+
+	if hardcoreMode == 0 then levelNerf = stats.levelNerf
+	elseif hardcoreMode == 1 then levelNerf = stats.hardcoreMode end
+
+	local foodType = stats.foodType
+
+	local foodPrefab1 = stats.foodPrefab1
+	local foodPrefab2 = stats.foodPrefab2
+	local foodPrefab3 = stats.foodPrefab3
+	local foodPrefab4 = stats.foodPrefab4
+	local foodPrefab5 = stats.foodPrefab5
+		local levelPerFood1 = stats.levelPerFood1
+		local levelPerFood2 = stats.levelPerFood2
+		local levelPerFood3 = stats.levelPerFood3
+		local levelPerFood4 = stats.levelPerFood4
+		local levelPerFood5 = stats.levelPerFood5
+
+
+	if nerfSpeed == 0 then
+		initialHealth = stats.initialHealth
+		initialHunger = stats.initialHunger
+		initialSanity = stats.initialSanity
+		initialDamage = stats.initialDamage
+		initialInsulation = stats.initialInsulation
 		initialWalk = stats.initialWalk
 		initialRun = stats.initialRun
-	elseif nerfSpeed == 1 then
-		initialWalk = stats.initialWalkNerf
-		initialRun = stats.initialRunNerf
-	end
-
-	local finalHealth = stats.finalHealth
-	local finalHunger = stats.finalHunger
-	local finalSanity = stats.finalSanity
-	local finalDamage = stats.finalDamage
-	local finalInsulation = stats.finalInsulation
-	if nerfSpeed == 0 then
+		finalHealth = stats.finalHealth
+		finalHunger = stats.finalHunger
+		finalSanity = stats.finalSanity
+		finalDamage = stats.finalDamage
+		finalInsulation = stats.finalInsulation
 		finalWalk = stats.finalWalk
 		finalRun = stats.finalRun
 	elseif nerfSpeed == 1 then
-		finalWalk = stats.finalWalkHardcore
-		finalRun = stats.finalRunHardcore
+		initialHealth = stats.initialHealthNerf
+		initialHunger = stats.initialHungerNerf
+		initialSanity = stats.initialSanityNerf
+		initialDamage = stats.initialDamageNerf
+		initialInsulation = stats.initialInsulationNerf
+		initialWalk = stats.initialWalkNerf
+		initialRun = stats.initialRunNerf
+		finalHealth = stats.finalHealthNerf
+		finalHunger = stats.finalHungerNerf
+		finalSanity = stats.finalSanityNerf
+		finalDamage = stats.finalDamageNerf
+		finalInsulation = stats.finalInsulationNerf
+		finalWalk = stats.finalWalkNerf
+		finalRun = stats.finalRunNerf
 	end
-	if not initialWalk then initialWalk = stats.initialWalk end
-	if not initialRun then initialRun = stats.initialRun end
-	if not finalWalk then finalWalk = stats.finalWalk end
-	if not finalRun then finalRun = stats.finalRun end
+	
+	local hunger_percent = inst.components.hunger:GetPercent()
+	local health_percent = inst.components.health:GetPercent()
+	local sanity_percent = inst.components.sanity:GetPercent()
 	
 	if levelSetting > 0 and initialHealth or initialHunger or initialSanity or initialDamage or initialInsulation or initialWalk or initialRun then
 		
@@ -499,6 +481,30 @@ local function modifyStats(inst, stats)
 			inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE * hungerRate)
 		end
 		
+	inst.components.hunger:SetPercent(hunger_percent)
+	inst.components.health:SetPercent(health_percent)
+	inst.components.sanity:SetPercent(sanity_percent)
+	
+end
+
+
+-----------------------------------------
+-- Function to add modes to characters --
+-----------------------------------------
+local function CRAddMode(inst, CRKey, CRAction)
+  local function OnKeyPressed(inst, data)
+		if data.inst == GLOBAL.ThePlayer then
+			if data.key == CRKey then --Welcome to GLOBAL ville
+				if GLOBAL.TheWorld.ismastersim then
+					GLOBAL.BufferedAction(inst, inst, GLOBAL.ACTIONS[CRAction]):Do()
+				else
+					GLOBAL.SendRPCToServer(GLOBAL.RPC.DoWidgetButtonAction, GLOBAL.ACTIONS[CRAction].code, inst, GLOBAL.ACTIONS[CRAction].mod_name)
+				end
+			end
+		end
+	end
+	inst:AddComponent("CRkeyhandler")
+	inst:ListenForEvent("CRkeypressed", OnKeyPressed)
 end
 
 
@@ -563,8 +569,8 @@ local function balanceCrashBandicootStats(inst)
 									finalHealth = 100,
 									finalHunger = 125,
 									finalSanity = 150,
-									finalRunHardcore = 1,
-									finalWalkHardcore = 1,
+									finalRunNerf = 1,
+									finalWalkNerf = 1,
 								}
 	
 	modifyStats(inst, crashBandicootStats)
@@ -632,6 +638,22 @@ local function balanceFarozGlasses(inst)
 	
 	inst:AddComponent("characterspecific")
 	inst.components.characterspecific:SetOwner("faroz")
+	
+end
+
+
+local function balanceFiliaStats(inst)
+	
+	local filiaStats =	{
+							health = 75,
+							hunger = 100,
+							sanity = 150,
+							damage = 1.5,
+							walkSpeed = 1.5,
+							runSpeed = 1.5,
+						}
+						
+	modifyStats(inst, filiaStats)
 	
 end
 
@@ -765,6 +787,16 @@ local function balanceMichaelTheFoxStats(inst)
 									nightDrain = 1.25,
 									monsterDrain = 1.25,
 									dapperness = TUNING.DAPPERNESS_TINY*-1,
+									
+									healthNerf = 100,
+									hungerNerf = 150,
+									sanityNerf = 100,
+									damageNerf = 0.85,
+									nightDrainNerf = 1.10,
+									monsterDrainNerf = 1.10,
+									dappernessNerf = TUNING.DAPPERNESS_TINY*0.5,
+									walkSpeedNerf = 1.25,
+									runSpeedNerf = 1.25,
 								}
 
 	modifyStats(inst, michaelTheFoxStats)
@@ -956,6 +988,70 @@ end
 end
 
 
+local function balanceTamamoStats(inst)
+	
+	local DefaultEater = require("components/eater")
+	local FERAL = GLOBAL.Action()
+	FERAL.str = "Feral"
+	FERAL.id = "FERAL"
+	FERAL.fn = function(act)
+		local silent = true
+		--act.target.Light:Enable(true) --inst. -> not assigned act.target is.
+		if act.target.transformed then
+			--act.target.Light:Enable(false)
+			tamamoStats =	{
+								health = 125,
+								damage = 1,
+								walkSpeed = 1,
+								runSpeed = 1,
+								dapperness = 0,
+								hungerRate = 1,
+							}
+			
+			modifyStats(act.target, tamamoStats)
+		else
+			--act.target.Light:Enable(true)
+			tamamoStats =	{
+								health = 125,
+								damage = 1.5,
+								walkSpeed = 1.5,
+								runSpeed = 1.5,
+								dapperness = -2*TUNING.DAPPERNESS_LARGE,
+								hungerRate = 1.5,
+							}
+							
+			modifyStats(act.target, tamamoStats)
+		end
+		act.target.transformed = not act.target.transformed
+		return true
+	end
+	
+	AddAction(FERAL)
+	
+	local tamamoStats =	{
+							health = 125,
+							walkSpeed = 1,
+							runSpeed = 1,
+							damage = 1,
+							dapperness = 0,
+							hungerRate = 1,
+						}
+	
+	modifyStats(inst, tamamoStats)
+	
+	CRAddMode(inst, GLOBAL.KEY_X, "FERAL")
+	
+	inst:RemoveTag('<span class="searchlite">birdwhisperer</span>')
+	inst:AddTag("scarytoprey")
+	
+	inst.components.eater.ignorespoilage = false
+	function inst.components.eater:Eat(food)
+		return DefaultEater.Eat(self, food)
+	end
+	
+end
+
+
 --local function balanceThanaStats(inst)
 --end
 
@@ -970,6 +1066,12 @@ local function balanceWarkStats(inst)
 							health = 125,
 							hunger = 150,
 							damage = 0.8,
+							
+							healthNerf = 150,
+							hungerNerf = 150,
+							damageNerf = 1,
+							walkSpeedNerf = 1,
+							runSpeedNerf = 1,
 						}
 	
 	modifyStats(inst, warkStats)
@@ -1016,11 +1118,13 @@ local function balanceWoodieAxe(inst)
 end
 
 
---[[local function balanceZimStats(inst)
-end]]
+--[[
+local function balanceZimStats(inst)
+
+end
+]]
 
 
---if not GLOBAL.TheNet:GetIsClient() then
 ---------------------------------------------------------------------------------
 -- Add the previously set functions to each character or character item prefab --
 ---------------------------------------------------------------------------------
@@ -1082,6 +1186,15 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 		end
 	end
 		
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-398833909") then
+		if filiaBalanced == 1 then
+			AddPrefabPostInit("filia", balanceFiliaStats)
+			printInfo("Balancing Filia")
+		else
+			printInfo("Ignoring Filia")
+		end
+	end
+	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-374341561") then
 		if fionnaBalanced == 1 then
 			AddPrefabPostInit("fionna", balanceFionnaStats)
@@ -1220,7 +1333,16 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 			printInfo("Ignoring Shovel Knight")
 		end
 	end
-		
+	
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-399799824") then
+		if tamamoBalanced == 1 then	
+			AddPrefabPostInit("tamamo", balanceTamamoStats)
+			printInfo("Balancing Tamamo")
+		else
+			printInfo("Ignoring Tamamo")
+		end
+	end
+	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-368541793") then
 		if thanaBalanced == 1 then	
 			AddPrefabPostInit("thana", balanceThanaStats)
