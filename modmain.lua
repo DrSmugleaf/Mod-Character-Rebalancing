@@ -487,6 +487,9 @@ local function modifyStats(inst, stats)
 end
 
 
+-----------------------------------------
+-- Function to add modes to characters --
+-----------------------------------------
 local function CRAddMode(inst, CRKey, CRAction)
   local function OnKeyPressed(inst, data)
 		if data.inst == GLOBAL.ThePlayer then
@@ -967,48 +970,36 @@ if levelSetting > 0 then
 end
 end
 
+
+
+local function balanceTamamoStats(inst)
+	
 	local FERAL = GLOBAL.Action()
 	FERAL.str = "Feral"
 	FERAL.id = "FERAL"
 	FERAL.fn = function(act)
 		local silent = true
-		--act.target.AnimState:SetBuild("tamamo_ball")
 		act.target.Light:Enable(true) --inst. -> not assigned act.target is.
 		if act.target.transformed then
-			--act.target.AnimState:SetBuild("tamamo")
 			act.target.Light:Enable(false)
 			tamamoStats =	{
-								health = 100
+								
 							}
 			
 			modifyStats(act.target, tamamoStats)
 		else
-			--act.target.AnimState:SetBuild("tamamo_ball")
 			act.target.Light:Enable(true)
 			tamamoStats =	{
-								health = 25
+								
 							}
 							
 			modifyStats(act.target, tamamoStats)
 		end
 		act.target.transformed = not act.target.transformed
-		-- act.target.components.health:SetCurrentHealth(1)
-		-- act.target.components.health:DoDelta(0)
 		return true
 	end
-AddAction(FERAL)
-
-local function balanceTamamoStats(inst)
-
-	local light = inst.entity:AddLight()
-	inst.Light:Enable(false)
-	inst.Light:SetRadius(15)
-	inst.Light:SetFalloff(0.75)
-	inst.Light:SetIntensity(.6)
-	inst.Light:SetColour(70/255,255/255,12/255)
 	
-	
-	
+	AddAction(FERAL)
 	
 	local tamamoStats =	{
 							health = 50
@@ -1019,7 +1010,6 @@ local function balanceTamamoStats(inst)
 	CRAddMode(inst, GLOBAL.KEY_T, "FERAL")
 	
 end
-
 
 
 --local function balanceThanaStats(inst)
@@ -1088,11 +1078,13 @@ local function balanceWoodieAxe(inst)
 end
 
 
---[[local function balanceZimStats(inst)
-end]]
+--[[
+local function balanceZimStats(inst)
+
+end
+]]
 
 
---if not GLOBAL.TheNet:GetIsClient() then
 ---------------------------------------------------------------------------------
 -- Add the previously set functions to each character or character item prefab --
 ---------------------------------------------------------------------------------
