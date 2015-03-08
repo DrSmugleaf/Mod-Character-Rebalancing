@@ -300,6 +300,10 @@ local function modifyStats(inst, stats)
 		finalRun = stats.finalRunNerf
 	end
 	
+	local hunger_percent = inst.components.hunger:GetPercent()
+	local health_percent = inst.components.health:GetPercent()
+	local sanity_percent = inst.components.sanity:GetPercent()
+	
 	if levelSetting > 0 and initialHealth or initialHunger or initialSanity or initialDamage or initialInsulation or initialWalk or initialRun then
 		
 		if not levelNerf then
@@ -476,6 +480,10 @@ local function modifyStats(inst, stats)
 			inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE * hungerRate)
 		end
 		
+	inst.components.hunger:SetPercent(hunger_percent)
+	inst.components.health:SetPercent(health_percent)
+	inst.components.sanity:SetPercent(sanity_percent)
+	
 end
 
 
@@ -969,9 +977,19 @@ end
 		if act.target.transformed then
 			--act.target.AnimState:SetBuild("tamamo")
 			act.target.Light:Enable(false)
+			tamamoStats =	{
+								health = 100
+							}
+			
+			modifyStats(act.target, tamamoStats)
 		else
 			--act.target.AnimState:SetBuild("tamamo_ball")
 			act.target.Light:Enable(true)
+			tamamoStats =	{
+								health = 25
+							}
+							
+			modifyStats(act.target, tamamoStats)
 		end
 		act.target.transformed = not act.target.transformed
 		-- act.target.components.health:SetCurrentHealth(1)
