@@ -2,6 +2,8 @@ local require = GLOBAL.require
 local STRINGS = GLOBAL.STRINGS
 
 local MOD_NAME = "Mod Character Rebalancing"
+local MOD_PREFIX = "MCR"
+local MOD_ID = "385300215"
 
 --------------------------------
 -- Load Starting Items config --
@@ -52,6 +54,13 @@ local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED")
 	--local zimBalanced = GetModConfigData("ZIM_BALANCED")
 	
 	
+-------------------------------
+-- Load Special Modes config --
+-------------------------------
+local nerfSpeed = GetModConfigData("NERF_SPEED")
+local hardcoreMode = GetModConfigData("HARDCORE_MODE")
+
+
 -------------------------------------------------------------------------
 -- Load Leveling System config and assign base max levels difficulties --
 -------------------------------------------------------------------------
@@ -69,14 +78,9 @@ if levelSetting then
 	
 	end
 	
+	if hardcoreMode then levelDifficulty = levelDifficulty + 200 end
+	
 end
-	
-	
--------------------------------
--- Load Special Modes config --
--------------------------------
-local nerfSpeed = GetModConfigData("NERF_SPEED")
-local hardcoreMode = GetModConfigData("HARDCORE_MODE")
 
 
 --------------------------------------------------------------
@@ -249,11 +253,10 @@ local function modifyStats(inst, stats)
 		strongStomach = stats.strongStomachNerf
 		hungerRate = stats.hungerRateNerf
 	end
-  
-  
-
-	if hardcoreMode == 0 then levelNerf = stats.levelNerf
-	elseif hardcoreMode == 1 then levelNerf = stats.hardcoreMode end
+	
+	
+	--if hardcoreMode == 0 then levelBase = stats.levelBase
+	--elseif hardcoreMode == 1 then levelBase = stats.hardcoreMode end
 
 	local foodType = stats.foodType
 
@@ -307,11 +310,11 @@ local function modifyStats(inst, stats)
 	
 	if levelSetting > 0 and initialHealth or initialHunger or initialSanity or initialDamage or initialInsulation or initialWalk or initialRun then
 		
-		if not levelNerf then
-			levelNerf = 0
+		if not levelBase then
+			levelBase = 0
 		end
 		
-		maxUpgrades = levelDifficulty+levelNerf
+		maxUpgrades = levelDifficulty+levelBase
 		
 		function applyUpgrades(inst)
 
@@ -550,8 +553,7 @@ inst.components.characterspecific:SetOwner(inst.prefab)
 local function balanceCrashBandicootStats(inst)
 
 	local crashBandicootStats = {
-									levelNerf = 50,
-									levelNerfHardcore = 250,
+									levelBase = 50,
 									
 									foodPrefab1 = "wumpa",
 									foodPrefab2 = "wumpa_cooked",
@@ -692,7 +694,7 @@ if levelSetting > 0 then
 	local oldPreLoad = inst.OnPreLoad
 	local oldEat = inst.components.eater.oneatfn
 	
-	local levelNerf = 25
+	local levelBase = 25
 	
 	local initialHealth = 75
 	local initialHunger = 75
@@ -709,7 +711,7 @@ if levelSetting > 0 then
 			
 	local function newUpg(inst)
 
-		max_upgrades = levelDifficulty+levelNerf
+		max_upgrades = levelDifficulty+levelBase
 		
 		local upgrades = math.min(inst.level, max_upgrades)
  
@@ -828,7 +830,7 @@ if levelSetting > 0 then
 	local oldPreLoad = inst.OnPreLoad
 	local oldEat = inst.components.eater.oneatfn
 	
-	local levelNerf = 50
+	local levelBase = 50
 	
 	local initialHealth = 75
 	local initialHunger = 75
@@ -848,7 +850,7 @@ if levelSetting > 0 then
 	
 	local function newUpg(inst)
 	
-		max_upgrades = levelDifficulty+levelNerf
+		max_upgrades = levelDifficulty+levelBase
 			
 		local upgrades = math.min(inst.level, max_upgrades)
  
@@ -928,7 +930,7 @@ if levelSetting > 0 then
 	local oldPreLoad = inst.OnPreLoad
 	local oldEat = inst.components.eater.oneatfn
 	
-	local levelNerf = 0
+	local levelBase = 0
 	
 	local initialHealth = 50
 	local initialHunger = 75
@@ -944,7 +946,7 @@ if levelSetting > 0 then
 	
 	local function newUpg(inst)
 
-		max_upgrades = levelDifficulty+levelNerf
+		max_upgrades = levelDifficulty+levelBase
 		
 		local upgrades = math.min(inst.level, max_upgrades)
  
@@ -1090,7 +1092,7 @@ local function balanceWoodieStats(inst)
 
 	local woodieStats = {
 
-							levelNerf =  0,
+							levelBase =  0,
 
 							foodPrefab1 =  "butterflymuffin",
 							levelPerFood1 = 1,
