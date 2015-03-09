@@ -2,7 +2,7 @@
 name = "Mod Character Balancing"
 description = "Configure everything! Balance your characters, new leveling systems, items for new players, customize your experience. Basically GregTech."
 author = "DrSmugleaf"
-version = "2.0.0"
+version = "2.1.0"
 
 priority = -100
 
@@ -279,6 +279,18 @@ configuration_options =
 	},
 	
 	{
+		name = "ESKO_BALANCED",
+		label = "Esko",
+		hover = "Balance Esko, the Skycat",
+		options =	{
+						{description = "Balanced", data = 1},
+						{description = "Ignored", data = 0},
+					},
+
+		default = 1,
+	},
+	
+	{
 		name = "FAROZ_BALANCED",
 		label = "Faroz",
 		hover = "Balance Faroz, the Little Scholar",
@@ -482,7 +494,7 @@ configuration_options =
 		default = 1,
 	},
 	
-	{
+	--[[{
 		name = "TAMAMO_BALANCED",
 		label = "Tamamo",
 		hover = "Balance Tamamo, Queen of Kitsunes",
@@ -492,7 +504,7 @@ configuration_options =
 					},
 
 		default = 1,
-	},
+	},]]
 	
 	--[[{
 		name = "THANA_BALANCED",
