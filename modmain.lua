@@ -491,14 +491,14 @@ end
 -----------------------------------------
 -- Function to add modes to characters --
 -----------------------------------------
-local function CRAddMode(inst, CRKey, CRAction)
+local function CRAddMode(inst, CRKeyActionMap)
   local function OnKeyPressed(inst, data)
 		if data.inst == GLOBAL.ThePlayer then
-			if data.key == CRKey then --Welcome to GLOBAL ville
+			if data.key ~= nil and CRKeyActionMap[data.key] ~= CRKey then --Welcome to GLOBAL ville
 				if GLOBAL.TheWorld.ismastersim then
-					GLOBAL.BufferedAction(inst, inst, GLOBAL.ACTIONS[CRAction]):Do()
+					GLOBAL.BufferedAction(inst, inst, GLOBAL.ACTIONS[CRKeyActionMap[data.key]]):Do()
 				else
-					GLOBAL.SendRPCToServer(GLOBAL.RPC.DoWidgetButtonAction, GLOBAL.ACTIONS[CRAction].code, inst, GLOBAL.ACTIONS[CRAction].mod_name)
+					GLOBAL.SendRPCToServer(GLOBAL.RPC.DoWidgetButtonAction, GLOBAL.ACTIONS[CRKeyActionMap[data.key]].code, inst, GLOBAL.ACTIONS[CRKeyActionMap[data.key]].mod_name)
 				end
 			end
 		end
@@ -1039,7 +1039,7 @@ local function balanceTamamoStats(inst)
 	
 	modifyStats(inst, tamamoStats)
 	
-	CRAddMode(inst, GLOBAL.KEY_X, "FERAL")
+	CRAddMode(inst, {[GLOBAL.KEY_X] = "FERAL"})
 	
 	inst:RemoveTag('<span class="searchlite">birdwhisperer</span>')
 	inst:AddTag("scarytoprey")
