@@ -28,6 +28,7 @@ local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED")
 	--local devonBalanced = GetModConfigData("DEVON_BALANCED")
 	local drokBalanced = GetModConfigData("DROK_BALANCED")
 	local endiaBalanced = GetModConfigData("ENDIA_BALANCED")
+	local eskoBalanced = GetModConfigData("ESKO_BALANCED")
 	local farozBalanced = GetModConfigData("FAROZ_BALANCED")
 	local filiaBalanced = GetModConfigData("FILIA_BALANCED")
 	--local fionnaBalanced = GetModConfigData("FIONNA_BALANCED")
@@ -78,7 +79,7 @@ if levelSetting then
 	
 	end
 	
-	if hardcoreMode then levelDifficulty = levelDifficulty + 200 end
+	if hardcoreMode == 1 then levelDifficulty = levelDifficulty + 200 end
 	
 end
 
@@ -226,6 +227,9 @@ end
 local function modifyStats(inst, stats)
 
 	-- Load the given stats
+	
+	levelBase = stats.levelBase
+	
 	if nerfSpeed == 0 then
 		health = stats.health
 		hunger = stats.hunger
@@ -618,6 +622,52 @@ local function balanceEndiaStats(inst)
 						}
 						
 	modifyStats(inst, endiaStats)
+	
+end
+
+
+local function balanceEskoStats(inst)
+	
+	local eskoStats =	{
+							levelBase = 25,
+							foodPrefab1 = "fish",
+							levelPerFood1 = 1,
+							
+							initialHealth = 75,
+							initialHunger = 100,
+							initialSanity = 75,
+							initialDamage = 0.7,
+							initialWalk = 1,
+							initialRun = 1,
+							
+							finalHealth = 125,
+							finalHunger = 150,
+							finalSanity = 100,
+							finalDamage = 1,
+							finalWalk = 1.5,
+							finalRun = 1.5,
+							
+							hungerRate = 2,
+							
+							
+							initialHealthNerf = 100,
+							initialHungerNerf = 100,
+							initialSanityNerf = 100,
+							initialDamageNerf = 0.7,
+							initialWalk = 1,
+							initialRun = 1,
+							
+							finalHealthNerf = 150,
+							finalHungerNerf = 150,
+							finalSanityNerf = 125,
+							finalDamageNerf = 0.9,
+							finalWalkNerf = 1.25,
+							finalRunNerf = 1.25,
+							
+							hungerRateNerf = 1.75,
+						}
+	
+	modifyStats(inst, eskoStats)
 	
 end
 
@@ -1179,6 +1229,15 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 		end
 	end
 
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-356880841") then
+		if eskoBalanced == 1 then
+			AddPrefabPostInit("esk", balanceEskoStats)
+			printInfo("Balancing Esko")
+		else
+			printInfo("Ignoring Esko")
+		end
+	end
+	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364491382") then
 		if farozBalanced == 1 then
 			AddPrefabPostInit("faroz", balanceFarozStats)

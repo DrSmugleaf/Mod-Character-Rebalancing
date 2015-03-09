@@ -2,7 +2,7 @@
 name = "Mod Character Balancing"
 description = "Configure everything! Balance your characters, new leveling systems, items for new players, customize your experience. Basically GregTech."
 author = "DrSmugleaf"
-version = "2.0.0"
+version = "2.1.0"
 
 priority = -100
 
@@ -270,6 +270,18 @@ configuration_options =
 		name = "ENDIA_BALANCED",
 		label = "Endia",
 		hover = "Balance Endia, the Paranoid Elf",
+		options =	{
+						{description = "Balanced", data = 1},
+						{description = "Ignored", data = 0},
+					},
+
+		default = 1,
+	},
+	
+	{
+		name = "ESKO_BALANCED",
+		label = "Esko",
+		hover = "Balance Esko, the Skycat",
 		options =	{
 						{description = "Balanced", data = 1},
 						{description = "Ignored", data = 0},
