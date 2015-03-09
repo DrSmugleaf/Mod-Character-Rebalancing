@@ -43,7 +43,7 @@ local modBalancingEnabled = GetModConfigData("MOD_BALANCING_ENABLED")
 	local serasBalanced = GetModConfigData("SERAS_BALANCED")
 	local sollyzBalanced = GetModConfigData("SOLLYZ_BALANCED")
 	local shovelKnightBalanced = GetModConfigData("SHOVELKNIGHT_BALANCED")
-	local tamamoBalanced = GetModConfigData("TAMAMO_BALANCED")
+	--local tamamoBalanced = GetModConfigData("TAMAMO_BALANCED")
 	--local thanaBalanced = GetModConfigData("THANA_BALANCED")
 	--local theMedicBalanced = GetModConfigData("THEMEDIC_BALANCED")
 	local warkBalanced = GetModConfigData("WARK_BALANCED")
@@ -988,7 +988,7 @@ end
 end
 
 
-local function balanceTamamoStats(inst)
+--[[local function balanceTamamoStats(inst)
 	
 	local DefaultEater = require("components/eater")
 	local FERAL = GLOBAL.Action()
@@ -1049,7 +1049,7 @@ local function balanceTamamoStats(inst)
 		return DefaultEater.Eat(self, food)
 	end
 	
-end
+end]]
 
 
 --local function balanceThanaStats(inst)
@@ -1142,8 +1142,8 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-384048428") then
-		if devonBalanced == 1 then
-			AddPrefabPostInit("devon", balanceDarkSakuraStats)
+		if darkSakuraBalanced == 1 then
+			AddPrefabPostInit("sakura", balanceDarkSakuraStats)
 			printInfo("Balancing Dark Sakura Matou")
 		else
 			printInfo("Ignoring Dark Sakura Matou")
@@ -1168,13 +1168,14 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 		end
 	end
 	
-		if GLOBAL.KnownModIndex:IsModEnabled("workshop-363966651") then
-			if endiaBalanced == 1 then
-				AddPrefabPostInit("endia", balanceEndiaStats)
-				printInfo("Balancing Endia")
-				--printInfoToConsole(info, "Balancing Endia")
-			end
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-363966651") then
+		if endiaBalanced == 1 then
+			AddPrefabPostInit("endia", balanceEndiaStats)
+			printInfo("Balancing Endia")
+		else
+			printInfo("Ignoring Endia")
 		end
+	end
 
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364491382") then
 		if farozBalanced == 1 then
@@ -1334,14 +1335,14 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 		end
 	end
 	
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-399799824") then
+	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-399799824") then
 		if tamamoBalanced == 1 then	
 			AddPrefabPostInit("tamamo", balanceTamamoStats)
 			printInfo("Balancing Tamamo")
 		else
 			printInfo("Ignoring Tamamo")
 		end
-	end
+	end]]
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-368541793") then
 		if thanaBalanced == 1 then	
