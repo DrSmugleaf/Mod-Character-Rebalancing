@@ -494,7 +494,7 @@ end
 local function CRAddMode(inst, CRKeyActionMap)
   local function OnKeyPressed(inst, data)
 		if data.inst == GLOBAL.ThePlayer then
-			if data.key ~= nil and CRKeyActionMap[data.key] ~= CRKey then --Welcome to GLOBAL ville
+			if data.key ~= nil and CRKeyActionMap[data.key] ~= nil then --Welcome to GLOBAL ville
 				if GLOBAL.TheWorld.ismastersim then
 					GLOBAL.BufferedAction(inst, inst, GLOBAL.ACTIONS[CRKeyActionMap[data.key]]):Do()
 				else
