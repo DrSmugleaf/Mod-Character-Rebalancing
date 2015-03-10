@@ -521,7 +521,7 @@ end
 AddComponentPostInit("inventory", function(self) -- Add the function to the component inventory
 	local DropItem_base = self.DropItem
 	function self:DropItem(item, ...)
-		if item:HasTag("undroppable") then -- Check for the tag
+		if item and item:HasTag("undroppable") then -- Check for the tag
 			return false -- Can't be dropped
 		else
 			return DropItem_base(self, item, ...)
