@@ -1,9 +1,12 @@
 local require = GLOBAL.require
 local STRINGS = GLOBAL.STRINGS
 
-PrintPrefix = require "PrintPrefix"
-ChangeStartingInventory = require "ChangeStartingInventory"
-InventoryModifiers = require "InventoryModifiers"
+local LogHelper = require "LogHelper"
+local ChangeStartingInventory = require "ChangeStartingInventory"
+local InventoryModifiers = require "InventoryModifiers"
+local ModifyCharacter = require "ModifyCharacter"
+
+AddComponentPostInit("inventory", InventoryModifiers.makeUndroppable())
 
 local MOD_NAME = "Mod Character Rebalancing"
 local MOD_PREFIX = "MCR"
@@ -18,14 +21,14 @@ local enableStartingItems = GetModConfigData("ENABLE_STARTING_ITEMS")
 	local amountOfTwigs = GetModConfigData("AMOUNT_OF_TWIGS")
 	local giveThermalStone = GetModConfigData("GIVE_THERMAL_STONE")
 
-startingItems = {}
+local startingItems = {}
 
 ----------------------------------------------------
 -- Check config settings and add items to a table --
 ----------------------------------------------------
 if enableStartingItems == 1 then -- If starting items is enabled
 	
-	PrintPrefix.printInfo("Starting Items enabled")
+	LogHelper.printInfo("Starting Items enabled")
 	
 	for _= 1, amountOfFlint do -- For the amount of flint specified in the config
 		table.insert(startingItems, "flint") -- Insert it into the table "startingItems"
@@ -49,7 +52,7 @@ if enableStartingItems == 1 then -- If starting items is enabled
 	
 else
 	
-	PrintPrefix.printInfo("Starting Items disabled")
+	LogHelper.printInfo("Starting Items disabled")
 	
 end
 
@@ -146,11 +149,6 @@ if levelSetting then
 	if hardcoreMode == 1 then levelDifficulty = levelDifficulty + 200 end
 	
 end
-
-
-
-
-
 
 
 --local function modifyPrefab(inst, stats)
@@ -430,27 +428,6 @@ local function modifyStats(inst, stats)
 	inst.components.sanity:SetPercent(sanity_percent)
 	
 end
-
-
------------------------------------------
--- Function to add modes to characters --
------------------------------------------
-local function CRAddMode(inst, CRKey, CRAction)
-  local function OnKeyPressed(inst, data)
-		if data.inst == GLOBAL.ThePlayer then
-			if data.key == CRKey then --Welcome to GLOBAL ville
-				if GLOBAL.TheWorld.ismastersim then
-					GLOBAL.BufferedAction(inst, inst, GLOBAL.ACTIONS[CRAction]):Do()
-				else
-					GLOBAL.SendRPCToServer(GLOBAL.RPC.DoWidgetButtonAction, GLOBAL.ACTIONS[CRAction].code, inst, GLOBAL.ACTIONS[CRAction].mod_name)
-				end
-			end
-		end
-	end
-	inst:AddComponent("CRkeyhandler")
-	inst:ListenForEvent("CRkeypressed", OnKeyPressed)
-end
-
 
 --------------------------------------------------------------------------------
 -- Component to make certain items undroppable when given the tag undroppable --
@@ -1031,7 +1008,7 @@ end
 	
 	modifyStats(inst, tamamoStats)
 	
-	CRAddMode(inst, GLOBAL.KEY_X, "FERAL")
+	ModifyCharacter:addMode(inst, GLOBAL.KEY_X, "FERAL")
 	
 	inst:RemoveTag('<span class="searchlite">birdwhisperer</span>')
 	inst:AddTag("scarytoprey")
@@ -1122,59 +1099,59 @@ end
 ---------------------------------------------------------------------------------
 if modBalancingEnabled == 1 then -- TODO: Replace with a function
 	
-	PrintPrefix.printInfo("Mod Balancing enabled")
+	LogHelper.printInfo("Mod Balancing enabled")
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-382501575") then
 		if crashBandicootBalanced == 1 then
 			AddPrefabPostInit("crashbandi", balanceCrashBandicootStats)
-			PrintPrefix.printInfo("Balancing Crash Bandicoot")
+			LogHelper.printInfo("Balancing Crash Bandicoot")
 		else
-			PrintPrefix.printInfo("Ignoring Crash Bandicoot")
+			LogHelper.printInfo("Ignoring Crash Bandicoot")
 		end
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-384048428") then
 		if darkSakuraBalanced == 1 then
 			AddPrefabPostInit("sakura", balanceDarkSakuraStats)
-			PrintPrefix.printInfo("Balancing Dark Sakura Matou")
+			LogHelper.printInfo("Balancing Dark Sakura Matou")
 		else
-			PrintPrefix.printInfo("Ignoring Dark Sakura Matou")
+			LogHelper.printInfo("Ignoring Dark Sakura Matou")
 		end
 	end
 		
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-366048578") then
 		if devonBalanced == 1 then
 			AddPrefabPostInit("devon", balanceDevonStats)
-			PrintPrefix.printInfo("Balancing Devon")
+			LogHelper.printInfo("Balancing Devon")
 		else
-			PrintPrefix.printInfo("Ignoring Devon")
+			LogHelper.printInfo("Ignoring Devon")
 		end
 	end]]
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-373622746") then
 		if drokBalanced == 1 then
 			AddPrefabPostInit("drok", balanceDrokStats)
-			PrintPrefix.printInfo("Balancing Drok the Caveman")
+			LogHelper.printInfo("Balancing Drok the Caveman")
 		else
-			PrintPrefix.printInfo("Ignoring Drok the Caveman")
+			LogHelper.printInfo("Ignoring Drok the Caveman")
 		end
 	end
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-363966651") then
 		if endiaBalanced == 1 then
 			AddPrefabPostInit("endia", balanceEndiaStats)
-			PrintPrefix.printInfo("Balancing Endia")
+			LogHelper.printInfo("Balancing Endia")
 		else
-			PrintPrefix.printInfo("Ignoring Endia")
+			LogHelper.printInfo("Ignoring Endia")
 		end
 	end
 
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-356880841") then
 		if eskoBalanced == 1 then
 			AddPrefabPostInit("esk", balanceEskoStats)
-			PrintPrefix.printInfo("Balancing Esko")
+			LogHelper.printInfo("Balancing Esko")
 		else
-			PrintPrefix.printInfo("Ignoring Esko")
+			LogHelper.printInfo("Ignoring Esko")
 		end
 	end
 	
@@ -1182,144 +1159,144 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 		if farozBalanced == 1 then
 			AddPrefabPostInit("faroz", balanceFarozStats)
 			AddPrefabPostInit("faroz_gls", balanceFarozGlasses)
-			PrintPrefix.printInfo("Balancing Faroz")
+			LogHelper.printInfo("Balancing Faroz")
 		else
-			PrintPrefix.printInfo("Ignoring Faroz")
+			LogHelper.printInfo("Ignoring Faroz")
 		end
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-398833909") then
 		if filiaBalanced == 1 then
 			AddPrefabPostInit("filia", balanceFiliaStats)
-			PrintPrefix.printInfo("Balancing Filia")
+			LogHelper.printInfo("Balancing Filia")
 		else
-			PrintPrefix.printInfo("Ignoring Filia")
+			LogHelper.printInfo("Ignoring Filia")
 		end
 	end
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-374341561") then
 		if fionnaBalanced == 1 then
 			AddPrefabPostInit("fionna", balanceFionnaStats)
-			PrintPrefix.printInfo("Balancing Fionna")
+			LogHelper.printInfo("Balancing Fionna")
 		else
-			PrintPrefix.printInfo("Ignoring Fionna")
+			LogHelper.printInfo("Ignoring Fionna")
 		end
 	end]]
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359318959") then
 		if freeSpiritBalanced == 1 then
 			AddPrefabPostInit("freebre", balanceFreeSpiritStats)
-			PrintPrefix.printInfo("Balancing FreeSpirit the Umbreon")
+			LogHelper.printInfo("Balancing FreeSpirit the Umbreon")
 		else
-			PrintPrefix.printInfo("Ignoring FreeSpirit the Umbreon")
+			LogHelper.printInfo("Ignoring FreeSpirit the Umbreon")
 		end
 	end
 		
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-381660473") then
 		if gabenBalanced == 1 then
 			AddPrefabPostInit("gbe", balanceGabenStats)
-			PrintPrefix.printInfo("Releasing HL3")
+			LogHelper.printInfo("Releasing HL3")
 		else
-			PrintPrefix.printInfo("Delaying HL3")
+			LogHelper.printInfo("Delaying HL3")
 		end
 	end]]		
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-363819976") then
 		if girBalanced == 1 then
 			AddPrefabPostInit("gir", balanceGirStats)
-			PrintPrefix.printInfo("Balancing Gir")
+			LogHelper.printInfo("Balancing Gir")
 		else
-			PrintPrefix.printInfo("Ignoring Gir")
+			LogHelper.printInfo("Ignoring Gir")
 		end
 	end]]
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359821133") then
 		if haruzBalanced == 1 then	
 			AddPrefabPostInit("haruz", balanceHaruzStats)
-			PrintPrefix.printInfo("Balancing Haruz")
+			LogHelper.printInfo("Balancing Haruz")
 		else
-			PrintPrefix.printInfo("Ignoring Haruz")
+			LogHelper.printInfo("Ignoring Haruz")
 		end
 	end
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-369898161") then
 		if hellaMerdurialBalanced == 1 then	
 			AddPrefabPostInit("hella", balanceHellaMerdurialStats)
-			PrintPrefix.printInfo("Balancing Hella")
+			LogHelper.printInfo("Balancing Hella")
 		else
-			PrintPrefix.printInfo("Ignoring Hella")
+			LogHelper.printInfo("Ignoring Hella")
 		end
 	end]]
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-380079744") then
 		if luffyBalanced == 1 then
 			AddPrefabPostInit("luffy", balanceLuffyStats)
-			PrintPrefix.printInfo("Balancing Luffy")
+			LogHelper.printInfo("Balancing Luffy")
 		else
-			PrintPrefix.printInfo("Ignoring Luffy")
+			LogHelper.printInfo("Ignoring Luffy")
 		end
 	end		
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369228986") then
 		if madeleineBalanced == 1 then	
 			AddPrefabPostInit("madeleine", balanceMadeleineStats)
-			PrintPrefix.printInfo("Balancing Madeleine")
+			LogHelper.printInfo("Balancing Madeleine")
 		else
-			PrintPrefix.printInfo("Ignoring Madeleine")
+			LogHelper.printInfo("Ignoring Madeleine")
 		end
 	end
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-357013795") then
 		if michaelTheFoxBalanced == 1 then	
 			AddPrefabPostInit("fox", balanceMichaelTheFoxStats)
-			PrintPrefix.printInfo("Balancing Michael the Fox")
+			LogHelper.printInfo("Balancing Michael the Fox")
 		else
-			PrintPrefix.printInfo("Ignoring Michael the Fox")
+			LogHelper.printInfo("Ignoring Michael the Fox")
 		end
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-368321978") then
 		if mikuHatsuneBalanced == 1 then
 			AddPrefabPostInit("miku", balanceMikuHatsuneStats)
-			PrintPrefix.printInfo("Balancing Miku Hatsune")
+			LogHelper.printInfo("Balancing Miku Hatsune")
 		else
-			PrintPrefix.printInfo("Ignoring Miku Hatsune")
+			LogHelper.printInfo("Ignoring Miku Hatsune")
 		end
 	end
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364189966") then
 		if mitsuruBalanced == 1 then	
 			AddPrefabPostInit("mitsuru", balanceMitsuruStats)
-			PrintPrefix.printInfo("Balancing Mitsuru")
+			LogHelper.printInfo("Balancing Mitsuru")
 		else
-			PrintPrefix.printInfo("Ignoring Mitsuru")
+			LogHelper.printInfo("Ignoring Mitsuru")
 		end
 	end
 		
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-351877222") then
 		if neptuniaBalanced == 1 then
 			AddPrefabPostInit("nep", balanceNeptuniaStats)
-			PrintPrefix.printInfo("Balancing Neptunia")
+			LogHelper.printInfo("Balancing Neptunia")
 		else
-			PrintPrefix.printInfo("Ignoring Neptunia")
+			LogHelper.printInfo("Ignoring Neptunia")
 		end
 	end]]			
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-360319890") then
 		if serasBalanced == 1 then	
 			AddPrefabPostInit("seras", balanceSerasStats)
-			PrintPrefix.printInfo("Balancing Seras")
+			LogHelper.printInfo("Balancing Seras")
 		else
-			PrintPrefix.printInfo("Ignoring Seras")
+			LogHelper.printInfo("Ignoring Seras")
 		end
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359479220") then
 		if sollyzBalanced == 1 then	
 			AddPrefabPostInit("sollyz", balanceSollyzStats)
-			PrintPrefix.printInfo("Balancing Sollyz")
+			LogHelper.printInfo("Balancing Sollyz")
 		else
-			PrintPrefix.printInfo("Ignoring Sollyz")
+			LogHelper.printInfo("Ignoring Sollyz")
 		end
 	end
 		
@@ -1330,54 +1307,54 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 			AddPrefabPostInit("skweaponshovelbladechargehandle", balanceShovelKnightBlades)
 			AddPrefabPostInit("skweaponshovelbladetrenchblade", balanceShovelKnightBlades)
 			AddPrefabPostInit("skweaponshovelbladedropspark", balanceShovelKnightBlades)
-			PrintPrefix.printInfo("Balancing Shovel Knight")
+			LogHelper.printInfo("Balancing Shovel Knight")
 		else
-			PrintPrefix.printInfo("Ignoring Shovel Knight")
+			LogHelper.printInfo("Ignoring Shovel Knight")
 		end
 	end
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-399799824") then
 		if tamamoBalanced == 1 then	
 			AddPrefabPostInit("tamamo", balanceTamamoStats)
-			PrintPrefix.printInfo("Balancing Tamamo")
+			LogHelper.printInfo("Balancing Tamamo")
 		else
-			PrintPrefix.printInfo("Ignoring Tamamo")
+			LogHelper.printInfo("Ignoring Tamamo")
 		end
 	end]]
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-368541793") then
 		if thanaBalanced == 1 then	
 			AddPrefabPostInit("thana", balanceThanaStats)
-			PrintPrefix.printInfo("Balancing Thana")
+			LogHelper.printInfo("Balancing Thana")
 		else
-			PrintPrefix.printInfo("Ignoring Thana")
+			LogHelper.printInfo("Ignoring Thana")
 		end
 	end]]
 		
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-379628839") then
 		if theMedicBalanced == 1 then
 			AddPrefabPostInit("medic", balanceTheMedicStats)
-			PrintPrefix.printInfo("Balancing The Medic")
+			LogHelper.printInfo("Balancing The Medic")
 		else
-			PrintPrefix.printInfo("Ignoring The Medic")
+			LogHelper.printInfo("Ignoring The Medic")
 		end
 	end]]			
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369518979") then
 		if warkBalanced == 1 then	
 			AddPrefabPostInit("wark", balanceWarkStats)
-			PrintPrefix.printInfo("Balancing Wark")
+			LogHelper.printInfo("Balancing Wark")
 		else
-			PrintPrefix.printInfo("Ignoring Wark")
+			LogHelper.printInfo("Ignoring Wark")
 		end
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369435452") then
 		if wolfBalanced == 1 then	
 			AddPrefabPostInit("wolft", balanceWolfStats)
-			PrintPrefix.printInfo("Balancing Wolf")
+			LogHelper.printInfo("Balancing Wolf")
 		else
-			PrintPrefix.printInfo("Ignoring Wolf")
+			LogHelper.printInfo("Ignoring Wolf")
 		end
 	end
 		
@@ -1385,23 +1362,23 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 		if woodieBalanced == 1 then	
 			AddPrefabPostInit("woodie", balanceWoodieStats)
 			AddPrefabPostInit("lucy", balanceWoodieAxe)
-			PrintPrefix.printInfo("Balancing PrzemoLSZ's Woodie")
+			LogHelper.printInfo("Balancing PrzemoLSZ's Woodie")
 		else
-			PrintPrefix.printInfo("Ignoring PrszemoLSZ's Woodie")
+			LogHelper.printInfo("Ignoring PrszemoLSZ's Woodie")
 		end
 	end
 		
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-357209437") then
 		if zimBalanced == 1 then	
 			AddPrefabPostInit("izim", balanceZimStats)
-			PrintPrefix.printInfo("Balancing Zim")
+			LogHelper.printInfo("Balancing Zim")
 		else
-			PrintPrefix.printInfo("Ignoring Zim")
+			LogHelper.printInfo("Ignoring Zim")
 		end
 	end]]
 	
 	else
 	
-	PrintPrefix.printInfo("Mod Balancing disabled")
+	LogHelper.printInfo("Mod Balancing disabled")
 	
 end
