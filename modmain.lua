@@ -1,14 +1,15 @@
 local require = GLOBAL.require
 local STRINGS = GLOBAL.STRINGS
 
+PrintPrefix = require "PrintPrefix"
+ChangeStartingInventory = require "ChangeStartingInventory"
+InventoryModifiers = require "InventoryModifiers"
+
 local MOD_NAME = "Mod Character Rebalancing"
 local MOD_PREFIX = "MCR"
 local MOD_ID = "385300215"
 local MOD_VERSION = "2.1.1"
 
---------------------------------
--- Load Starting Items config --
---------------------------------
 local enableStartingItems = GetModConfigData("ENABLE_STARTING_ITEMS")
 	local amountOfFlint = GetModConfigData("AMOUNT_OF_FLINT")
 	local amountOfGrass = GetModConfigData("AMOUNT_OF_GRASS")
@@ -16,10 +17,72 @@ local enableStartingItems = GetModConfigData("ENABLE_STARTING_ITEMS")
 	local amountOfMeat = GetModConfigData("AMOUNT_OF_MEAT")
 	local amountOfTwigs = GetModConfigData("AMOUNT_OF_TWIGS")
 	local giveThermalStone = GetModConfigData("GIVE_THERMAL_STONE")
+
+startingItems = {}
+
+----------------------------------------------------
+-- Check config settings and add items to a table --
+----------------------------------------------------
+if enableStartingItems == 1 then -- If starting items is enabled
 	
-	local startingItems = {}
+	PrintPrefix.printInfo("Starting Items enabled")
 	
+	for _= 1, amountOfFlint do -- For the amount of flint specified in the config
+		table.insert(startingItems, "flint") -- Insert it into the table "startingItems"
+	end
+	for _= 1, amountOfGrass do
+		table.insert(startingItems, "cutgrass")
+	end
+	for _= 1, amountOfLogs do
+		table.insert(startingItems, "log")
+	end
+	for _= 1, amountOfMeat do
+		table.insert(startingItems, "meat")
+	end
+	for _= 1, amountOfTwigs do
+		table.insert(startingItems, "twigs")
+	end
 	
+	if giveThermalStone == 1 then
+		table.insert(startingItems, "heatrock")
+	end
+	
+else
+	
+	PrintPrefix.printInfo("Starting Items disabled")
+	
+end
+
+--------------------------------------------------
+-- Put starting items in the player's inventory --
+--------------------------------------------------
+AddPlayerPostInit(function(inst) -- Add to every player
+
+    if inst.OnNewSpawn then -- Store old function
+        inst.old_OnNewSpawn = inst.OnNewSpawn
+    end
+     
+    inst.OnNewSpawn = function(inst) -- On spawn, do the following function
+	
+        if inst.components.inventory ~= nil then
+		
+            inst.components.inventory.ignoresound = true
+            for i, v in ipairs(startingItems) do -- For each value inserted above into the table
+                inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give that amount of items to the player
+            end
+            inst.components.inventory.ignoresound = false
+			
+        end
+		
+        if inst.old_OnNewSpawn then
+		
+            return inst:old_OnNewSpawn(inst)
+			
+        end
+    end
+end)
+
+
 -------------------------------------
 -- Load Character Balancing config --
 -------------------------------------
@@ -85,136 +148,9 @@ if levelSetting then
 end
 
 
---------------------------------------------------------------
--- Printing to console functions with mod name and prefixes --
---------------------------------------------------------------
-local function printDebug(message)
-	
-	if message then
-	print("[".. (MOD_NAME).. "] ".. "[DEBUG] ".. (message))
-	end
-	
-end
-local function printError(message)
-	
-	if message then
-	print("[".. (MOD_NAME).. "] ".. "[ERROR] ".. (message))
-	end
-	
-end
-local function printFatal(message)
-	
-	if message then
-	print("[".. (MOD_NAME).. "] ".. "[FATAL] ".. (message))
-	end
-	
-end
-local function printInfo(message)
-	
-	if message then
-	print("[".. (MOD_NAME).. "] ".. "[INFO] ".. (message))
-	end
-	
-end
-local function printWarn(message)
-
-	if message then
-	print("[".. (MOD_NAME).. "] ".. "[WARN] ".. (message))
-	end
-	
-end
 
 
-----------------------------------------------------
--- Check config settings and add items to a table --
-----------------------------------------------------
-if enableStartingItems == 1 then -- If starting items is enabled
-	
-	printInfo("Starting Items enabled")
-	
-	for _= 1, amountOfFlint do -- For the amount of flint specified in the config
-		table.insert(startingItems, "flint") -- Insert it into the table "startingItems"
-	end
-	for _= 1, amountOfGrass do
-		table.insert(startingItems, "cutgrass")
-	end
-	for _= 1, amountOfLogs do
-		table.insert(startingItems, "log")
-	end
-	for _= 1, amountOfMeat do
-		table.insert(startingItems, "meat")
-	end
-	for _= 1, amountOfTwigs do
-		table.insert(startingItems, "twigs")
-	end
-	
-	if giveThermalStone == 1 then
-		table.insert(startingItems, "heatrock")
-	end
-	
-else
-	
-	printInfo("Starting Items disabled")
-	
-end
 
-
---------------------------------------------------
--- Put starting items in the player's inventory --
---------------------------------------------------
-AddPlayerPostInit(function(inst) -- Add to every player
-
-    if inst.OnNewSpawn then -- Store old function
-        inst.old_OnNewSpawn = inst.OnNewSpawn
-    end
-     
-    inst.OnNewSpawn = function(inst) -- On spawn, do the following function
-	
-        if inst.components.inventory ~= nil then
-		
-            inst.components.inventory.ignoresound = true
-            for i, v in ipairs(startingItems) do -- For each value inserted above into the table
-                inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give that amount of items to the player
-            end
-            inst.components.inventory.ignoresound = false
-			
-        end
-		
-        if inst.old_OnNewSpawn then
-		
-            return inst:old_OnNewSpawn(inst)
-			
-        end
-    end
-end)
-
-
---------------------------------------------------
--- Delete and add items to a player's inventory --
---------------------------------------------------
-local function changeStartingInventory(inst, start_inv)
-
-	local oldSpawn = inst.OnNewSpawn
-	start_inv = start_inv or {}
-	for _,v in pairs(startingItems) do -- Load starting items too since this deletes inventories
-		table.insert(start_inv, v)
-	end
-	inst.OnNewSpawn = function()
-	
-	if oldSpawn ~= nil then oldSpawn() end
-	
-	if inst.components.inventory ~= nil then
-		inst.components.inventory.ignoresound = true
-		for i = 1, inst.components.inventory:GetNumSlots() do
-			inst.components.inventory:RemoveItemBySlot(i) -- Remove all items
-		end
-		for _, v in ipairs(start_inv) do
-			inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give new items
-		end
-		inst.components.inventory.ignoresound = false
-	end
-	end
-end
 
 
 --local function modifyPrefab(inst, stats)
@@ -552,43 +488,7 @@ inst.components.characterspecific:SetOwner(inst.prefab)
 ]]
 
 
--------------------------------------------
--- Make characters unable to equip items --
--------------------------------------------
-local function makeUnequippable(inst, head, body)
 
-	local old_Equip = inst.components.inventory.Equip
-	
-	if head == true and body == false then
-		inst.components.inventory.Equip = function(self, item, ...)
-			if item.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.HEAD then
-				self.inst.components.talker:Say("I can't equip this")
-				return false
-			end
-			return old_Equip(self, item, ...)
-		end
-
-	elseif head == false and body == true then
-		inst.components.inventory.Equip = function(self, item, ...)
-			if item.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.BODY then
-				self.inst.components.talker:Say("I can't equip this")
-				return false
-			end
-			return old_Equip(self, item, ...)
-		end
-
-	elseif head == true and body == true then
-		inst.components.inventory.Equip = function(self, item, ...)
-			if item.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.HEAD or item.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.BODY then
-				self.inst.components.talker:Say("I can't equip this")
-				return false
-			end
-			return old_Equip(self, item, ...)
-		end
-
-	end
-
-end
 
 
 -----------------------------------------------------
@@ -864,7 +764,7 @@ end
 
 local function balanceMadeleineStats(inst)
 
-	changeStartingInventory(inst, {"goldnugget", "redgem", "redgem", "bluegem", "bluegem", "purplegem"})
+	ChangeStartingInventory:modifyInventory(inst, {"goldnugget", "redgem", "redgem", "bluegem", "bluegem", "purplegem"})
 
 end
 
@@ -994,7 +894,7 @@ end
 
 local function balanceSerasStats(inst)
 
-	changeStartingInventory(inst, {"smallmeat", "smallmeat"})
+	ChangeStartingInventory:modifyInventory(inst, {"smallmeat", "smallmeat"})
 	
 end
 
@@ -1222,59 +1122,59 @@ end
 ---------------------------------------------------------------------------------
 if modBalancingEnabled == 1 then -- TODO: Replace with a function
 	
-	printInfo("Mod Balancing enabled")
+	PrintPrefix.printInfo("Mod Balancing enabled")
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-382501575") then
 		if crashBandicootBalanced == 1 then
 			AddPrefabPostInit("crashbandi", balanceCrashBandicootStats)
-			printInfo("Balancing Crash Bandicoot")
+			PrintPrefix.printInfo("Balancing Crash Bandicoot")
 		else
-			printInfo("Ignoring Crash Bandicoot")
+			PrintPrefix.printInfo("Ignoring Crash Bandicoot")
 		end
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-384048428") then
 		if darkSakuraBalanced == 1 then
 			AddPrefabPostInit("sakura", balanceDarkSakuraStats)
-			printInfo("Balancing Dark Sakura Matou")
+			PrintPrefix.printInfo("Balancing Dark Sakura Matou")
 		else
-			printInfo("Ignoring Dark Sakura Matou")
+			PrintPrefix.printInfo("Ignoring Dark Sakura Matou")
 		end
 	end
 		
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-366048578") then
 		if devonBalanced == 1 then
 			AddPrefabPostInit("devon", balanceDevonStats)
-			printInfo("Balancing Devon")
+			PrintPrefix.printInfo("Balancing Devon")
 		else
-			printInfo("Ignoring Devon")
+			PrintPrefix.printInfo("Ignoring Devon")
 		end
 	end]]
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-373622746") then
 		if drokBalanced == 1 then
 			AddPrefabPostInit("drok", balanceDrokStats)
-			printInfo("Balancing Drok the Caveman")
+			PrintPrefix.printInfo("Balancing Drok the Caveman")
 		else
-			printInfo("Ignoring Drok the Caveman")
+			PrintPrefix.printInfo("Ignoring Drok the Caveman")
 		end
 	end
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-363966651") then
 		if endiaBalanced == 1 then
 			AddPrefabPostInit("endia", balanceEndiaStats)
-			printInfo("Balancing Endia")
+			PrintPrefix.printInfo("Balancing Endia")
 		else
-			printInfo("Ignoring Endia")
+			PrintPrefix.printInfo("Ignoring Endia")
 		end
 	end
 
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-356880841") then
 		if eskoBalanced == 1 then
 			AddPrefabPostInit("esk", balanceEskoStats)
-			printInfo("Balancing Esko")
+			PrintPrefix.printInfo("Balancing Esko")
 		else
-			printInfo("Ignoring Esko")
+			PrintPrefix.printInfo("Ignoring Esko")
 		end
 	end
 	
@@ -1282,144 +1182,144 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 		if farozBalanced == 1 then
 			AddPrefabPostInit("faroz", balanceFarozStats)
 			AddPrefabPostInit("faroz_gls", balanceFarozGlasses)
-			printInfo("Balancing Faroz")
+			PrintPrefix.printInfo("Balancing Faroz")
 		else
-			printInfo("Ignoring Faroz")
+			PrintPrefix.printInfo("Ignoring Faroz")
 		end
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-398833909") then
 		if filiaBalanced == 1 then
 			AddPrefabPostInit("filia", balanceFiliaStats)
-			printInfo("Balancing Filia")
+			PrintPrefix.printInfo("Balancing Filia")
 		else
-			printInfo("Ignoring Filia")
+			PrintPrefix.printInfo("Ignoring Filia")
 		end
 	end
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-374341561") then
 		if fionnaBalanced == 1 then
 			AddPrefabPostInit("fionna", balanceFionnaStats)
-			printInfo("Balancing Fionna")
+			PrintPrefix.printInfo("Balancing Fionna")
 		else
-			printInfo("Ignoring Fionna")
+			PrintPrefix.printInfo("Ignoring Fionna")
 		end
 	end]]
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359318959") then
 		if freeSpiritBalanced == 1 then
 			AddPrefabPostInit("freebre", balanceFreeSpiritStats)
-			printInfo("Balancing FreeSpirit the Umbreon")
+			PrintPrefix.printInfo("Balancing FreeSpirit the Umbreon")
 		else
-			printInfo("Ignoring FreeSpirit the Umbreon")
+			PrintPrefix.printInfo("Ignoring FreeSpirit the Umbreon")
 		end
 	end
 		
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-381660473") then
 		if gabenBalanced == 1 then
 			AddPrefabPostInit("gbe", balanceGabenStats)
-			printInfo("Releasing HL3")
+			PrintPrefix.printInfo("Releasing HL3")
 		else
-			printInfo("Delaying HL3")
+			PrintPrefix.printInfo("Delaying HL3")
 		end
 	end]]		
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-363819976") then
 		if girBalanced == 1 then
 			AddPrefabPostInit("gir", balanceGirStats)
-			printInfo("Balancing Gir")
+			PrintPrefix.printInfo("Balancing Gir")
 		else
-			printInfo("Ignoring Gir")
+			PrintPrefix.printInfo("Ignoring Gir")
 		end
 	end]]
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359821133") then
 		if haruzBalanced == 1 then	
 			AddPrefabPostInit("haruz", balanceHaruzStats)
-			printInfo("Balancing Haruz")
+			PrintPrefix.printInfo("Balancing Haruz")
 		else
-			printInfo("Ignoring Haruz")
+			PrintPrefix.printInfo("Ignoring Haruz")
 		end
 	end
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-369898161") then
 		if hellaMerdurialBalanced == 1 then	
 			AddPrefabPostInit("hella", balanceHellaMerdurialStats)
-			printInfo("Balancing Hella")
+			PrintPrefix.printInfo("Balancing Hella")
 		else
-			printInfo("Ignoring Hella")
+			PrintPrefix.printInfo("Ignoring Hella")
 		end
 	end]]
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-380079744") then
 		if luffyBalanced == 1 then
 			AddPrefabPostInit("luffy", balanceLuffyStats)
-			printInfo("Balancing Luffy")
+			PrintPrefix.printInfo("Balancing Luffy")
 		else
-			printInfo("Ignoring Luffy")
+			PrintPrefix.printInfo("Ignoring Luffy")
 		end
 	end		
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369228986") then
 		if madeleineBalanced == 1 then	
 			AddPrefabPostInit("madeleine", balanceMadeleineStats)
-			printInfo("Balancing Madeleine")
+			PrintPrefix.printInfo("Balancing Madeleine")
 		else
-			printInfo("Ignoring Madeleine")
+			PrintPrefix.printInfo("Ignoring Madeleine")
 		end
 	end
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-357013795") then
 		if michaelTheFoxBalanced == 1 then	
 			AddPrefabPostInit("fox", balanceMichaelTheFoxStats)
-			printInfo("Balancing Michael the Fox")
+			PrintPrefix.printInfo("Balancing Michael the Fox")
 		else
-			printInfo("Ignoring Michael the Fox")
+			PrintPrefix.printInfo("Ignoring Michael the Fox")
 		end
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-368321978") then
 		if mikuHatsuneBalanced == 1 then
 			AddPrefabPostInit("miku", balanceMikuHatsuneStats)
-			printInfo("Balancing Miku Hatsune")
+			PrintPrefix.printInfo("Balancing Miku Hatsune")
 		else
-			printInfo("Ignoring Miku Hatsune")
+			PrintPrefix.printInfo("Ignoring Miku Hatsune")
 		end
 	end
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364189966") then
 		if mitsuruBalanced == 1 then	
 			AddPrefabPostInit("mitsuru", balanceMitsuruStats)
-			printInfo("Balancing Mitsuru")
+			PrintPrefix.printInfo("Balancing Mitsuru")
 		else
-			printInfo("Ignoring Mitsuru")
+			PrintPrefix.printInfo("Ignoring Mitsuru")
 		end
 	end
 		
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-351877222") then
 		if neptuniaBalanced == 1 then
 			AddPrefabPostInit("nep", balanceNeptuniaStats)
-			printInfo("Balancing Neptunia")
+			PrintPrefix.printInfo("Balancing Neptunia")
 		else
-			printInfo("Ignoring Neptunia")
+			PrintPrefix.printInfo("Ignoring Neptunia")
 		end
 	end]]			
 	
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-360319890") then
 		if serasBalanced == 1 then	
 			AddPrefabPostInit("seras", balanceSerasStats)
-			printInfo("Balancing Seras")
+			PrintPrefix.printInfo("Balancing Seras")
 		else
-			printInfo("Ignoring Seras")
+			PrintPrefix.printInfo("Ignoring Seras")
 		end
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359479220") then
 		if sollyzBalanced == 1 then	
 			AddPrefabPostInit("sollyz", balanceSollyzStats)
-			printInfo("Balancing Sollyz")
+			PrintPrefix.printInfo("Balancing Sollyz")
 		else
-			printInfo("Ignoring Sollyz")
+			PrintPrefix.printInfo("Ignoring Sollyz")
 		end
 	end
 		
@@ -1430,54 +1330,54 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 			AddPrefabPostInit("skweaponshovelbladechargehandle", balanceShovelKnightBlades)
 			AddPrefabPostInit("skweaponshovelbladetrenchblade", balanceShovelKnightBlades)
 			AddPrefabPostInit("skweaponshovelbladedropspark", balanceShovelKnightBlades)
-			printInfo("Balancing Shovel Knight")
+			PrintPrefix.printInfo("Balancing Shovel Knight")
 		else
-			printInfo("Ignoring Shovel Knight")
+			PrintPrefix.printInfo("Ignoring Shovel Knight")
 		end
 	end
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-399799824") then
 		if tamamoBalanced == 1 then	
 			AddPrefabPostInit("tamamo", balanceTamamoStats)
-			printInfo("Balancing Tamamo")
+			PrintPrefix.printInfo("Balancing Tamamo")
 		else
-			printInfo("Ignoring Tamamo")
+			PrintPrefix.printInfo("Ignoring Tamamo")
 		end
 	end]]
 	
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-368541793") then
 		if thanaBalanced == 1 then	
 			AddPrefabPostInit("thana", balanceThanaStats)
-			printInfo("Balancing Thana")
+			PrintPrefix.printInfo("Balancing Thana")
 		else
-			printInfo("Ignoring Thana")
+			PrintPrefix.printInfo("Ignoring Thana")
 		end
 	end]]
 		
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-379628839") then
 		if theMedicBalanced == 1 then
 			AddPrefabPostInit("medic", balanceTheMedicStats)
-			printInfo("Balancing The Medic")
+			PrintPrefix.printInfo("Balancing The Medic")
 		else
-			printInfo("Ignoring The Medic")
+			PrintPrefix.printInfo("Ignoring The Medic")
 		end
 	end]]			
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369518979") then
 		if warkBalanced == 1 then	
 			AddPrefabPostInit("wark", balanceWarkStats)
-			printInfo("Balancing Wark")
+			PrintPrefix.printInfo("Balancing Wark")
 		else
-			printInfo("Ignoring Wark")
+			PrintPrefix.printInfo("Ignoring Wark")
 		end
 	end
 		
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369435452") then
 		if wolfBalanced == 1 then	
 			AddPrefabPostInit("wolft", balanceWolfStats)
-			printInfo("Balancing Wolf")
+			PrintPrefix.printInfo("Balancing Wolf")
 		else
-			printInfo("Ignoring Wolf")
+			PrintPrefix.printInfo("Ignoring Wolf")
 		end
 	end
 		
@@ -1485,23 +1385,23 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 		if woodieBalanced == 1 then	
 			AddPrefabPostInit("woodie", balanceWoodieStats)
 			AddPrefabPostInit("lucy", balanceWoodieAxe)
-			printInfo("Balancing PrzemoLSZ's Woodie")
+			PrintPrefix.printInfo("Balancing PrzemoLSZ's Woodie")
 		else
-			printInfo("Ignoring PrszemoLSZ's Woodie")
+			PrintPrefix.printInfo("Ignoring PrszemoLSZ's Woodie")
 		end
 	end
 		
 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-357209437") then
 		if zimBalanced == 1 then	
 			AddPrefabPostInit("izim", balanceZimStats)
-			printInfo("Balancing Zim")
+			PrintPrefix.printInfo("Balancing Zim")
 		else
-			printInfo("Ignoring Zim")
+			PrintPrefix.printInfo("Ignoring Zim")
 		end
 	end]]
 	
 	else
 	
-	printInfo("Mod Balancing disabled")
+	PrintPrefix.printInfo("Mod Balancing disabled")
 	
 end
