@@ -4,6 +4,7 @@ local STRINGS = GLOBAL.STRINGS
 local MOD_NAME = "Mod Character Rebalancing"
 local MOD_PREFIX = "MCR"
 local MOD_ID = "385300215"
+local MOD_VERSION = "2.1.1"
 
 --------------------------------
 -- Load Starting Items config --
@@ -549,6 +550,45 @@ end)
 inst:AddComponent("characterspecific")
 inst.components.characterspecific:SetOwner(inst.prefab)
 ]]
+
+
+-------------------------------------------
+-- Make characters unable to equip items --
+-------------------------------------------
+local function makeUnequippable(inst, head, body)
+
+	local old_Equip = inst.components.inventory.Equip
+	
+	if head == true and body == false then
+		inst.components.inventory.Equip = function(self, item, ...)
+			if item.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.HEAD then
+				self.inst.components.talker:Say("I can't equip this")
+				return false
+			end
+			return old_Equip(self, item, ...)
+		end
+
+	elseif head == false and body == true then
+		inst.components.inventory.Equip = function(self, item, ...)
+			if item.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.BODY then
+				self.inst.components.talker:Say("I can't equip this")
+				return false
+			end
+			return old_Equip(self, item, ...)
+		end
+
+	elseif head == true and body == true then
+		inst.components.inventory.Equip = function(self, item, ...)
+			if item.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.HEAD or item.components.equippable.equipslot == GLOBAL.EQUIPSLOTS.BODY then
+				self.inst.components.talker:Say("I can't equip this")
+				return false
+			end
+			return old_Equip(self, item, ...)
+		end
+
+	end
+
+end
 
 
 -----------------------------------------------------
