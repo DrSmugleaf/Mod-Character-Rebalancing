@@ -1380,3 +1380,72 @@ if modBalancingEnabled == 1 then -- TODO: Replace with a function
 	LogHelper.printInfo("Mod Balancing disabled")
 	
 end
+
+
+
+local function balanceModifiedTamamoStats(inst)
+	
+	local DefaultEater = require("components/eater")
+	local FERAL = GLOBAL.Action()
+	FERAL.str = "Feral"
+	FERAL.id = "FERAL"
+	FERAL.fn = function(act)
+		local silent = true
+		--act.target.Light:Enable(true) --inst. -> not assigned act.target is.
+		if act.target.transformed then
+			--act.target.Light:Enable(false)
+			tamamoStats =	{
+								health = 125,
+								damage = 1,
+								walkSpeed = 1,
+								runSpeed = 1,
+								dapperness = 0,
+								hungerRate = 1,
+							}
+			
+			modifyStats(act.target, tamamoStats)
+		else
+			--act.target.Light:Enable(true)
+			tamamoStats =	{
+								health = 125,
+								damage = 1.5,
+								walkSpeed = 1.5,
+								runSpeed = 1.5,
+								dapperness = -2*TUNING.DAPPERNESS_LARGE,
+								hungerRate = 1.5,
+							}
+							
+			modifyStats(act.target, tamamoStats)
+		end
+		act.target.transformed = not act.target.transformed
+		return true
+	end
+	
+	AddAction(FERAL)
+	
+	local tamamoStats =	{
+							health = 125,
+							walkSpeed = 1,
+							runSpeed = 1,
+							damage = 1,
+							dapperness = 0,
+							hungerRate = 1,
+						}
+	
+	modifyStats(inst, tamamoStats)
+	
+	ModifyCharacter:addMode(inst, GLOBAL.KEY_X, "FERAL")
+	
+	inst:RemoveTag('<span class="searchlite">birdwhisperer</span>')
+	inst:AddTag("scarytoprey")
+	
+	inst.components.eater.ignorespoilage = false
+	function inst.components.eater:Eat(food)
+		return DefaultEater.Eat(self, food)
+	end
+	
+end
+
+	
+AddPrefabPostInit("tamamo", balanceModifiedTamamoStats)
+LogHelper.printInfo("Balancing Modified Tamamo")
