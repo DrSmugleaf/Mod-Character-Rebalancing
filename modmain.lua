@@ -6,8 +6,6 @@ local ChangeStartingInventory = require "ChangeStartingInventory"
 local InventoryModifiers = require "InventoryModifiers"
 local ModifyCharacter = require "ModifyCharacter"
 
-AddComponentPostInit("inventory", InventoryModifiers.makeUndroppable())
-
 local MOD_NAME = "Mod Character Rebalancing"
 local MOD_PREFIX = "MCR"
 local MOD_ID = "385300215"
@@ -1038,9 +1036,9 @@ local function balanceWarkStats(inst)
 							
 							healthNerf = 150,
 							hungerNerf = 150,
-							damageNerf = 1,
-							walkSpeedNerf = 1,
-							runSpeedNerf = 1,
+							damageNerf = 0.8,
+							walkSpeedNerf = 1.25,
+							runSpeedNerf = 1.25,
 						}
 	
 	modifyStats(inst, warkStats)
