@@ -7,9 +7,9 @@ end)
 function MCRKeyHandler:OnRawKey(key, down)
 	local player = ThePlayer
   	if (key and not down) and not IsPaused() then
-      	player:PushEvent("keypressed", {inst = self.inst, player = player, key = key})
+      	player:PushEvent("mcrkeypressed", {inst = self.inst, player = player, key = key})
     elseif key and down and not IsPaused() then
-      	player:PushEvent("keydown", {inst = self.inst, player = player, key = key})
+      	player:PushEvent("mcrkeydown", {inst = self.inst, player = player, key = key})
   	end
 end
 

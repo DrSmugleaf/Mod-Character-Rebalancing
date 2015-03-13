@@ -494,17 +494,17 @@ configuration_options =
 		default = 1,
 	},
 	
-	--[[{
+	{
 		name = "TAMAMO_BALANCED",
 		label = "Tamamo",
 		hover = "Balance Tamamo, Queen of Kitsunes",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
-	},]]
+		default = true,
+	},
 	
 	--[[{
 		name = "THANA_BALANCED",

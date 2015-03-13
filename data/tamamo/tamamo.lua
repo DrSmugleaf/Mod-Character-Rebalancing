@@ -1,7 +1,7 @@
 local tamamoBalanced = GetModConfigData("TAMAMO_BALANCED")
 
 local function FeralFn(inst)
-	if inst.transformed then
+	if inst.feral then
 			local tamamoStats =	{
 								health = 125,
 								damage = 1,
@@ -11,7 +11,9 @@ local function FeralFn(inst)
 								hungerRate = 1,
 							}
 			
-			modifyStats(inst, tamamoStats)
+			ModifyStats(inst, tamamoStats)
+
+			inst.feral = false
 	else
 			local tamamoStats =	{
 								health = 125,
@@ -21,16 +23,27 @@ local function FeralFn(inst)
 								dapperness = -2*TUNING.DAPPERNESS_LARGE,
 								hungerRate = 1.5,
 							}
-			modifyStats(inst, tamamoStats)
+			ModifyStats(inst, tamamoStats)
+
+			inst.feral = true
 	end
 end
 
 local function balanceTamamoStats(inst)
-	
-	local DefaultEater = require("components/eater")
 
 	-- Adds the mod rpc handler for Tamamo.
 	AddModRPCHandler("MCR", "FERAL", FeralFn)
+
+	ModifyCharacter:addMode(inst, GLOBAL.KEY_X, "FERAL")
+
+	-- This is used for our changes to be made as server host.
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst:ListenForEvent("MCRAction", FeralFn)
+	
+	local DefaultEater = require("components/eater")
 	
 	local tamamoStats =	{
 							health = 125,
@@ -41,9 +54,9 @@ local function balanceTamamoStats(inst)
 							hungerRate = 1,
 						}
 	
-	modifyStats(inst, tamamoStats)
-	
-	ModifyCharacter:addMode(inst, GLOBAL.KEY_X, "FERAL")
+	ModifyStats(inst, tamamoStats)
+
+	inst.feral = false
 	
 	inst:RemoveTag('<span class="searchlite">birdwhisperer</span>')
 	inst:AddTag("scarytoprey")
@@ -53,14 +66,9 @@ local function balanceTamamoStats(inst)
 		return DefaultEater.Eat(self, food)
 	end
 
-	-- This is used for our changes to be made as server host.
-	if TheWorld.ismastersim then
-		inst:ListenForEvent("MCRAction", FeralFn)
-	end
-	
 end
 
-if ModBalancingEnabled() then
+if ModBalancingEnabled() == 1 then
 
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-399799824") then
 		if tamamoBalanced then	

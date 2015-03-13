@@ -1,3 +1,31 @@
+-------------------------------
+-- Load Special Modes config --
+-------------------------------
+local nerfSpeed = GetModConfigData("NERF_SPEED")
+local hardcoreMode = GetModConfigData("HARDCORE_MODE")
+
+-------------------------------------------------------------------------
+-- Load Leveling System config and assign base max levels difficulties --
+-------------------------------------------------------------------------
+local levelSetting = GetModConfigData("LEVEL_SETTING")
+
+if levelSetting then
+
+	if levelSetting == 1 then levelDifficulty = 30
+	
+	elseif levelSetting == 2 then levelDifficulty = 50
+		
+	elseif levelSetting == 3 then levelDifficulty = 75
+		
+	elseif levelSetting == 4 then levelDifficulty = 100
+	
+	end
+	
+	if hardcoreMode == 1 then levelDifficulty = levelDifficulty + 200 end
+	
+end
+
+
 -----------------------------------------------------------------------
 -- Add a leveling system to a character or plainly modify it's stats --
 -----------------------------------------------------------------------
@@ -6,6 +34,19 @@ return function(inst, stats)
 	-- Load the given stats
 	
 	local levelBase = stats.levelBase
+
+	local health = nil
+	local hunger = nil
+	local sanity = nil
+	local damage = nil
+	local insulation = nil
+	local walkSpeed = nil
+	local runSpeed = nil
+	local dapperness = nil
+	local nightDrain = nil
+	local monsterDrain = nil
+	local strongStomcah = nil
+	local hungerRate = nil
 	
 	if nerfSpeed == 0 then
 		health = stats.health
@@ -268,5 +309,9 @@ return function(inst, stats)
 	inst.components.hunger:SetPercent(hunger_percent)
 	inst.components.health:SetPercent(health_percent)
 	inst.components.sanity:SetPercent(sanity_percent)
+
+	inst.components.hunger:DoDelta(0)
+	inst.components.health:DoDelta(0)
+	inst.components.sanity:DoDelta(0)
 	
 end

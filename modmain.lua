@@ -2,7 +2,13 @@
 modimport("libs/use.lua")
 
 -- Allows use to call global environment variables without initializing them in our files.
-env = use "libs/mod_env"
+use "libs/mod_env"(env)
+
+-- These lines of code prevent keystrokes from happening during critical moments.
+use "data/widgets/controls"
+use "data/screens/chatinputscreen"
+use "data/screens/consolescreen"
+-- End prevention of keystrokes.
 
 LogHelper = use "data/scripts/LogHelper"
 ChangeStartingInventory = use "data/scripts/ChangeStartingInventory"
@@ -11,14 +17,8 @@ ModifyCharacter = use "data/scripts/ModifyCharacter"
 ModifyStats = use "data/scripts/ModifyStats"
 ModBalancingEnabled = use "data/scripts/ModBalancingEnabled"
 
--- These lines of code prevent keystrokes from happening during critical moments.
-use "data/widgets/controls"
-use "data/screens/chatinputscreen"
-use "data/screens/consolescreen"
--- End prevention of keystrokes.
-
-modBalancingEnabled = ModBalancingEnabled()
-modifyStats = ModifyStats
+local modBalancingEnabled = ModBalancingEnabled()
+local modifyStats = ModifyStats
 
 -- Import tamamo changes.
 use "data/tamamo/tamamo"
@@ -141,29 +141,6 @@ end)
 -------------------------------
 local nerfSpeed = GetModConfigData("NERF_SPEED")
 local hardcoreMode = GetModConfigData("HARDCORE_MODE")
-
-
--------------------------------------------------------------------------
--- Load Leveling System config and assign base max levels difficulties --
--------------------------------------------------------------------------
-local levelSetting = GetModConfigData("LEVEL_SETTING")
-
-if levelSetting then
-
-	if levelSetting == 1 then levelDifficulty = 30
-	
-	elseif levelSetting == 2 then levelDifficulty = 50
-		
-	elseif levelSetting == 3 then levelDifficulty = 75
-		
-	elseif levelSetting == 4 then levelDifficulty = 100
-	
-	end
-	
-	if hardcoreMode == 1 then levelDifficulty = levelDifficulty + 200 end
-	
-end
-
 
 --local function modifyPrefab(inst, stats)
 

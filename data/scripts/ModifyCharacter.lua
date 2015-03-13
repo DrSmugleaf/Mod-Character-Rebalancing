@@ -19,8 +19,8 @@ function ModifyCharacter:addMode(inst, Key, Action)
 		end
 	end
 
-	inst:AddComponent("keyhandler")
-	inst:ListenForEvent("keypressed", OnKeyPressed)
+	inst:AddComponent("mcrkeyhandler")
+	inst:ListenForEvent("mcrkeypressed", OnKeyPressed)
 
 end
 
