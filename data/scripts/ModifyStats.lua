@@ -87,12 +87,26 @@ return function(inst, stats)
 	local foodPrefab3 = stats.foodPrefab3
 	local foodPrefab4 = stats.foodPrefab4
 	local foodPrefab5 = stats.foodPrefab5
-		local levelPerFood1 = stats.levelPerFood1
-		local levelPerFood2 = stats.levelPerFood2
-		local levelPerFood3 = stats.levelPerFood3
-		local levelPerFood4 = stats.levelPerFood4
-		local levelPerFood5 = stats.levelPerFood5
+	local levelPerFood1 = stats.levelPerFood1
+	local levelPerFood2 = stats.levelPerFood2
+	local levelPerFood3 = stats.levelPerFood3
+	local levelPerFood4 = stats.levelPerFood4
+	local levelPerFood5 = stats.levelPerFood5
 
+	local initialHealth = nil
+	local initialHunger = nil
+	local initialSanity = nil
+	local initialDamage = nil
+	local initialInsulation = nil
+	local initialWalk = nil
+	local initialRun = nil
+	local finalHealth = nil
+	local finalHunger = nil
+	local finalSanity = nil
+	local finalDamage = nil
+	local finalInsulation = nil
+	local finalWalk = nil
+	local finalRun = nil
 
 	if nerfSpeed == 0 then
 		initialHealth = stats.initialHealth
@@ -136,9 +150,9 @@ return function(inst, stats)
 			levelBase = 0
 		end
 		
-		maxUpgrades = levelDifficulty+levelBase
+		local maxUpgrades = levelDifficulty+levelBase
 		
-		function applyUpgrades(inst)
+		local function applyUpgrades(inst)
 
 			local upgrades = math.min(inst.level, maxUpgrades)
 	 
