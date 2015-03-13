@@ -1448,5 +1448,4 @@ end
 
 	
 AddPrefabPostInit("tamamo", balanceModifiedTamamoStats)
-AddPrefabPostInit("gir", balanceModifiedTamamoStats)
-LogHelper.printInfo("Balancing Modified Tamamo and Gir")
+LogHelper.printInfo("Balancing Modified Tamamo")
