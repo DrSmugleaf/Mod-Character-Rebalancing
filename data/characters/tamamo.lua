@@ -68,7 +68,7 @@ local function balanceTamamoStats(inst)
 
 end
 
-if ModBalancingEnabled() == 1 then
+if ModBalancingEnabled() then
 
 	if GLOBAL.KnownModIndex:IsModEnabled("workshop-399799824") then
 		if tamamoBalanced then	

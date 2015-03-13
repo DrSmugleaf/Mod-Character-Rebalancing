@@ -1,36 +1,30 @@
-local mitsuruBalanced = GetModConfigData("MITSURU_BALANCED")
+local sollyzBalanced = GetModConfigData("SOLLYZ_BALANCED")
 
-local function balanceMitsuruStats(inst)
-
-	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
+local function balanceSollyzStats(inst)
 
 	if levelSetting > 0 then
 
 		local oldPreLoad = inst.OnPreLoad
 		local oldEat = inst.components.eater.oneatfn
 		
-		local levelBase = 50
+		local levelBase = 0
 		
-		local initialHealth = 75
+		local initialHealth = 50
 		local initialHunger = 75
 		local initialSanity = 50
-		local initialDamage = 1.0
-		local initialInsulation = 0
 		
 		local finalHealth = 100
 		local finalHunger = 150
-		local finalSanity = 125
-		local finalDamage = 1.5
-		local finalInsulation = 75
+		local finalSanity = 90
 		
 		inst.components.health:SetMaxHealth(initialHealth)
 		inst.components.hunger:SetMax(initialHunger)
 		inst.components.sanity:SetMax(initialSanity)
 		
 		local function newUpg(inst)
-		
+
 			max_upgrades = levelDifficulty+levelBase
-				
+			
 			local upgrades = math.min(inst.level, max_upgrades)
 	 
 			local hunger_percent = inst.components.hunger:GetPercent()
@@ -42,11 +36,7 @@ local function balanceMitsuruStats(inst)
 			inst.components.hunger.max = math.ceil (initialHunger + upgrades * (finalHunger - initialHunger) / max_upgrades)
 			inst.components.sanity.max = math.ceil (initialSanity + upgrades * (finalSanity - initialSanity) / max_upgrades)
 			
-			inst.components.combat.damagemultiplier = math.ceil (initialDamage + upgrades * (finalDamage - initialDamage) / max_upgrades)
-			inst.components.temperature.inherentinsulation = math.ceil (initialInsulation + upgrades * (finalInsulation - initialInsulation) / max_upgrades)
-
 			inst.components.talker:Say("Level : ".. (inst.level))
-			
 			if inst.level > math.ceil (max_upgrades-1) then
 				inst.components.talker:Say("Level : Max!")
 			end
@@ -58,7 +48,7 @@ local function balanceMitsuruStats(inst)
 		
 		local function newEat(inst, food)
 			oldEat(inst, food)
-		if food and food.components.edible and food.prefab == "corn" or food.prefab == "carrot" or food.prefab == "eggplant" or food.prefab == "dragonfruit" then
+		if food and food.components.edible and food.prefab == "fish"  then
 				newUpg(inst)
 			end
 		end
@@ -78,12 +68,12 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364189966") then
-		if mitsuruBalanced then	
-			AddPrefabPostInit("mitsuru", balanceMitsuruStats)
-			LogHelper.printInfo("Balancing Mitsuru")
+	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359479220") then
+		if sollyzBalanced then	
+			AddPrefabPostInit("sollyz", balanceSollyzStats)
+			LogHelper.printInfo("Balancing Sollyz")
 		else
-			LogHelper.printInfo("Ignoring Mitsuru")
+			LogHelper.printInfo("Ignoring Sollyz")
 		end
 	end
 
