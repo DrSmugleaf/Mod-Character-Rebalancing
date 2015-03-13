@@ -12,7 +12,7 @@ local startingItems = {}
 ----------------------------------------------------
 -- Check config settings and add items to a table --
 ----------------------------------------------------
-if enableStartingItems == 1 then -- If starting items is enabled
+if enableStartingItems then -- If starting items is enabled
 	
 	LogHelper.printInfo("Starting Items enabled")
 	
