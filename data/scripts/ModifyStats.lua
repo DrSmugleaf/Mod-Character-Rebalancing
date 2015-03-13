@@ -11,7 +11,7 @@ local levelSetting = GetModConfigData("LEVEL_SETTING")
 
 if levelSetting then
 
-	if levelSetting == 1 then levelDifficulty = 30
+	if levelSetting == 1 then levelDifficulty = 25
 	
 	elseif levelSetting == 2 then levelDifficulty = 50
 		
@@ -108,7 +108,7 @@ return function(inst, stats)
 	local finalWalk = nil
 	local finalRun = nil
 
-	if not nerfSpeed then
+	if not nerfSpeed and levelSetting > 0 then
 		initialHealth = stats.initialHealth
 		initialHunger = stats.initialHunger
 		initialSanity = stats.initialSanity
@@ -123,7 +123,7 @@ return function(inst, stats)
 		finalInsulation = stats.finalInsulation
 		finalWalk = stats.finalWalk
 		finalRun = stats.finalRun
-	else
+	elseif nerfSpeed and levelSetting > 0 then
 		initialHealth = stats.initialHealthNerf
 		initialHunger = stats.initialHungerNerf
 		initialSanity = stats.initialSanityNerf
@@ -275,27 +275,27 @@ return function(inst, stats)
 		inst.OnPreLoad = onpreload
 	end
 
-		if health then
+		if health and not initialHealth then
 			inst.components.health:SetMaxHealth(health)
 		end
 		
-		if hunger then
+		if hunger and not initialHunger then
 			inst.components.hunger:SetMax(hunger)
 		end
 		
-		if sanity then
+		if sanity and not initialSanity then
 			inst.components.sanity:SetMax(sanity)
 		end
 		
-		if damage then
+		if damage and not initialDamage then
 			inst.components.combat.damagemultiplier = damage
 		end
 		
-		if insulation then
+		if insulation and not initialInsulation then
 			inst.components.temperature.inherentinsulation = insulation
 		end
 		
-		if walkSpeed and runSpeed then
+		if walkSpeed and runSpeed and not initialWalk and not initialRun then
 			inst.components.locomotor.walkspeed = TUNING.WILSON_WALK_SPEED * walkSpeed
 			inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED * runSpeed
 		end
