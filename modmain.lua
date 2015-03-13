@@ -16,6 +16,7 @@ InventoryModifiers = use "data/scripts/InventoryModifiers"
 ModifyCharacter = use "data/scripts/ModifyCharacter"
 ModifyStats = use "data/scripts/ModifyStats"
 ModBalancingEnabled = use "data/scripts/ModBalancingEnabled"
+use "data/scripts/StartingItems"
 
 -- Import character changes.
 use "data/characters/init"
@@ -25,77 +26,7 @@ local MOD_PREFIX = "MCR"
 local MOD_ID = "385300215"
 local MOD_VERSION = "2.1.1"
 
-local enableStartingItems = GetModConfigData("ENABLE_STARTING_ITEMS")
-	local amountOfFlint = GetModConfigData("AMOUNT_OF_FLINT")
-	local amountOfGrass = GetModConfigData("AMOUNT_OF_GRASS")
-	local amountOfLogs = GetModConfigData("AMOUNT_OF_LOGS")
-	local amountOfMeat = GetModConfigData("AMOUNT_OF_MEAT")
-	local amountOfTwigs = GetModConfigData("AMOUNT_OF_TWIGS")
-	local giveThermalStone = GetModConfigData("GIVE_THERMAL_STONE")
 
-local startingItems = {}
-
-----------------------------------------------------
--- Check config settings and add items to a table --
-----------------------------------------------------
-if enableStartingItems == 1 then -- If starting items is enabled
-	
-	LogHelper.printInfo("Starting Items enabled")
-	
-	for _= 1, amountOfFlint do -- For the amount of flint specified in the config
-		table.insert(startingItems, "flint") -- Insert it into the table "startingItems"
-	end
-	for _= 1, amountOfGrass do
-		table.insert(startingItems, "cutgrass")
-	end
-	for _= 1, amountOfLogs do
-		table.insert(startingItems, "log")
-	end
-	for _= 1, amountOfMeat do
-		table.insert(startingItems, "meat")
-	end
-	for _= 1, amountOfTwigs do
-		table.insert(startingItems, "twigs")
-	end
-	
-	if giveThermalStone == 1 then
-		table.insert(startingItems, "heatrock")
-	end
-	
-else
-	
-	LogHelper.printInfo("Starting Items disabled")
-	
-end
-
---------------------------------------------------
--- Put starting items in the player's inventory --
---------------------------------------------------
-AddPlayerPostInit(function(inst) -- Add to every player
-
-    if inst.OnNewSpawn then -- Store old function
-        inst.old_OnNewSpawn = inst.OnNewSpawn
-    end
-     
-    inst.OnNewSpawn = function(inst) -- On spawn, do the following function
-	
-        if inst.components.inventory ~= nil then
-		
-            inst.components.inventory.ignoresound = true
-            for i, v in ipairs(startingItems) do -- For each value inserted above into the table
-                inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give that amount of items to the player
-            end
-            inst.components.inventory.ignoresound = false
-			
-        end
-		
-        if inst.old_OnNewSpawn then
-		
-            return inst:old_OnNewSpawn(inst)
-			
-        end
-    end
-end)
 
 
 -------------------------------------
@@ -138,40 +69,9 @@ end)
 
 --end
 
---------------------------------------------------------------------------------
--- Component to make certain items undroppable when given the tag undroppable --
---------------------------------------------------------------------------------
-AddComponentPostInit("inventory", function(self) -- Add the function to the component inventory
-	local DropItem_base = self.DropItem
-	function self:DropItem(item, ...)
-		if item and item:HasTag("undroppable") then -- Check for the tag
-			return false -- Can't be dropped
-		else
-			return DropItem_base(self, item, ...)
-		end
-	end
-end)
 
 
-------------------------------------------------
--- Component to make items character specific --
-------------------------------------------------
-AddComponentPostInit("inventory", function(self)
-	local old_Equip = self.Equip -- Store old function
-	function self:Equip(item, ...)
-		-- Checks if item is character specific, and if the player isn't the owner, make it say so
-		if item.components.characterspecific and item.components.characterspecific.character ~= self.inst.prefab then
-			self.inst.components.talker:Say("This isn't mine")
-			self:DropItem(item)
-			return false -- Prevents item from being obtained
-		end
-		return old_Equip(self, item, ...) -- Normal function execution
-	end
-end)
---[[Add the characterspecific component to the items:
-inst:AddComponent("characterspecific")
-inst.components.characterspecific:SetOwner(inst.prefab)
-]]
+
 
 
 
