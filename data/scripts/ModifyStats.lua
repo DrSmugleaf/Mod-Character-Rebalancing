@@ -21,7 +21,7 @@ if levelSetting then
 	
 	end
 	
-	if hardcoreMode == 1 then levelDifficulty = levelDifficulty + 200 end
+	if hardcoreMode then levelDifficulty = levelDifficulty + 200 end
 	
 end
 
@@ -48,7 +48,7 @@ return function(inst, stats)
 	local strongStomach = nil
 	local hungerRate = nil
 	
-	if nerfSpeed then
+	if not nerfSpeed then
 		health = stats.health
 		hunger = stats.hunger
 		sanity = stats.sanity
@@ -108,7 +108,7 @@ return function(inst, stats)
 	local finalWalk = nil
 	local finalRun = nil
 
-	if nerfSpeed then
+	if not nerfSpeed then
 		initialHealth = stats.initialHealth
 		initialHunger = stats.initialHunger
 		initialSanity = stats.initialSanity
@@ -209,7 +209,7 @@ return function(inst, stats)
 			end
 		end
 		
-		function oneat(inst, food)
+		local function oneat(inst, food)
 			if foodPrefab1 and levelPerFood1 then -- If the variables exist
 				if food and food.components.edible and food.prefab == foodPrefab1 then -- If its a food, edible and has the specified prefab
 					inst.level = inst.level + levelPerFood1 -- Level up according to the variable levelPerFood
@@ -276,7 +276,6 @@ return function(inst, stats)
 	end
 
 		if health then
-			print("Health!!")
 			inst.components.health:SetMaxHealth(health)
 		end
 		
