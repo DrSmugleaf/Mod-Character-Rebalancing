@@ -48,7 +48,7 @@ return function(inst, stats)
 	local strongStomach = nil
 	local hungerRate = nil
 	
-	if nerfSpeed == 0 then
+	if nerfSpeed then
 		health = stats.health
 		hunger = stats.hunger
 		sanity = stats.sanity
@@ -61,7 +61,7 @@ return function(inst, stats)
 		monsterDrain = stats.monsterDrain
 		strongStomach = stats.strongStomach
 		hungerRate = stats.hungerRate
-	elseif nerfSpeed == 1 then
+	else
 		health = stats.healthNerf
 		hunger = stats.hungerNerf
 		sanity = stats.sanityNerf
@@ -108,7 +108,7 @@ return function(inst, stats)
 	local finalWalk = nil
 	local finalRun = nil
 
-	if nerfSpeed == 0 then
+	if nerfSpeed then
 		initialHealth = stats.initialHealth
 		initialHunger = stats.initialHunger
 		initialSanity = stats.initialSanity
@@ -123,7 +123,7 @@ return function(inst, stats)
 		finalInsulation = stats.finalInsulation
 		finalWalk = stats.finalWalk
 		finalRun = stats.finalRun
-	elseif nerfSpeed == 1 then
+	else
 		initialHealth = stats.initialHealthNerf
 		initialHunger = stats.initialHungerNerf
 		initialSanity = stats.initialSanityNerf
@@ -276,6 +276,7 @@ return function(inst, stats)
 	end
 
 		if health then
+			print("Health!!")
 			inst.components.health:SetMaxHealth(health)
 		end
 		

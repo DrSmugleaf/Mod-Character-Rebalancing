@@ -1,6 +1,7 @@
 local tamamoBalanced = GetModConfigData("TAMAMO_BALANCED")
 
 local function FeralFn(inst)
+	print("Feral toggle activated.")
 	if inst.feral then
 			local tamamoStats =	{
 								health = 125,
@@ -34,14 +35,22 @@ local function balanceTamamoStats(inst)
 	-- Adds the mod rpc handler for Tamamo.
 	AddModRPCHandler("MCR", "FERAL", FeralFn)
 
-	ModifyCharacter:addMode(inst, GLOBAL.KEY_X, "FERAL")
+	ModifyCharacter:addMode(inst, GLOBAL.KEY_X, "MCR", "FERAL")
 
 	-- This is used for our changes to be made as server host.
 	if not TheWorld.ismastersim then
 		return inst
 	end
 
-	inst:ListenForEvent("MCRAction", FeralFn)
+	inst:ListenForEvent("Action", function(inst, data)
+		print("Action: "..data.Action)
+		
+		if not data.Action == "FERAL" then
+			return
+		end
+			
+		FeralFn(inst)
+	end, inst)
 	
 	local DefaultEater = require("components/eater")
 	
