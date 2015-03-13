@@ -45,7 +45,7 @@ return function(inst, stats)
 	local dapperness = nil
 	local nightDrain = nil
 	local monsterDrain = nil
-	local strongStomcah = nil
+	local strongStomach = nil
 	local hungerRate = nil
 	
 	if nerfSpeed == 0 then

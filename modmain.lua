@@ -21,7 +21,7 @@ local modBalancingEnabled = ModBalancingEnabled()
 local modifyStats = ModifyStats
 
 -- Import tamamo changes.
-use "data/tamamo/tamamo"
+use "data/characters/tamamo"
 
 local MOD_NAME = "Mod Character Rebalancing"
 local MOD_PREFIX = "MCR"
@@ -135,13 +135,6 @@ end)
 	local woodieBalanced = GetModConfigData("WOODIE_BALANCED")
 	--local zimBalanced = GetModConfigData("ZIM_BALANCED")
 	
-	
--------------------------------
--- Load Special Modes config --
--------------------------------
-local nerfSpeed = GetModConfigData("NERF_SPEED")
-local hardcoreMode = GetModConfigData("HARDCORE_MODE")
-
 --local function modifyPrefab(inst, stats)
 
 --end
