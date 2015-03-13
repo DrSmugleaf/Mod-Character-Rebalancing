@@ -10,15 +10,10 @@ use "data/screens/chatinputscreen"
 use "data/screens/consolescreen"
 -- End prevention of keystrokes.
 
-LogHelper = use "data/scripts/LogHelper"
-ChangeStartingInventory = use "data/scripts/ChangeStartingInventory"
-InventoryModifiers = use "data/scripts/InventoryModifiers"
-ModifyCharacter = use "data/scripts/ModifyCharacter"
-ModifyStats = use "data/scripts/ModifyStats"
-ModBalancingEnabled = use "data/scripts/ModBalancingEnabled"
-use "data/scripts/StartingItems"
+-- Scripts Initialization.
+use "data/scripts/init"
 
--- Import character changes.
+-- Character Initialization.
 use "data/characters/init"
 
 local MOD_NAME = "Mod Character Rebalancing"
