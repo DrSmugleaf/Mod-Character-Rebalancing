@@ -27,27 +27,26 @@ configuration_options =
 {
 
 	{
-        name = "TEST_OF_TESTIES_OF_USELESS_PLACEHOLDER_PANCAKES",
-        label = "Hover over me!",
+		name = "TEST_OF_TESTIES_OF_USELESS_PLACEHOLDER_PANCAKES",
+		label = "Hover over me!",
 		hover = "Hover over any config option for details!",
-        options =
-        {
-            {description = "And me!", data = 1, hover = "You can hover over these for information too!"},
-            {description = "hey", data = 0, hover = "Do you want to build a snoowmaan"},
-        },
-        default = 1,
-    },
+		options =	{
+						{description = "And me!", data = true, hover = "You can hover over these for information too!"},
+						{description = "hey", data = false, hover = "Do you want to build a snoowmaan"},
+					},
+		default = true,
+	},
 	
 	{
 		name = "MOD_BALANCING_ENABLED",
 		label = "Balance Mod Characters",
 		hover = "Balance modded characters",
 		options =	{
-						{description = "Enabled", data = 1},
-						{description = "Disabled", data = 0},
+						{description = "Enabled", data = true},
+						{description = "Disabled", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -70,11 +69,11 @@ configuration_options =
 		label = "Ultrahard Mode",
 		hover = "Make everything terrible. Will override most config settings",
 		options =	{
-						{description = "No", data = 0, hover = "Don't turn on ultrahard mode, I preffer living"},
-						{description = "Yes", data = 1, hover = "HOLD ONTO YOUR PANTS"},
+						{description = "No", data = false, hover = "Don't turn on ultrahard mode, I preffer living"},
+						{description = "Yes", data = true, hover = "HOLD ONTO YOUR PANTS"},
 					},
 
-		default = 0,
+		default = false,
 	},
 	
 	{
@@ -82,11 +81,11 @@ configuration_options =
 		label = "Nerf speed",
 		hover = "Nerf characters speed to be more default. NOTE: Will buff other stats",
 		options =	{
-						{description = "No", data = 0, hover = "Don't nerf speed"},
-						{description = "Yes", data = 1, hover = "Nerf speed but buff other stats to compensate"},
+						{description = "No", data = false, hover = "Don't nerf speed"},
+						{description = "Yes", data = true, hover = "Nerf speed but buff other stats to compensate"},
 					},
 
-		default = 0,
+		default = false,
 	},
 	
 	{
@@ -94,11 +93,11 @@ configuration_options =
 		label = "Starting Items",
 		hover = "Enable Starting Items for new players",
 		options =	{
-						{description = "Yes", data = 1, hover = "Enable spawning with resources"},
-						{description = "No", data = 0, hover = "Disable spawning with resources"},
+						{description = "Yes", data = true, hover = "Enable spawning with resources"},
+						{description = "No", data = false, hover = "Disable spawning with resources"},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -211,11 +210,11 @@ configuration_options =
 		label = "Give thermal stone",
 		hover = "Whether or not to give new players a thermal stone",
 		options =	{
-						{description = "Yes", data = 1, hover = "Give new players a thermal stone"},
-						{description = "No", data = 0, hover = "Don't give new players a thermal stone"},
+						{description = "Yes", data = true, hover = "Give new players a thermal stone"},
+						{description = "No", data = false, hover = "Don't give new players a thermal stone"},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -223,11 +222,11 @@ configuration_options =
 		label = "Crash Bandicoot",
 		hover = "Balance Crash Bandicoot, the Experiment",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -235,11 +234,11 @@ configuration_options =
 		label = "Dark Sakura",
 		hover = "Balance Dark Sakura Matou",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	--[[{
@@ -247,11 +246,11 @@ configuration_options =
 		label = "Devon",
 		hover = "Balance Devon, the Hunter",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},]]
 	
 	{
@@ -259,11 +258,11 @@ configuration_options =
 		label = "Drok",
 		hover = "Balance Drok, the Caveman",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -271,11 +270,11 @@ configuration_options =
 		label = "Endia",
 		hover = "Balance Endia, the Paranoid Elf",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -283,11 +282,11 @@ configuration_options =
 		label = "Esko",
 		hover = "Balance Esko, the Skycat",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -295,11 +294,11 @@ configuration_options =
 		label = "Faroz",
 		hover = "Balance Faroz, the Little Scholar",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -307,11 +306,11 @@ configuration_options =
 		label = "Filia",
 		hover = "Balance Filia, the forgetful schoolgirl",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	--[[{
@@ -319,11 +318,11 @@ configuration_options =
 		label = "Fionna",
 		hover = "Balance Fionna",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},]]
 	
 	{
@@ -331,11 +330,11 @@ configuration_options =
 		label = "FreeSpirit",
 		hover = "Balance Umbreon, the FreeSpirit",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	--[[{
@@ -343,11 +342,11 @@ configuration_options =
 		label = "Gaben",
 		hover = "Release HL3",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},]]
 
 	--[[{
@@ -355,11 +354,11 @@ configuration_options =
 		label = "Gir",
 		hover = "Balance Purswader's Gir",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},]]
 
 	{
@@ -367,11 +366,11 @@ configuration_options =
 		label = "Haruz",
 		hover = "Balance Haruz, the Cowardly Dog",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	--[[{
@@ -379,11 +378,11 @@ configuration_options =
 		label = "Hella Merdurial",
 		hover = "Balance Hella Merdurial",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},]]
 	
 	{
@@ -391,11 +390,11 @@ configuration_options =
 		label = "Luffy",
 		hover = "Balance Luffy",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -403,11 +402,11 @@ configuration_options =
 		label = "Madeleine",
 		hover = "Balance Madeleine, the Rich Cat",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -415,11 +414,11 @@ configuration_options =
 		label = "Michael the Fox",
 		hover = "Balance Michael the Fox, the Scaredy Cat",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -427,11 +426,11 @@ configuration_options =
 		label = "Miku Hatsune",
 		hover = "Balance Miku Hatsune",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -439,11 +438,11 @@ configuration_options =
 		label = "Mitsuru",
 		hover = "Balance Mitsuru, the Winter Wolfy",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	--[[{
@@ -451,11 +450,11 @@ configuration_options =
 		label = "Neptunia",
 		hover = "Balance Hyperdimension Neptunia: Neptune",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},]]
 	
 	{
@@ -463,11 +462,11 @@ configuration_options =
 		label = "Seras",
 		hover = "Balance Seras, the Fledgling Vampire",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -475,11 +474,11 @@ configuration_options =
 		label = "Sollyz",
 		hover = "Balance Sollyz, the Cat Slap",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -487,11 +486,11 @@ configuration_options =
 		label = "Shovel Knight",
 		hover = "Balance Shovel Knight, the Blue Burrower",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -511,11 +510,11 @@ configuration_options =
 		label = "Thana",
 		hover = "Balance Thana, the Nightstalker",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},]]
 	
 	--[[{
@@ -523,11 +522,11 @@ configuration_options =
 		label = "The Medic",
 		hover = "Balance The Medic",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},]]
 	
 	{
@@ -535,11 +534,11 @@ configuration_options =
 		label = "Wark, the Chocobo",
 		hover = "Balance Wark, the Chocobo",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -547,11 +546,11 @@ configuration_options =
 		label = "Wolf",
 		hover = "Balance Wolf, the Lone Wolf",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	
 	{
@@ -559,22 +558,22 @@ configuration_options =
 		label = "Woodie",
 		hover = "Balance Woodie, the Lumberjack",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},
 	--[[{
 		name = "ZIM_BALANCED",
 		label = "Zim",
 		hover = "Balance Purswader's Zim",
 		options =	{
-						{description = "Balanced", data = 1},
-						{description = "Ignored", data = 0},
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
 					},
 
-		default = 1,
+		default = true,
 	},]]
 
 }
