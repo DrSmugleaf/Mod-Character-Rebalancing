@@ -6,6 +6,8 @@ end
 
 local function balanceShovelKnightBlades(inst)
 	
+	if inst == nil then print("We're fucked.") return end
+
     inst:AddTag("undroppable")
 	
 	inst:AddComponent("characterspecific")
