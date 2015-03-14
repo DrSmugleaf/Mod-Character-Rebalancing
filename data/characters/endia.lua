@@ -18,6 +18,20 @@ local function balanceEndiaStats(inst)
 							hungerRate = 1,
 
 
+							healthNerf = 75,
+							hungerNerf = 100,
+							sanityNerf = 100,
+							damageNerf = 0.85,
+							insulationNerf = 0,
+							walkSpeedNerf = 1,
+							runSpeedNerf = 1,
+							dappernessNerf = TUNING.DAPPERNESS_TINY * -0.33,
+							nightDrainNerf = 1.15,
+							monsterDrainNerf = 1.15,
+							strongStomachNerf = false,
+							hungerRateNerf = 1,
+
+
 							levelBase = 100,
 							
 							foodPrefab1 = "corn",
