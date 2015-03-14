@@ -24,6 +24,16 @@ function KeyHandler:AddActionListener(Namespace, Key, Action)
 			end
 		end
 	end)
+
+	if TheWorld.ismastersim then
+      self.inst:ListenForEvent("keyaction", function(inst, data)
+          if not data.Action == Action then
+              return
+          end
+          
+          data.Fn(inst)
+      end, self.inst) 
+    end
 end
 
 return KeyHandler

@@ -44,14 +44,6 @@ local function balanceTamamoStats(inst)
 	if not TheWorld.ismastersim then
 		return inst
 	end
-
-	inst:ListenForEvent("keyaction", function(inst, data)
-		if not data.Action == "FERAL" then
-			return
-		end
-			
-		FeralFn(inst)
-	end, inst)
 	
 	local DefaultEater = require("components/eater")
 	
