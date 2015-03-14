@@ -45,7 +45,7 @@ local function balanceCrashBandicootStats(inst)
 
 									initialHealthNerf = 100,
 									initialHungerNerf = 100,
-									initialSanityNerf = 125
+									initialSanityNerf = 125,
 									initialDamageNerf = 1,
 									initialInsulationNerf = 0,
 									initialWalkNerf = 1,
