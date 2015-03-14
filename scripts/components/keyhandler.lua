@@ -17,7 +17,7 @@ function KeyHandler:AddActionListener(Namespace, Key, Action)
 		if data.inst == ThePlayer then
 			if data.key == Key then
 				if TheWorld.ismastersim then
-					ThePlayer:PushEvent("keyaction", { Namespace = Namespace, Action = Action })
+					ThePlayer:PushEvent("keyaction", { Namespace = Namespace, Action = Action, Fn = MOD_RPC_HANDLERS[Namespace][MOD_RPC[Namespace][Action].id] })
 				else
 					SendModRPCToServer( MOD_RPC[Namespace][Action] )
 				end
