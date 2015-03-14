@@ -17,7 +17,21 @@ local function balanceCrashBandicootStats(inst)
 									hungerRate = 1.25,
 
 
-									levelBase = 50,
+									healthNerf = 125,
+									hungerNerf = 150,
+									sanityNerf = 150,
+									damageNerf = 1.25,
+									insulationNerf = 0,
+									walkSpeedNerf = 1,
+									runSpeedNerf = 1,
+									dappernessNerf = 0,
+									nightDrainNerf = 1,
+									monsterDrainNerf = 1,
+									strongStomachNerf = false,
+									hungerRateNerf = 1.25,
+
+
+									levelBase = 100,
 									
 									foodPrefab1 = "wumpa",
 									foodPrefab2 = "wumpa_cooked",

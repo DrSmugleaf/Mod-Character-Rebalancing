@@ -1,4 +1,5 @@
 local mitsuruBalanced = GetModConfigData("MITSURU_BALANCED")
+local levelSetting = GetModConfigData("LEVEL_SETTING")
 
 local function balanceMitsuruStats(inst)
 

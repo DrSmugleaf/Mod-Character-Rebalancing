@@ -8,9 +8,6 @@ use "data/characters/crashbandicoot"
 -- Import darksakura changes.
 use "data/characters/darksakura"
 
--- Import drok changes.
-use "data/characters/drok"
-
 -- Import endia changes.
 use "data/characters/endia"
 

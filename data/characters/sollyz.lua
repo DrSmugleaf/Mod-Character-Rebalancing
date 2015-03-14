@@ -1,4 +1,5 @@
 local sollyzBalanced = GetModConfigData("SOLLYZ_BALANCED")
+local levelSetting = GetModConfigData("LEVEL_SETTING")
 
 local function balanceSollyzStats(inst)
 

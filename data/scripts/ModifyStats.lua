@@ -197,19 +197,16 @@ return function(inst, stats)
 			inst.components.sanity:SetPercent(sanity_percent)
 		end
 		
-		if foodType then
-			local function oneat(inst, food)
-			
-				if food and food.components.edible and food.components.edible.foodtype=="foodType" then
-					inst.level = inst.level + 1
+		local function oneat(inst, food)
+
+			if foodType and levelPerFood1 then
+				if food and food.components.edible and food.components.edible.foodtype == foodType then
+					inst.level = inst.level + levelPerFood1
 					applyUpgrades(inst)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
 				end
-				
 			end
-		end
-		
-		local function oneat(inst, food)
+
 			if foodPrefab1 and levelPerFood1 then -- If the variables exist
 				if food and food.components.edible and food.prefab == foodPrefab1 then -- If its a food, edible and has the specified prefab
 					inst.level = inst.level + levelPerFood1 -- Level up according to the variable levelPerFood
@@ -217,6 +214,7 @@ return function(inst, stats)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup") -- Play a sound
 				end
 			end
+
 			if foodPrefab2 and levelPerFood2 then
 				if food and food.components.edible and food.prefab == foodPrefab2 then
 					inst.level = inst.level + levelPerFood2
@@ -224,6 +222,7 @@ return function(inst, stats)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
 				end
 			end
+
 			if foodPrefab3 and levelPerFood3 then
 				if food and food.components.edible and food.prefab == foodPrefab3 then
 					inst.level = inst.level + levelPerFood3
@@ -231,6 +230,7 @@ return function(inst, stats)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
 				end
 			end
+
 			if foodPrefab4 and levelPerFood4 then
 				if food and food.components.edible and food.prefab == foodPrefab4 then
 					inst.level = inst.level + levelPerFood4
@@ -238,6 +238,7 @@ return function(inst, stats)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
 				end
 			end
+
 			if foodPrefab5 and levelPerFood5 then
 				if food and food.components.edible and food.prefab == foodPrefab5 then
 					inst.level = inst.level + levelPerFood5
@@ -245,6 +246,7 @@ return function(inst, stats)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
 				end
 			end
+
 		end
 			
 		local function onpreload(inst, data)

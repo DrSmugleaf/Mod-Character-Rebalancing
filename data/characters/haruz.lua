@@ -1,4 +1,5 @@
 local haruzBalanced = GetModConfigData("HARUZ_BALANCED")
+local levelSetting = GetModConfigData("LEVEL_SETTING")
 
 local function balanceHaruzStats(inst)
 
@@ -51,7 +52,7 @@ local function balanceHaruzStats(inst)
 		
 		local function newEat(inst, food)
 			oldEat(inst, food)
-		if food and food.components.edible and food.components.edible.foodtype=="MEAT" then
+		if food and food.components.edible and food.components.edible.foodtype == "MEAT" then
 			newUpg(inst)
 		end
 	end
