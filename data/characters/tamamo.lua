@@ -21,7 +21,7 @@ local function FeralFn(inst)
 								walkSpeed = 1.5,
 								runSpeed = 1.5,
 								dapperness = -2*TUNING.DAPPERNESS_LARGE,
-								hungerRate = 1.5,
+								hungerRate = 2,
 							}
 			ModifyStats(inst, tamamoStats)
 
