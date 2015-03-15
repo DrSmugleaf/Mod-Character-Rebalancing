@@ -1,6 +1,7 @@
 local tamamoBalanced = GetModConfigData("TAMAMO_BALANCED")
 
 local function FeralFn(inst)
+	if inst:HasTag("playerghost") then return end
 	if inst.feral then
 			local tamamoStats =	{
 									health = 125,
