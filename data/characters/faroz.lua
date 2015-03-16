@@ -14,7 +14,7 @@ end
 
 local function balanceFarozGlasses(inst)
 
-	inst:AddTag("undroppable")
+	inst.components.inventoryitem.keepondeath = true
 	
 	inst:AddComponent("characterspecific")
 	inst.components.characterspecific:SetOwner("faroz")

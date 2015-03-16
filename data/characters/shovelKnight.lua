@@ -8,7 +8,7 @@ local function balanceShovelKnightBlades(inst)
 	
 	if inst == nil then print("We're fucked.") return end
 
-    inst:AddTag("undroppable")
+	inst.components.inventoryitem.keepondeath = true
 	
 	inst:AddComponent("characterspecific")
 	inst.components.characterspecific:SetOwner("winston")
