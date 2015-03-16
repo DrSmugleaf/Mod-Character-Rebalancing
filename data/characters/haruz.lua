@@ -72,7 +72,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359821133") then
+	if KnownModIndex:IsModEnabled("workshop-359821133") then
 		if haruzBalanced then	
 			AddPrefabPostInit("haruz", balanceHaruzStats)
 			LogHelper.printInfo("Balancing Haruz")

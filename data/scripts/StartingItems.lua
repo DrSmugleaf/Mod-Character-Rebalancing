@@ -58,7 +58,7 @@ AddPlayerPostInit(function(inst) -- Add to every player
 		
             inst.components.inventory.ignoresound = true
             for i, v in ipairs(startingItems) do -- For each value inserted above into the table
-                inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give that amount of items to the player
+                inst.components.inventory:GiveItem(SpawnPrefab(v)) -- Give that amount of items to the player
             end
             inst.components.inventory.ignoresound = false
 			

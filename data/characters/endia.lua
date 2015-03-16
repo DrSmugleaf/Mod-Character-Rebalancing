@@ -85,7 +85,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-363966651") then
+	if KnownModIndex:IsModEnabled("workshop-363966651") then
 		if endiaBalanced then
 			AddPrefabPostInit("endia", balanceEndiaStats)
 			LogHelper.printInfo("Balancing Endia")

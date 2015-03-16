@@ -14,7 +14,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-380079744") then
+	if KnownModIndex:IsModEnabled("workshop-380079744") then
 		if luffyBalanced then
 			AddPrefabPostInit("luffy", balanceLuffyStats)
 			LogHelper.printInfo("Balancing Luffy")

@@ -8,7 +8,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-360319890") then
+	if KnownModIndex:IsModEnabled("workshop-360319890") then
 		if serasBalanced then	
 			AddPrefabPostInit("seras", balanceSerasStats)
 			LogHelper.printInfo("Balancing Seras")

@@ -79,7 +79,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364189966") then
+	if KnownModIndex:IsModEnabled("workshop-364189966") then
 		if mitsuruBalanced then	
 			AddPrefabPostInit("mitsuru", balanceMitsuruStats)
 			LogHelper.printInfo("Balancing Mitsuru")

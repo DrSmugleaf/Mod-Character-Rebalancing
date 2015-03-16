@@ -15,7 +15,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-368321978") then
+	if KnownModIndex:IsModEnabled("workshop-368321978") then
 		if mikuHatsuneBalanced then
 			AddPrefabPostInit("miku", balanceMikuHatsuneStats)
 			LogHelper.printInfo("Balancing Miku Hatsune")

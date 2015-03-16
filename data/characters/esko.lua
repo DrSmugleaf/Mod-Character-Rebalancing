@@ -76,7 +76,7 @@ end
 
 if ModBalancingEnabled() then 
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-356880841") then
+	if KnownModIndex:IsModEnabled("workshop-356880841") then
 		if eskoBalanced then
 			AddPrefabPostInit("esk", balanceEskoStats)
 			LogHelper.printInfo("Balancing Esko")

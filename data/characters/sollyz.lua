@@ -69,7 +69,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359479220") then
+	if KnownModIndex:IsModEnabled("workshop-359479220") then
 		if sollyzBalanced then	
 			AddPrefabPostInit("sollyz", balanceSollyzStats)
 			LogHelper.printInfo("Balancing Sollyz")

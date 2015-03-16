@@ -80,7 +80,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-382501575") then
+	if KnownModIndex:IsModEnabled("workshop-382501575") then
 		if crashBandicootBalanced then
 			AddPrefabPostInit("crashbandi", balanceCrashBandicootStats)
 			LogHelper.printInfo("Balancing Crash Bandicoot")

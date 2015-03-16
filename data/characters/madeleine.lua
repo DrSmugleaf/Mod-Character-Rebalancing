@@ -8,7 +8,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369228986") then
+	if KnownModIndex:IsModEnabled("workshop-369228986") then
 		if madeleineBalanced then	
 			AddPrefabPostInit("madeleine", balanceMadeleineStats)
 			LogHelper.printInfo("Balancing Madeleine")

@@ -105,7 +105,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-399799824") then
+	if KnownModIndex:IsModEnabled("workshop-399799824") then
 		if tamamoBalanced then	
 			AddPrefabPostInit("tamamo", balanceTamamoStats)
 			LogHelper.printInfo("Balancing Tamamo")

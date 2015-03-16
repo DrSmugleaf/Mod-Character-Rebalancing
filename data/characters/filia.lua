@@ -76,7 +76,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-398833909") then
+	if KnownModIndex:IsModEnabled("workshop-398833909") then
 		if filiaBalanced then
 			AddPrefabPostInit("filia", balanceFiliaStats)
 			LogHelper.printInfo("Balancing Filia")

@@ -74,7 +74,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359318959") then
+	if KnownModIndex:IsModEnabled("workshop-359318959") then
 		if freeSpiritBalanced then
 			AddPrefabPostInit("freebre", balanceFreeSpiritStats)
 			LogHelper.printInfo("Balancing FreeSpirit the Umbreon")

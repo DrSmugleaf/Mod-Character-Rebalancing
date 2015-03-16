@@ -33,7 +33,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-384633033") then
+	if KnownModIndex:IsModEnabled("workshop-384633033") then
 		if woodieBalanced then	
 			AddPrefabPostInit("woodie", balanceWoodieStats)
 			AddPrefabPostInit("lucy", balanceWoodieAxe)

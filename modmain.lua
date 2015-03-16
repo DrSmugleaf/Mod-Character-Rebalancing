@@ -172,7 +172,7 @@ end
 		
 	
 		
--- 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-366048578") then
+-- 	--[[if KnownModIndex:IsModEnabled("workshop-366048578") then
 -- 		if devonBalanced == 1 then
 -- 			AddPrefabPostInit("devon", balanceDevonStats)
 -- 			LogHelper.printInfo("Balancing Devon")
@@ -186,7 +186,7 @@ end
 	
 		
 	
--- 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-374341561") then
+-- 	--[[if KnownModIndex:IsModEnabled("workshop-374341561") then
 -- 		if fionnaBalanced == 1 then
 -- 			AddPrefabPostInit("fionna", balanceFionnaStats)
 -- 			LogHelper.printInfo("Balancing Fionna")
@@ -197,7 +197,7 @@ end
 		
 	
 		
--- 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-381660473") then
+-- 	--[[if KnownModIndex:IsModEnabled("workshop-381660473") then
 -- 		if gabenBalanced == 1 then
 -- 			AddPrefabPostInit("gbe", balanceGabenStats)
 -- 			LogHelper.printInfo("Releasing HL3")
@@ -206,7 +206,7 @@ end
 -- 		end
 -- 	end]]		
 	
--- 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-363819976") then
+-- 	--[[if KnownModIndex:IsModEnabled("workshop-363819976") then
 -- 		if girBalanced == 1 then
 -- 			AddPrefabPostInit("gir", balanceGirStats)
 -- 			LogHelper.printInfo("Balancing Gir")
@@ -217,7 +217,7 @@ end
 	
 	
 	
--- 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-369898161") then
+-- 	--[[if KnownModIndex:IsModEnabled("workshop-369898161") then
 -- 		if hellaMerdurialBalanced == 1 then	
 -- 			AddPrefabPostInit("hella", balanceHellaMerdurialStats)
 -- 			LogHelper.printInfo("Balancing Hella")
@@ -236,7 +236,7 @@ end
 	
 	
 		
--- 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-351877222") then
+-- 	--[[if KnownModIndex:IsModEnabled("workshop-351877222") then
 -- 		if neptuniaBalanced == 1 then
 -- 			AddPrefabPostInit("nep", balanceNeptuniaStats)
 -- 			LogHelper.printInfo("Balancing Neptunia")
@@ -251,7 +251,7 @@ end
 		
 
 		
--- 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-368541793") then
+-- 	--[[if KnownModIndex:IsModEnabled("workshop-368541793") then
 -- 		if thanaBalanced == 1 then	
 -- 			AddPrefabPostInit("thana", balanceThanaStats)
 -- 			LogHelper.printInfo("Balancing Thana")
@@ -260,7 +260,7 @@ end
 -- 		end
 -- 	end]]
 		
--- 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-379628839") then
+-- 	--[[if KnownModIndex:IsModEnabled("workshop-379628839") then
 -- 		if theMedicBalanced == 1 then
 -- 			AddPrefabPostInit("medic", balanceTheMedicStats)
 -- 			LogHelper.printInfo("Balancing The Medic")
@@ -275,7 +275,7 @@ end
 		
 
 		
--- 	--[[if GLOBAL.KnownModIndex:IsModEnabled("workshop-357209437") then
+-- 	--[[if KnownModIndex:IsModEnabled("workshop-357209437") then
 -- 		if zimBalanced == 1 then	
 -- 			AddPrefabPostInit("izim", balanceZimStats)
 -- 			LogHelper.printInfo("Balancing Zim")

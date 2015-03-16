@@ -18,7 +18,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369544255") then
+	if KnownModIndex:IsModEnabled("workshop-369544255") then
 		if shovelKnightBalanced then
 			AddPrefabPostInit("winston", balanceShovelKnightStats)
 			AddPrefabPostInit("skweaponshovelbladebasic", balanceShovelKnightBlades)

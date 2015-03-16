@@ -20,7 +20,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-369518979") then
+	if KnownModIndex:IsModEnabled("workshop-369518979") then
 		if warkBalanced then	
 			AddPrefabPostInit("wark", balanceWarkStats)
 			LogHelper.printInfo("Balancing Wark")

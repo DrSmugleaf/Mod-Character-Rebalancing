@@ -22,7 +22,7 @@ function ChangeStartingInventory:modifyInventory(inst, start_inv)
 			inst.components.inventory:RemoveItemBySlot(i) -- Remove all items
 		end
 		for _, v in ipairs(start_inv) do
-			--inst.components.inventory:GiveItem(GLOBAL.SpawnPrefab(v)) -- Give new items
+			--inst.components.inventory:GiveItem(SpawnPrefab(v)) -- Give new items
 			inst.components.inventory:GiveItem(SpawnPrefab(v))
 		end
 		inst.components.inventory.ignoresound = false

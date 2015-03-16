@@ -23,7 +23,7 @@ end
 
 if ModBalancingEnabled() then 
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364491382") then
+	if KnownModIndex:IsModEnabled("workshop-364491382") then
 		if farozBalanced then
 			AddPrefabPostInit("faroz", balanceFarozStats)
 			AddPrefabPostInit("faroz_gls", balanceFarozGlasses)

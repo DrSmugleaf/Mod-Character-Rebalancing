@@ -56,7 +56,7 @@ end
 
 if ModBalancingEnabled() then 
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-384048428") then
+	if KnownModIndex:IsModEnabled("workshop-384048428") then
 		if darkSakuraBalanced then
 			AddPrefabPostInit("sakura", balanceDarkSakuraStats)
 			LogHelper.printInfo("Balancing Dark Sakura Matou")
