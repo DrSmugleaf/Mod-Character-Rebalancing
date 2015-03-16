@@ -40,8 +40,7 @@ local function BallFn(inst)
 
 	if inst:HasTag("playerghost") then return end
 		
-	if inst.transformed then
-		--inst.AnimState:SetBuild("tamamo")
+	if not inst.transformed then
 		inst.components.locomotor.walkspeed = (TUNING.WILSON_WALK_SPEED)
 		inst.components.locomotor.runspeed = (TUNING.WILSON_RUN_SPEED)
 		inst.components.health.absorb = 0.05
@@ -50,7 +49,6 @@ local function BallFn(inst)
 		inst.components.hunger:SetRate(0.18310)
 		 
 		else
-		--inst.AnimState:SetBuild("tamamo_ball")
 		inst.components.locomotor.walkspeed = (2.5)
 		inst.components.locomotor.runspeed = (3.5)
 		inst.components.health.absorb = 0.40
