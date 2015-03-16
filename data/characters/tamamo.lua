@@ -36,16 +36,43 @@ local function FeralFn(inst)
 	end
 end
 
+local function BallFn(inst)
+
+	if inst:HasTag("playerghost") then return end
+		
+	if inst.transformed then
+		--inst.AnimState:SetBuild("tamamo")
+		inst.components.locomotor.walkspeed = (TUNING.WILSON_WALK_SPEED)
+		inst.components.locomotor.runspeed = (TUNING.WILSON_RUN_SPEED)
+		inst.components.health.absorb = 0.05
+		inst.components.combat.damagemultiplier = 0.7
+		inst.components.temperature.inherentinsulation = 35
+		inst.components.hunger:SetRate(0.18310)
+		 
+		else
+		--inst.AnimState:SetBuild("tamamo_ball")
+		inst.components.locomotor.walkspeed = (2.5)
+		inst.components.locomotor.runspeed = (3.5)
+		inst.components.health.absorb = 0.40
+		inst.components.combat.damagemultiplier = 0.4
+		inst.components.temperature.inherentinsulation = 65
+		inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE)
+			 
+	end
+end
+
 local function balanceTamamoStats(inst)
 
 	-- Adds the mod rpc handler for Tamamo.
 	AddModRPCHandler("MCR", "FERAL", FeralFn)
+	AddModRPCHandler("MCR", "BALL", BallFn)
 
 	if not inst.components.keyhandler then
 		inst:AddComponent("keyhandler")
 	end
 
 	inst.components.keyhandler:AddActionListener("MCR", KEY_X, "FERAL")
+	inst.components.keyhandler:AddActionListener("MCR", TUNING.TAMAMO.KEY, "BALL")
 
 	-- This is used for our changes to be made as server host.
 	if not TheWorld.ismastersim then
@@ -74,36 +101,6 @@ local function balanceTamamoStats(inst)
 	inst.components.eater.ignorespoilage = false
 	function inst.components.eater:Eat(food)
 		return DefaultEater.Eat(self, food)
-	end
-
-
-	local function BallFn(inst)
-
-		if inst:HasTag("playerghost") then return end
-		if inst.transformed then
-		inst.AnimState:SetBuild("tamamo")
-		inst.components.locomotor.walkspeed = (TUNING.WILSON_WALK_SPEED)
-		inst.components.locomotor.runspeed = (TUNING.WILSON_RUN_SPEED)
-		inst.components.health.absorb = 0.05
-		inst.components.combat.damagemultiplier = 0.7
-		inst.components.temperature.inherentinsulation = 35
-		inst.components.hunger:SetRate(0.18310)
-		 
-		else
-		inst.AnimState:SetBuild("tamamo_ball")
-		inst.components.locomotor.walkspeed = (2.5)
-		inst.components.locomotor.runspeed = (3.5)
-		inst.components.health.absorb = 0.40
-		inst.components.combat.damagemultiplier = 0.4
-		inst.components.temperature.inherentinsulation = 65
-		inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE)
-		 
-		end
-		 
-		inst.transformed = not inst.transformed
-
-		return true
-
 	end
 
 end
