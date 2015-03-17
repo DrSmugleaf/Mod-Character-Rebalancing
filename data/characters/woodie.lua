@@ -2,6 +2,8 @@ local woodieBalanced = GetModConfigData("WOODIE_BALANCED")
 
 local function balanceWoodieStats(inst)
 
+	inst:AddTag("lucy")
+
 	local woodieStats = {
 
 							levelBase =  0,
@@ -25,9 +27,25 @@ end
 local function balanceWoodieAxe(inst)
 	
     inst:AddTag("undroppable")
-	
-	inst:AddComponent("characterspecific")
-	inst.components.characterspecific:SetOwner("woodie")
+
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	if inst.components.inventoryitem then
+		inst.components.inventoryitem._onpickupfn = inst.components.inventoryitem.onpickupfn
+
+		inst.components.inventoryitem.onpickupfn = function(inst, doer, ...)
+			if not doer:HasTag("lucy") then
+				self.inst.components.talker:Say("This isn't mine")
+	 			self:DropItem(item)
+	 			return false -- Prevents item from being obtained
+	 		else
+	 			return inst.components.inventoryitem._onpickupfn(inst, doer, ...)
+	 		end
+		end
+	end
 	
 end
 
