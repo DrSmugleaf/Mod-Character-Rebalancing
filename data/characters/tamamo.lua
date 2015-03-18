@@ -28,6 +28,7 @@ local function FeralFn(inst)
 									dapperness = -2*TUNING.DAPPERNESS_LARGE,
 									hungerRate = 2.5,
 								}
+								
 			ModifyStats(inst, tamamoStats)
 
 			inst.components.health.absorb = 0.05
