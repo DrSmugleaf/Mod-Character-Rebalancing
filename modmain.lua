@@ -59,7 +59,6 @@ local MOD_VERSION = "2.1.1"
 	
 	
 	
-	--local thanaBalanced = GetModConfigData("THANA_BALANCED")
 	--local theMedicBalanced = GetModConfigData("THEMEDIC_BALANCED")
 	
 
@@ -154,8 +153,6 @@ local MOD_VERSION = "2.1.1"
 
 
 
---local function balanceThanaStats(inst)
---end
 
 
 --local function balanceTheMedicStats(inst)
@@ -257,14 +254,7 @@ end
 		
 
 		
--- 	--[[if KnownModIndex:IsModEnabled("workshop-368541793") then
--- 		if thanaBalanced == 1 then	
--- 			AddPrefabPostInit("thana", balanceThanaStats)
--- 			LogHelper.printInfo("Balancing Thana")
--- 		else
--- 			LogHelper.printInfo("Ignoring Thana")
--- 		end
--- 	end]]
+
 		
 -- 	--[[if KnownModIndex:IsModEnabled("workshop-379628839") then
 -- 		if theMedicBalanced == 1 then

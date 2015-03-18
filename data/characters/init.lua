@@ -53,11 +53,11 @@ use "data/characters/sollyz"
 -- Import tamamo changes.
 use "data/characters/tamamo"
 
+-- Import thana changes.
+use "data/characters/thana"
+
 -- Import wark changes.
 use "data/characters/wark"
 
 -- Import wolf changes.
 use "data/characters/wolf"
-
--- Import woodie changes.
-use "data/characters/woodie"
