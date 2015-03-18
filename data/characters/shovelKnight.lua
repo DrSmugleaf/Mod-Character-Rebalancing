@@ -56,8 +56,25 @@ local function balanceShovelKnightBlades(inst)
 	 			return false -- Prevents item from being obtained
 	 			end
 	 		else
-	 			return inst.components.inventoryitem._onpickupfn(inst, doer, ...)
+	 			return inst.components.inventoryitem:_onpickupfn(inst, doer, ...)
 	 		end
+		end
+	end
+
+
+
+	-- This is test code for when a player equips it.
+	if inst.components.equippable then
+		inst.components.equippable._onequipfn = inst.components.equippable.onequipfn
+
+		inst.components.equippable.onequipfn = function(inst, owner)
+			if not owner:HasTag("shovelblades") then
+				owner.components.talker:Say("This is a bullshit weapon.")
+				inst.components.inventoryitem:DropItem(inst)
+				return false
+			else
+				return inst.components.equippable:_onequipfn(inst, owner)
+			end
 		end
 	end
 	
