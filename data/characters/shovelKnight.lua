@@ -37,46 +37,13 @@ end
 
 local function balanceShovelKnightBlades(inst)
 	
-	if inst == nil then print("We're fucked.") return end
-
-	inst.components.inventoryitem.keepondeath = true
-	
 	if not TheWorld.ismastersim then
 		return inst
 	end
 
-	if inst.components.inventoryitem then
-		inst.components.inventoryitem._onpickupfn = inst.components.inventoryitem.onpickupfn
+	inst.components.inventoryitem.keepondeath = true
 
-		inst.components.inventoryitem.onpickupfn = function(inst, doer, ...)
-			if not doer:HasTag("shovelblades") then
-				doer.components.talker:Say("This isn't mine")
-				if self and self.activeitem then
-	 			self:DropItem(item)
-	 			return false -- Prevents item from being obtained
-	 			end
-	 		else
-	 			return inst.components.inventoryitem:_onpickupfn(inst, doer, ...)
-	 		end
-		end
-	end
-
-
-
-	-- This is test code for when a player equips it.
-	if inst.components.equippable then
-		inst.components.equippable._onequipfn = inst.components.equippable.onequipfn
-
-		inst.components.equippable.onequipfn = function(inst, owner)
-			if not owner:HasTag("shovelblades") then
-				owner.components.talker:Say("This is a bullshit weapon.")
-				inst.components.inventoryitem:DropItem(inst)
-				return false
-			else
-				return inst.components.equippable:_onequipfn(inst, owner)
-			end
-		end
-	end
+	inst.components.inventoryitem:AddCharacterSpecificTag("shoveblades")
 	
 end
 
