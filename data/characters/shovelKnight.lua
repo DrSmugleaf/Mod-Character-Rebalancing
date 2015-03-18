@@ -2,6 +2,8 @@ local shovelKnightBalanced = GetModConfigData("SHOVELKNIGHT_BALANCED")
 
 local function balanceShovelKnightStats(inst)
 
+	inst:AddTag("shovelblades")
+
 	local function ondeathkill(inst, deadthing)
 
 		inst.components.sanity:DoDelta(0)
@@ -39,8 +41,25 @@ local function balanceShovelKnightBlades(inst)
 
 	inst.components.inventoryitem.keepondeath = true
 	
-	inst:AddComponent("characterspecific")
-	inst.components.characterspecific:SetOwner("winston")
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	if inst.components.inventoryitem then
+		inst.components.inventoryitem._onpickupfn = inst.components.inventoryitem.onpickupfn
+
+		inst.components.inventoryitem.onpickupfn = function(inst, doer, ...)
+			if not doer:HasTag("shovelblades") then
+				doer.components.talker:Say("This isn't mine")
+				if self and self.activeitem then
+	 			self:DropItem(item)
+	 			return false -- Prevents item from being obtained
+	 			end
+	 		else
+	 			return inst.components.inventoryitem._onpickupfn(inst, doer, ...)
+	 		end
+		end
+	end
 	
 end
 
