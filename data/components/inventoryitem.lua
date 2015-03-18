@@ -10,13 +10,17 @@ local function InventoryItemPostInit(inst)
 	end
 
 	function inst:IsCharacterSpecific(new_owner)
-		for _, tag in pairs(self.characterspecific_tags) do
-            if new_owner:HasTag(tag) then
-                return true
-            end
-        end
+		if self.characterspecific_tags ~= nil then
+			for _, tag in pairs(self.characterspecific_tags) do
+            	if new_owner:HasTag(tag) then
+                	return true
+            	end
+        	end
 
-        return false
+        	return false
+        else
+        	return true
+        end
     end
 
 	return inst
