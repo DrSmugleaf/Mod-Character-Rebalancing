@@ -4,7 +4,7 @@ local function InventoryPostInit(inst)
 
 	function inst:CanTakeItemInSlot(item, slot)
 		if ThePlayer ~= nil then
-			if item.components.characterspecific and not item.components.characterspecific:CanPickUp(ThePlayer.prefab) then
+			if item.components.characterspecific and not item.components.characterspecific:CanPickUp(ThePlayer) then
     			local owner = item.components.inventoryitem.owner or ThePlayer or self.inst
     			if owner ~= nil then
     				owner.components.inventory:DropItem(item)
