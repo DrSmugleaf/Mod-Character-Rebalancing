@@ -3,6 +3,7 @@ local CharacterSpecific = Class(function(self, inst)
 
     self.character = nil
     self.storable = false
+    self.comment = "That does not belong to me."
 end)
 
 function CharacterSpecific:CanPickUp(doer)
@@ -23,6 +24,14 @@ end
 
 function CharacterSpecific:SetStorable(value)
 	self.storable = value
+end
+
+function CharacterSpecific:GetComment()
+	return self.comment
+end
+
+function CharacterSpecific:SetComment(comment)
+	self.comment = comment
 end
 
 return CharacterSpecific
