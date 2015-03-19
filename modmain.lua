@@ -19,7 +19,7 @@ use "data/actions/init"
 -- Character Initialization.
 use "data/characters/init"
 
--- Components Initialization.
+-- Component Initialization.
 use "data/components/init"
 
 local MOD_NAME = "Mod Character Rebalancing"

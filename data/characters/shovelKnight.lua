@@ -2,8 +2,6 @@ local shovelKnightBalanced = GetModConfigData("SHOVELKNIGHT_BALANCED")
 
 local function balanceShovelKnightStats(inst)
 
-	inst:AddTag("shovelblades")
-
 	local function ondeathkill(inst, deadthing)
 
 		inst.components.sanity:DoDelta(0)
@@ -43,7 +41,12 @@ local function balanceShovelKnightBlades(inst)
 
 	inst.components.inventoryitem.keepondeath = true
 
-	inst.components.inventoryitem:AddCharacterSpecificTag("shoveblades")
+	if not inst.components.characterspecific then
+		inst:AddComponent("characterspecific")
+	end
+
+	inst.components.characterspecific:SetOwner("winston")
+	inst.components.characterspecific:SetStorable(true)
 	
 end
 

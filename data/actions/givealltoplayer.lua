@@ -1,8 +1,8 @@
 ACTIONS.GIVEALLTOPLAYER._fn = ACTIONS.GIVEALLTOPLAYER.fn
 ACTIONS.GIVEALLTOPLAYER.fn = function(act)
-	if act.target.components.inventoryitem:IsCharacterSpecific(act.doer) then
-            return ACTION.GIVEALLTOPLAYER._fn
+	if act.invobject.components.characterspecific and not act.invobject.components.characterspecific:CanPickUp(act.target) then
+        return false, "CHARACTERSPECIFIC"
     end
 
-    return false, "CHARACTERSPECIFIC"
+    return ACTIONS.GIVEALLTOPLAYER._fn(act)
 end

@@ -1,8 +1,10 @@
 ACTIONS.TAKEITEM._fn = ACTIONS.TAKEITEM.fn
 ACTIONS.TAKEITEM.fn = function(act)
-	if act.target.components.inventoryitem:IsCharacterSpecific(act.doer) then
-            return ACTION.TAKEITEM._fn
-        end
+	local targ = act.invobject
 
-    return false, "CHARACTERSPECIFIC"
+	if targ.components.characterspecific and not targ.components.characterspecific:CanPickUp(act.doer) then
+        return false, "CHARACTERSPECIFIC"
+    end
+
+    return ACTIONS.TAKEITEM._fn(act)
 end

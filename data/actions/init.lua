@@ -1,3 +1,5 @@
+-- Initialize equip action
+use "data/actions/equip"
 
 -- Initialize givealltoplayer action.
 use "data/actions/givealltoplayer"

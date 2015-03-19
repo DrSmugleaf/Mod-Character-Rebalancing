@@ -6,10 +6,10 @@ ACTIONS.PICKUP.fn = function(act)
         not act.target:IsInLimbo() and
         not act.target:HasTag("catchable") then
 
-        if act.target.components.inventoryitem:IsCharacterSpecific(act.doer) then
-            return ACTION.PICKUP._fn
+        if act.target.components.characterspecific and not act.target.components.characterspecific:CanPickUp(act.doer) then
+            return false, "CHARACTERSPECIFIC"
         end
-
-        return false, "CHARACTERSPECIFIC"
     end
+
+    return ACTIONS.PICKUP._fn(act)
 end

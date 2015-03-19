@@ -14,10 +14,19 @@ end
 
 local function balanceFarozGlasses(inst)
 
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
 	inst.components.inventoryitem.keepondeath = true
-	
-	inst:AddComponent("characterspecific")
+
+	if not inst.components.characterspecific then
+		inst:AddComponent("characterspecific")
+	end
+
 	inst.components.characterspecific:SetOwner("faroz")
+	inst.components.characterspecific:SetStorable(true)
+	inst.components.characterspecific:SetComment("These seem heavier than they look.")
 	
 end
 
