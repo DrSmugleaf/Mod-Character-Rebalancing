@@ -5,4 +5,4 @@ use "data/components/container"
 use "data/components/inventory"
 
 
-AddReplicableComponent( "characterspecific" )
+--AddReplicableComponent( "characterspecific" )
