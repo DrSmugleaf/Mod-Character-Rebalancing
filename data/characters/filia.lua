@@ -1,5 +1,6 @@
 local filiaBalanced = GetModConfigData("FILIA_BALANCED")
 
+
 local function balanceFiliaStats(inst)
 	
 	local filiaStats =	{
@@ -74,11 +75,31 @@ local function balanceFiliaStats(inst)
 	
 end
 
+local function balanceFiliaHairpin(inst)
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst.components.inventoryitem.keepondeath = true
+
+	if not inst.components.characterspecific then
+		inst:AddComponent("characterspecific")
+	end
+
+	inst.components.characterspecific:SetOwner("filia")
+	inst.components.characterspecific:SetStorable(true)
+	inst.components.characterspecific:SetComment("This thing smells of fighting games.")
+	
+end
+
+
 if ModBalancingEnabled() then
 
 	if KnownModIndex:IsModEnabled("workshop-398833909") then
 		if filiaBalanced then
 			AddPrefabPostInit("filia", balanceFiliaStats)
+			AddPrefabPostInit("hairpin", balanceFiliaHairpin)
 			LogHelper.printInfo("Balancing Filia")
 		else
 			LogHelper.printInfo("Ignoring Filia")

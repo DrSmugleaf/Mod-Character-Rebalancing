@@ -96,9 +96,9 @@ local function balanceEndiaAmulet(inst)
 	end
 
 	inst.components.characterspecific:SetOwner("endia")
-	inst.components.characterspecific:SetStorable(false)
+	inst.components.characterspecific:SetStorable(true)
 	inst.components.characterspecific:SetComment("I can't understand how this artifact works")
-	
+
 end
 
 
