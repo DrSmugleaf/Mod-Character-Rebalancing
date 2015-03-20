@@ -15,13 +15,13 @@ local function ContainerPostInit(inst)
 	inst._CanTakeItemInSlot = inst.CanTakeItemInSlot
 
 	function inst:CanTakeItemInSlot(item, slot)
-		if item.components.characterspecific and not item.components.characterspecific:CanPickUp(inst.opener) and not item.components.characterspecific:IsStorable() then
+		if item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(inst.opener) and not item.components.characterspecific:IsStorable() then
     		inst.components.talker:Say(item.components.characterspecific:GetComment())
     		inst.opener.components.inventory:DropItem(item)
     		return false
     	end
 
-    	if item.components.characterspecific and not item.components.characterspecific:CanPickUp(inst.opener) and inst.type == "pack" then
+    	if item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(inst.opener) and inst.type == "pack" then
     		inst.components.talker:Say(item.components.characterspecific:GetComment())
     		inst.opener.components.inventory:DropItem(item)
     		return false
@@ -52,7 +52,7 @@ local function ContainerPostInit(inst)
 		end
 
 		if item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(self.opener) then
-			inst.components.talker:Say(item.components.characterspecific:GetComment())
+			inst.opener.components.talker:Say(item.components.characterspecific:GetComment())
     		return 
     	end
 
@@ -71,7 +71,7 @@ local function ContainerPostInit(inst)
 		end
 
 		if item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(self.opener) then
-			inst.components.talker:Say(item.components.characterspecific:GetComment())
+			inst.opener.components.talker:Say(item.components.characterspecific:GetComment())
     		return 
     	end
 
@@ -90,7 +90,7 @@ local function ContainerPostInit(inst)
 		end
 
 		if item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(self.opener) then
-			inst.components.talker:Say(item.components.characterspecific:GetComment())
+			inst.opener.components.talker:Say(item.components.characterspecific:GetComment())
     		return 
     	end
 
