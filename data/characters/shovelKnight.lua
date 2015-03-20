@@ -1,36 +1,7 @@
 local shovelKnightBalanced = GetModConfigData("SHOVELKNIGHT_BALANCED")
 
+
 local function balanceShovelKnightStats(inst)
-
-	local function ondeathkill(inst, deadthing)
-
-		inst.components.sanity:DoDelta(0)
-
-	end
-
-	local function onkill(inst, data)
-
-		if data.afflicter == inst 
-			and not data.inst:HasTag("prey") 
-			and not data.inst:HasTag("veggie") 
-			and not data.inst:HasTag("structure") then
-			inst.components.sanity:DoDelta(5)
-		end
-
-	end
-
-	inst._onplayerkillthing = function(player, data)
-		onkill(inst, data)
-	end
-
-end
-
-local function balanceShovelKnightConjurerCoat(inst)
-
-	local function activate(owner)
-		owner:ListenForEvent("killed", owner._onplayerkillthing, owner)
-	end
-
 end
 
 local function balanceShovelKnightBlades(inst)
@@ -47,7 +18,8 @@ local function balanceShovelKnightBlades(inst)
 
 	inst.components.characterspecific:SetOwner("winston")
 	inst.components.characterspecific:SetStorable(true)
-	
+	inst.components.characterspecific:SetComment("I'm not mighty enough for glorious shovelry!")
+
 end
 
 
@@ -60,7 +32,6 @@ if ModBalancingEnabled() then
 			AddPrefabPostInit("skweaponshovelbladechargehandle", balanceShovelKnightBlades)
 			AddPrefabPostInit("skweaponshovelbladetrenchblade", balanceShovelKnightBlades)
 			AddPrefabPostInit("skweaponshovelbladedropspark", balanceShovelKnightBlades)
-			AddPrefabPostInit("skarmorconjurerscoat", balanceShovelKnightConjurerCoat)
 			LogHelper.printInfo("Balancing Shovel Knight")
 		else
 			LogHelper.printInfo("Ignoring Shovel Knight")

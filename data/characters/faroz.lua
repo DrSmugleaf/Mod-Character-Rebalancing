@@ -1,5 +1,6 @@
 local farozBalanced = GetModConfigData("FAROZ_BALANCED")
 
+
 local function balanceFarozStats(inst)
 
 	local farozStats =	{
@@ -25,10 +26,11 @@ local function balanceFarozGlasses(inst)
 	end
 
 	inst.components.characterspecific:SetOwner("faroz")
-	inst.components.characterspecific:SetStorable(true)
+	inst.components.characterspecific:SetStorable(false)
 	inst.components.characterspecific:SetComment("These seem heavier than they look.")
 	
 end
+
 
 if ModBalancingEnabled() then 
 

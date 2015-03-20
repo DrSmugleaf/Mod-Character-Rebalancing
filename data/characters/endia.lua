@@ -83,11 +83,31 @@ local function balanceEndiaStats(inst)
 	
 end
 
+local function balanceEndiaAmulet(inst)
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst.components.inventoryitem.keepondeath = true
+
+	if not inst.components.characterspecific then
+		inst:AddComponent("characterspecific")
+	end
+
+	inst.components.characterspecific:SetOwner("endia")
+	inst.components.characterspecific:SetStorable(false)
+	inst.components.characterspecific:SetComment("I can't understand how this artifact works")
+	
+end
+
+
 if ModBalancingEnabled() then
 
 	if KnownModIndex:IsModEnabled("workshop-363966651") then
 		if endiaBalanced then
 			AddPrefabPostInit("endia", balanceEndiaStats)
+			AddPrefabPostInit("endiaamulet", balanceEndiaAmulet)
 			LogHelper.printInfo("Balancing Endia")
 		else
 			LogHelper.printInfo("Ignoring Endia")
