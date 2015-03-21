@@ -23,6 +23,9 @@ use "data/characters/filia"
 -- Import freespirit changes.
 use "data/characters/freespirit"
 
+-- Import freespirit changes.
+use "data/characters/growlie"
+
 -- Import haruz changes.
 use "data/characters/haruz"
 

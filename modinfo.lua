@@ -362,6 +362,18 @@ configuration_options =
 	},]]
 
 	{
+		name = "GROWLIE_BALANCED",
+		label = "Growlie",
+		hover = "Balance Growlie, the Demonic Prisoner",
+		options =	{
+						{description = "Balanced", data = true},
+						{description = "Ignored", data = false},
+					},
+
+		default = true,
+	},
+
+	{
 		name = "HARUZ_BALANCED",
 		label = "Haruz",
 		hover = "Balance Haruz, the Cowardly Dog",

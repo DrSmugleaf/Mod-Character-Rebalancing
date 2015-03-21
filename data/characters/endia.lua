@@ -97,7 +97,7 @@ local function balanceEndiaAmulet(inst)
 
 	inst.components.characterspecific:SetOwner("endia")
 	inst.components.characterspecific:SetStorable(true)
-	inst.components.characterspecific:SetComment("I can't understand how this artifact works")
+	inst.components.characterspecific:SetComment("I can't understand how this artifact works.")
 
 end
 
@@ -113,6 +113,5 @@ if ModBalancingEnabled() then
 			LogHelper.printInfo("Ignoring Endia")
 		end
 	end
-
 
 end

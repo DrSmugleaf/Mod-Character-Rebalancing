@@ -28,7 +28,14 @@ local MOD_ID = "385300215"
 local MOD_VERSION = "2.1.1"
 
 
-
+	GLOBAL.FOODTYPE.GROWLIEFOOD = "GROWLIEFOOD"
+	local growlie_food = {"nightmarefuel", }
+	local function AddGrowlieFood(inst)
+		inst:AddTag("edible_"..GLOBAL.FOODTYPE.GROWLIEFOOD)
+	end
+	for k,v in pairs(growlie_food) do
+		AddPrefabPostInit(v, AddGrowlieFood)
+	end
 
 -------------------------------------
 -- Load Character Balancing config --

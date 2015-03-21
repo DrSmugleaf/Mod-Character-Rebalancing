@@ -18,7 +18,7 @@ local function balanceShovelKnightBlades(inst)
 
 	inst.components.characterspecific:SetOwner("winston")
 	inst.components.characterspecific:SetStorable(true)
-	inst.components.characterspecific:SetComment("I'm not mighty enough for glorious shovelry!")
+	inst.components.characterspecific:SetComment("I am not mighty enough for glorious shovelry!")
 
 end
 
