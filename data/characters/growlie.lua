@@ -198,22 +198,19 @@ if ModBalancingEnabled() then
 		if growlieBalanced then
 			AddPrefabPostInit("growlie", balanceGrowlieStats)
 			AddPrefabPostInit("spear_growlie", balanceGrowlieSpear)
-			AddPrefabPostInit("shadowcreature", function(inst)
-				
-				if onkilledbyother then
-					_onkilledbyother = onkilledbyother(inst, attacker)
+			AddPrefabPostInit("terrorbeak", function(inst)
+				if inst.components.combat.onkilledbyother then
+					inst.components.combat._onkilledbyother = inst.components.combat.onkilledbyother
 				end
 				
-				onkilledbyother = function(inst, attacker)
-				
+				inst.components.combat.onkilledbyother = function(inst, attacker)
 					if attacker and attacker.components.sanity then
 						if attacker.prefab == "growlie" and attacker.form == "demonic" then
-							attacker.components.sanity:DoDelta((inst.sanityreward or TUNING.SANITY_SMALL) * (-1))
-							print(inst.sanityreward or TUNING.SANITY_SMALL)
+							return attacker.components.sanity:DoDelta((inst.sanityreward or TUNING.SANITY_SMALL) * (-1))
 						end
 						
-						if _onkilledbyother then
-							return _onkilledbyother(inst, attacker)
+						if inst.components.combat._onkilledbyother then
+							return inst.components.combat._onkilledbyother(inst, attacker)
 						end
 					end
 					
