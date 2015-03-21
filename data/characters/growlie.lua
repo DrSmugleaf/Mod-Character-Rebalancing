@@ -1,7 +1,142 @@
 local growlieBalanced = GetModConfigData("GROWLIE_BALANCED")
+local nerfSpeed = GetModConfigData("NERF_SPEED")
 
 
 local function balanceGrowlieStats(inst)
+
+	inst.Light:Enable(false)
+	inst.Light:SetRadius(2)
+	inst.Light:SetFalloff(.5)
+	inst.Light:SetIntensity(.5)
+	inst.Light:SetColour(152/255,153/255,255/255)
+
+	local function applyForm(inst)
+		if inst.form == "demonic" then
+			local damageMultiplier = nil
+			local speed = nil
+			if not nerfSpeed then
+				damageMultiplier = 1.50
+				speed = 1.50
+			elseif nerfSpeed then
+				damageMultiplier = 1.50
+				speed = 1.25
+			end
+
+			inst.components.combat.damagemultiplier = damageMultiplier
+			inst.components.locomotor.walkspeed = TUNING.WILSON_WALK_SPEED * speed
+			inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED * speed
+			inst.components.health:SetMaxHealth(50)
+		end
+
+		if inst.form == "normal" then
+			local damageMultiplier = nil
+			local speed = nil
+			if not nerfSpeed then
+				damageMultiplier = 1.25
+				speed = 1.25
+			elseif nerfSpeed then
+				damageMultiplier = 1.25
+				speed = 1
+			end
+			inst.components.combat.damagemultiplier = damageMultiplier
+			inst.components.locomotor.walkspeed = TUNING.WILSON_WALK_SPEED * speed
+			inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED * speed
+			inst.components.health:SetMaxHealth(60)
+		end
+
+	end
+
+	local function becomenormal(inst, silent)
+
+		if inst.form == "normal" then
+			return
+		end
+
+		inst.form = "normal"
+
+	end
+
+	local function becomedemonic(inst, silent)
+
+		if inst.form == "demonic" then
+			return
+		end
+
+		inst.form = "demonic"
+
+	end
+
+	local function onhungerchange(inst, data, forcesilent)
+
+		if inst.sg:HasStateTag("nomorph") or
+			inst:HasTag("playerghost") or
+			inst.components.health:IsDead() then
+			return
+		end
+
+		local silent = inst.sg:HasStateTag("silentmorph") or not inst.entity:IsVisible() or forcesilent
+
+		if inst.form == "demonic" then
+			if inst.components.sanity.current < (30) then
+				becomenormal(inst, silent)
+			end
+		elseif inst.form == "normal" then
+			if inst.components.sanity.current > (30) then
+				becomedemonic(inst, silent)
+			end
+		end
+		applyForm(inst)
+
+	end
+
+	local function onnewstate(inst)
+
+		if inst._wasnomorph ~= inst.sg:HasStateTag("nomorph") then
+			inst._wasnomorph = not inst._wasnomorph
+			if not inst._wasnomorph then
+				onhungerchange(inst)
+			end
+		end
+
+	end
+
+	local function onbecameghost(inst)
+		if inst._wasnomorph ~= nil then
+			inst.strength = "normal"
+			inst._wasnomorph = nil
+			inst.talksoundoverride = nil
+			inst.hurtsoundoverride = nil
+			inst:RemoveEventCallback("hungerdelta", onhungerchange)
+			inst:RemoveEventCallback("newstate", onnewstate)
+		end
+	end
+
+	local function onbecamehuman(inst)
+	    if inst._wasnomorph == nil then
+	        inst.strength = "normal"
+	        inst._wasnomorph = inst.sg:HasStateTag("nomorph")
+	        inst.talksoundoverride = nil
+	        inst.hurtsoundoverride = nil
+	        inst:ListenForEvent("sanitydelta", onhungerchange)
+	        inst:ListenForEvent("newstate", onnewstate)
+	        onhungerchange(inst, nil, true)
+	    end
+	end
+
+	inst.form = "normal"
+	inst._wasnomorph = nil
+	inst.talksoundoverride = nil
+	inst.hurtsoundoverride = nil
+
+	inst:ListenForEvent("ms_respawnedfromghost", onbecamehuman)
+	inst:ListenForEvent("ms_becameghost", onbecameghost)
+
+	if inst:HasTag("playerghost") then
+		onbecameghost(inst)
+	else
+		onbecamehuman(inst)
+	end
+	inst.OnNewSpawn = onload
 
 	ChangeStartingInventory:modifyInventory(inst, {})
 
@@ -63,6 +198,26 @@ if ModBalancingEnabled() then
 		if growlieBalanced then
 			AddPrefabPostInit("growlie", balanceGrowlieStats)
 			AddPrefabPostInit("spear_growlie", balanceGrowlieSpear)
+			AddPrefabPostInit("shadowcreature", function(inst)
+				
+				if onkilledbyother then
+					_onkilledbyother = onkilledbyother(inst, attacker)
+				end
+				
+				onkilledbyother = function(inst, attacker)
+				
+					if attacker and attacker.components.sanity then
+						if attacker.prefab == "growlie" and attacker.form == "demonic" then
+							attacker.components.sanity:DoDelta(-(inst.sanityreward or TUNING.SANITY_SMALL))
+						end
+						
+						if _onkilledbyother then
+							return _onkilledbyother(inst, attacker)
+						end
+					end
+					
+				end
+			end)
 			LogHelper.printInfo("Balancing Growlie")
 		else
 			LogHelper.printInfo("Ignoring Growlie")
