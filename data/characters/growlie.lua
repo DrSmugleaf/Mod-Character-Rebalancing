@@ -77,11 +77,11 @@ local function balanceGrowlieStats(inst)
 		local silent = inst.sg:HasStateTag("silentmorph") or not inst.entity:IsVisible() or forcesilent
 
 		if inst.form == "demonic" then
-			if inst.components.sanity.current < (30) then
+			if inst.components.sanity.current > (30) then
 				becomenormal(inst, silent)
 			end
 		elseif inst.form == "normal" then
-			if inst.components.sanity.current > (30) then
+			if inst.components.sanity.current < (30) then
 				becomedemonic(inst, silent)
 			end
 		end
@@ -208,7 +208,8 @@ if ModBalancingEnabled() then
 				
 					if attacker and attacker.components.sanity then
 						if attacker.prefab == "growlie" and attacker.form == "demonic" then
-							attacker.components.sanity:DoDelta(-(inst.sanityreward or TUNING.SANITY_SMALL))
+							attacker.components.sanity:DoDelta((inst.sanityreward or TUNING.SANITY_SMALL) * (-1))
+							print(inst.sanityreward or TUNING.SANITY_SMALL)
 						end
 						
 						if _onkilledbyother then
