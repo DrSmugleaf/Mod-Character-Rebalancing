@@ -3,7 +3,6 @@ local LogHelper = {}
 --------------------------------------------------------------
 -- Printing to console functions with mod name and prefixes --
 --------------------------------------------------------------
-local MOD_NAME = "Mod Character Rebalancing"
 
 function LogHelper.printDebug(message)
 
