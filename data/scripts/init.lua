@@ -5,3 +5,6 @@ ModifyCharacter = use "data/scripts/ModifyCharacter"
 ModifyStats = use "data/scripts/ModifyStats"
 ModBalancingEnabled = use "data/scripts/ModBalancingEnabled"
 StartingItems = use "data/scripts/StartingItems"
+
+RemoveWatchWorldState = use "data/scripts/RemoveWatchWorldState"
+RemoveListener = use "data/scripts/RemoveListener"
