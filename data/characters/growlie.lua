@@ -1,7 +1,6 @@
 local growlieBalanced = GetModConfigData("GROWLIE_BALANCED")
 
 
-
 local function balanceGrowlieStats(inst)
 
 	ChangeStartingInventory:modifyInventory(inst, {})
