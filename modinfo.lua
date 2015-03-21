@@ -54,11 +54,11 @@ configuration_options =
 		label = "Character leveling",
 		hover = "Needs balance mod characters enabled. New leveling or not, and difficulty",
 		options =	{
-						{description = "Disabled", data = 0, hover = "Keeps all leveling systems as is"},
-						{description = "Easy", data = 1, hover = "Keeps all leveling systems as is, and adds more"},
-						{description = "Normal", data = 2, hover = "Adds more leveling systems, 50 max lvl base"},
-						{description = "Hard", data = 3, hover = "Adds more leveling systems, 75 max lvl base"},
-						{description = "Very Hard", data = 4, hover = "Adds more leveling systems, 100 max lvl base"},
+						{description = "Disabled", data = "disabled", hover = "Keeps all leveling systems as is"},
+						{description = "Easy", data = "easy", hover = "Keeps all leveling systems as is, and adds more"},
+						{description = "Normal", data = "normal", hover = "Adds more leveling systems, 50 max lvl base"},
+						{description = "Hard", data = "hard", hover = "Adds more leveling systems, 75 max lvl base"},
+						{description = "Very Hard", data = "veryhard", hover = "Adds more leveling systems, 100 max lvl base"},
 					},
 
 		default = 2,
@@ -241,18 +241,6 @@ configuration_options =
 		default = true,
 	},
 	
-	--[[{
-		name = "DEVON_BALANCED",
-		label = "Devon",
-		hover = "Balance Devon, the Hunter",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},]]
-	
 	{
 		name = "DROK_BALANCED",
 		label = "Drok",
@@ -313,18 +301,6 @@ configuration_options =
 		default = true,
 	},
 	
-	--[[{
-		name = "FIONNA_BALANCED",
-		label = "Fionna",
-		hover = "Balance Fionna",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},]]
-	
 	{
 		name = "FREESPIRIT_BALANCED",
 		label = "FreeSpirit",
@@ -336,30 +312,6 @@ configuration_options =
 
 		default = true,
 	},
-	
-	--[[{
-		name = "GABEN_BALANCED",
-		label = "Gaben",
-		hover = "Release HL3",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},]]
-
-	--[[{
-		name = "GIR_BALANCED",
-		label = "Gir",
-		hover = "Balance Purswader's Gir",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},]]
 
 	{
 		name = "GROWLIE_BALANCED",
@@ -384,18 +336,6 @@ configuration_options =
 
 		default = true,
 	},
-	
-	--[[{
-		name = "HELLAMERDURIAL_BALANCED",
-		label = "Hella Merdurial",
-		hover = "Balance Hella Merdurial",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},]]
 	
 	{
 		name = "LUFFY_BALANCED",
@@ -457,18 +397,6 @@ configuration_options =
 		default = true,
 	},
 	
-	--[[{
-		name = "NEPTUNIA_BALANCED",
-		label = "Neptunia",
-		hover = "Balance Hyperdimension Neptunia: Neptune",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},]]
-	
 	{
 		name = "SERAS_BALANCED",
 		label = "Seras",
@@ -517,30 +445,6 @@ configuration_options =
 		default = true,
 	},
 	
-	--[[{
-		name = "THANA_BALANCED",
-		label = "Thana",
-		hover = "Balance Thana, the Nightstalker",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},]]
-	
-	--[[{
-		name = "THEMEDIC_BALANCED",
-		label = "The Medic",
-		hover = "Balance The Medic",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},]]
-	
 	{
 		name = "WARK_BALANCED",
 		label = "Wark, the Chocobo",
@@ -564,28 +468,5 @@ configuration_options =
 
 		default = true,
 	},
-	
-	{
-		name = "WOODIE_BALANCED",
-		label = "Woodie",
-		hover = "Balance Woodie, the Lumberjack",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},
-	--[[{
-		name = "ZIM_BALANCED",
-		label = "Zim",
-		hover = "Balance Purswader's Zim",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},]]
 
 }

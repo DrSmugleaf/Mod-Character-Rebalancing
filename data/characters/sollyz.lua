@@ -3,7 +3,7 @@ local levelSetting = GetModConfigData("LEVEL_SETTING")
 
 local function balanceSollyzStats(inst)
 
-	if levelSetting > 0 then
+	if not levelSetting == "disabled" then
 
 		local oldPreLoad = inst.OnPreLoad
 		local oldEat = inst.components.eater.oneatfn

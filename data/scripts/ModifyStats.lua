@@ -9,15 +9,15 @@ local hardcoreMode = GetModConfigData("HARDCORE_MODE")
 -------------------------------------------------------------------------
 local levelSetting = GetModConfigData("LEVEL_SETTING")
 
-if levelSetting then
+if not levelSetting == "disabled" then
 
-	if levelSetting == 1 then levelDifficulty = 25
+	if levelSetting == "easy" then levelDifficulty = 25
 	
-	elseif levelSetting == 2 then levelDifficulty = 50
+	elseif levelSetting == "normal" then levelDifficulty = 50
 		
-	elseif levelSetting == 3 then levelDifficulty = 75
+	elseif levelSetting == "hard" then levelDifficulty = 75
 		
-	elseif levelSetting == 4 then levelDifficulty = 100
+	elseif levelSetting == "veryhard" then levelDifficulty = 100
 	
 	end
 	
@@ -108,7 +108,7 @@ return function(inst, stats)
 	local finalWalk = nil
 	local finalRun = nil
 
-	if not nerfSpeed and levelSetting > 0 then
+	if not nerfSpeed and not levelSetting == "disabled" then
 		initialHealth = stats.initialHealth
 		initialHunger = stats.initialHunger
 		initialSanity = stats.initialSanity
@@ -123,7 +123,7 @@ return function(inst, stats)
 		finalInsulation = stats.finalInsulation
 		finalWalk = stats.finalWalk
 		finalRun = stats.finalRun
-	elseif nerfSpeed and levelSetting > 0 then
+	elseif nerfSpeed and not levelSetting == "disabled" then
 		initialHealth = stats.initialHealthNerf
 		initialHunger = stats.initialHungerNerf
 		initialSanity = stats.initialSanityNerf
@@ -144,7 +144,7 @@ return function(inst, stats)
 	local health_percent = inst.components.health:GetPercent()
 	local sanity_percent = inst.components.sanity:GetPercent()
 	
-	if levelSetting > 0 and initialHealth or initialHunger or initialSanity or initialDamage or initialInsulation or initialWalk or initialRun then
+	if not levelSetting == "disabled" and initialHealth or initialHunger or initialSanity or initialDamage or initialInsulation or initialWalk or initialRun then
 		
 		if not levelBase then
 			levelBase = 0
