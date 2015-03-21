@@ -1,15 +1,3 @@
---[[
--- The following is to prevent this file from being run more than once.
---
--- This is necessary to allow it to be loaded both from modmain.lua and
--- modworldgenmain.lua without the former load overriding the latter.
---]]
-local _IDENTIFIER = "CS_INVENTORY"
-
-if _G.rawget(_G, _IDENTIFIER) then
-    return
-end
-
 local function InventoryPostInit(inst)
 
 	inst._CanTakeItemInSlot = inst.CanTakeItemInSlot
@@ -63,5 +51,3 @@ end
 
 AddComponentPostInit("inventory", InventoryPostInit)
 AddComponentPostInit("inventory_relica", InventoryPostInit)
-
-_G[_IDENTIFIER] = true

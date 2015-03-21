@@ -4,10 +4,10 @@ MOD_ID = "385300215"
 MOD_VERSION = "2.1.1"
 
 -- This library function allows us to use a file in a specified location.
-modimport("libs/use.lua")
-
 -- Allows use to call global environment variables without initializing them in our files.
-use "libs/mod_env"(env)
+modimport("libs/env.lua")
+
+-- use "libs/mod_env"(env)
 
 -- These lines of code prevent keystrokes from happening during critical moments.
 use "data/widgets/controls"
