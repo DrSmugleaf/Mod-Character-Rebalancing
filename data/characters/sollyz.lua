@@ -3,6 +3,8 @@ local levelSetting = GetModConfigData("LEVEL_SETTING")
 
 local function balanceSollyzStats(inst)
 
+	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
+
 	if not levelSetting == "disabled" then
 
 		local oldPreLoad = inst.OnPreLoad
