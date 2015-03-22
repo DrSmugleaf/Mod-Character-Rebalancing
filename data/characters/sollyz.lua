@@ -10,7 +10,7 @@ local function balanceSollyzStats(inst)
 		local oldPreLoad = inst.OnPreLoad
 		local oldEat = inst.components.eater.oneatfn
 		
-		local levelBase = 0
+		local levelBase = 25
 		
 		local initialHealth = 50
 		local initialHunger = 75
