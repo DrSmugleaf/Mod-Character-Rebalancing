@@ -1,7 +1,7 @@
 MOD_NAME = "Mod Character Rebalancing"
 MOD_PREFIX = "MCR"
 MOD_ID = "385300215"
-MOD_VERSION = "2.1.1"
+MOD_VERSION = "3.0.0"
 
 -- This library function allows us to use a file in a specified location.
 -- Allows use to call global environment variables without initializing them in our files.
