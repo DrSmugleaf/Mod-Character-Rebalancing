@@ -374,18 +374,6 @@ configuration_options =
 	},
 	
 	{
-		name = "SERAS_BALANCED",
-		label = "Seras",
-		hover = "Balance Seras, the Fledgling Vampire",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},
-	
-	{
 		name = "SOLLYZ_BALANCED",
 		label = "Sollyz",
 		hover = "Balance Sollyz, the Cat Slap",

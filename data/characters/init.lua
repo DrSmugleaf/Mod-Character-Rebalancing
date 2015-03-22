@@ -41,9 +41,6 @@ use "data/characters/michaelthefox"
 -- Import mitsuru changes.
 use "data/characters/mitsuru"
 
--- Import seras changes.
-use "data/characters/seras"
-
 -- Import shovelknight changes.
 use "data/characters/shovelknight"
 
