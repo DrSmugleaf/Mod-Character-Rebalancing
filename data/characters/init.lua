@@ -38,9 +38,6 @@ use "data/characters/madeleine"
 -- Import miochaelthefox changes.
 use "data/characters/michaelthefox"
 
--- Import miku changes.
-use "data/characters/miku"
-
 -- Import mitsuru changes.
 use "data/characters/mitsuru"
 

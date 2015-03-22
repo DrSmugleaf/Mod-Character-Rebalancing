@@ -25,7 +25,6 @@ local function balanceGrowlieStats(inst)
 			inst.components.combat.damagemultiplier = damageMultiplier
 			inst.components.locomotor.walkspeed = TUNING.WILSON_WALK_SPEED * speed
 			inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED * speed
-			inst.components.health:SetMaxHealth(50)
 		end
 
 		if inst.form == "normal" then
@@ -41,7 +40,6 @@ local function balanceGrowlieStats(inst)
 			inst.components.combat.damagemultiplier = damageMultiplier
 			inst.components.locomotor.walkspeed = TUNING.WILSON_WALK_SPEED * speed
 			inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED * speed
-			inst.components.health:SetMaxHealth(60)
 		end
 
 	end
@@ -206,7 +204,25 @@ if ModBalancingEnabled() then
 				inst.components.combat.onkilledbyother = function(inst, attacker)
 					if attacker and attacker.components.sanity then
 						if attacker.prefab == "growlie" and attacker.form == "demonic" then
-							return attacker.components.sanity:DoDelta((inst.sanityreward or TUNING.SANITY_SMALL) * (-1))
+							return attacker.components.sanity:DoDelta(0)
+						end
+						
+						if inst.components.combat._onkilledbyother then
+							return inst.components.combat._onkilledbyother(inst, attacker)
+						end
+					end
+					
+				end
+			end)
+			AddPrefabPostInit("crawlinghorror", function(inst)
+				if inst.components.combat.onkilledbyother then
+					inst.components.combat._onkilledbyother = inst.components.combat.onkilledbyother
+				end
+				
+				inst.components.combat.onkilledbyother = function(inst, attacker)
+					if attacker and attacker.components.sanity then
+						if attacker.prefab == "growlie" and attacker.form == "demonic" then
+							return attacker.components.sanity:DoDelta(0)
 						end
 						
 						if inst.components.combat._onkilledbyother then

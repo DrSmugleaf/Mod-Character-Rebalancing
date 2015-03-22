@@ -242,18 +242,6 @@ configuration_options =
 	},
 	
 	{
-		name = "DROK_BALANCED",
-		label = "Drok",
-		hover = "Balance Drok, the Caveman",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},
-	
-	{
 		name = "ENDIA_BALANCED",
 		label = "Endia",
 		hover = "Balance Endia, the Paranoid Elf",
@@ -365,18 +353,6 @@ configuration_options =
 		name = "MICHAELTHEFOX_BALANCED",
 		label = "Michael the Fox",
 		hover = "Balance Michael the Fox, the Scaredy Cat",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},
-	
-	{
-		name = "MIKUHATSUNE_BALANCED",
-		label = "Miku Hatsune",
-		hover = "Balance Miku Hatsune",
 		options =	{
 						{description = "Balanced", data = true},
 						{description = "Ignored", data = false},
