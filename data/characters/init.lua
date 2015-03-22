@@ -55,6 +55,3 @@ use "data/characters/tamamo"
 
 -- Import wark changes.
 use "data/characters/wark"
-
--- Import wolf changes.
-use "data/characters/wolf"

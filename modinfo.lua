@@ -432,17 +432,5 @@ configuration_options =
 
 		default = true,
 	},
-	
-	{
-		name = "WOLF_BALANCED",
-		label = "Wolf",
-		hover = "Balance Wolf, the Lone Wolf",
-		options =	{
-						{description = "Balanced", data = true},
-						{description = "Ignored", data = false},
-					},
-
-		default = true,
-	},
 
 }
