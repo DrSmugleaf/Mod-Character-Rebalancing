@@ -1,7 +1,7 @@
 local _visibility_hud = false
 
 local function OnKeyPressed(key)
-	--if data.inst == GLOBAL.ThePlayer then
+	--if data.inst == ThePlayer then
 		if key == KEY_H then
 			if _visibility_hud then
 				ThePlayer.HUD:Toggle(0)

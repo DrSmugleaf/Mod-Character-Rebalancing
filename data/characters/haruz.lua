@@ -1,10 +1,11 @@
 local haruzBalanced = GetModConfigData("HARUZ_BALANCED")
+local levelSetting = GetModConfigData("LEVEL_SETTING")
 
 local function balanceHaruzStats(inst)
 
 	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
 
-	if levelSetting > 0 then
+	if not levelSetting == "disabled" then
 
 		local oldPreLoad = inst.OnPreLoad
 		local oldEat = inst.components.eater.oneatfn
@@ -51,7 +52,7 @@ local function balanceHaruzStats(inst)
 		
 		local function newEat(inst, food)
 			oldEat(inst, food)
-		if food and food.components.edible and food.components.edible.foodtype=="MEAT" then
+		if food and food.components.edible and food.components.edible.foodtype == "MEAT" then
 			newUpg(inst)
 		end
 	end
@@ -71,7 +72,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359821133") then
+	if KnownModIndex:IsModEnabled("workshop-359821133") then
 		if haruzBalanced then	
 			AddPrefabPostInit("haruz", balanceHaruzStats)
 			LogHelper.printInfo("Balancing Haruz")

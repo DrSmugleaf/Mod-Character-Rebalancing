@@ -29,7 +29,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-357013795") then
+	if KnownModIndex:IsModEnabled("workshop-357013795") then
 		if michaelTheFoxBalanced then	
 			AddPrefabPostInit("fox", balanceMichaelTheFoxStats)
 			LogHelper.printInfo("Balancing Michael the Fox")

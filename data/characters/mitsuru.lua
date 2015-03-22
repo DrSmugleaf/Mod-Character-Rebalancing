@@ -1,10 +1,11 @@
 local mitsuruBalanced = GetModConfigData("MITSURU_BALANCED")
+local levelSetting = GetModConfigData("LEVEL_SETTING")
 
 local function balanceMitsuruStats(inst)
 
 	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
 
-	if levelSetting > 0 then
+	if not levelSetting == "disabled" then
 
 		local oldPreLoad = inst.OnPreLoad
 		local oldEat = inst.components.eater.oneatfn
@@ -78,7 +79,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364189966") then
+	if KnownModIndex:IsModEnabled("workshop-364189966") then
 		if mitsuruBalanced then	
 			AddPrefabPostInit("mitsuru", balanceMitsuruStats)
 			LogHelper.printInfo("Balancing Mitsuru")

@@ -1,5 +1,6 @@
 local farozBalanced = GetModConfigData("FAROZ_BALANCED")
 
+
 local function balanceFarozStats(inst)
 
 	local farozStats =	{
@@ -14,16 +15,26 @@ end
 
 local function balanceFarozGlasses(inst)
 
-	inst:AddTag("undroppable")
-	
-	inst:AddComponent("characterspecific")
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst.components.inventoryitem.keepondeath = true
+
+	if not inst.components.characterspecific then
+		inst:AddComponent("characterspecific")
+	end
+
 	inst.components.characterspecific:SetOwner("faroz")
+	inst.components.characterspecific:SetStorable(false)
+	inst.components.characterspecific:SetComment("These seem heavier than they look.")
 	
 end
 
+
 if ModBalancingEnabled() then 
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-364491382") then
+	if KnownModIndex:IsModEnabled("workshop-364491382") then
 		if farozBalanced then
 			AddPrefabPostInit("faroz", balanceFarozStats)
 			AddPrefabPostInit("faroz_gls", balanceFarozGlasses)

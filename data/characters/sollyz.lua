@@ -1,13 +1,16 @@
 local sollyzBalanced = GetModConfigData("SOLLYZ_BALANCED")
+local levelSetting = GetModConfigData("LEVEL_SETTING")
 
 local function balanceSollyzStats(inst)
 
-	if levelSetting > 0 then
+	inst.components.sanity.dapperness = TUNING.DAPPERNESS_TINY*-1
+
+	if not levelSetting == "disabled" then
 
 		local oldPreLoad = inst.OnPreLoad
 		local oldEat = inst.components.eater.oneatfn
 		
-		local levelBase = 0
+		local levelBase = 25
 		
 		local initialHealth = 50
 		local initialHunger = 75
@@ -68,7 +71,7 @@ end
 
 if ModBalancingEnabled() then
 
-	if GLOBAL.KnownModIndex:IsModEnabled("workshop-359479220") then
+	if KnownModIndex:IsModEnabled("workshop-359479220") then
 		if sollyzBalanced then	
 			AddPrefabPostInit("sollyz", balanceSollyzStats)
 			LogHelper.printInfo("Balancing Sollyz")

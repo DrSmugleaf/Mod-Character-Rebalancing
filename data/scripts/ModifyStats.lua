@@ -9,15 +9,15 @@ local hardcoreMode = GetModConfigData("HARDCORE_MODE")
 -------------------------------------------------------------------------
 local levelSetting = GetModConfigData("LEVEL_SETTING")
 
-if levelSetting then
+if not levelSetting == "disabled" then
 
-	if levelSetting == 1 then levelDifficulty = 30
+	if levelSetting == "easy" then levelDifficulty = 25
 	
-	elseif levelSetting == 2 then levelDifficulty = 50
+	elseif levelSetting == "normal" then levelDifficulty = 50
 		
-	elseif levelSetting == 3 then levelDifficulty = 75
+	elseif levelSetting == "hard" then levelDifficulty = 75
 		
-	elseif levelSetting == 4 then levelDifficulty = 100
+	elseif levelSetting == "veryhard" then levelDifficulty = 100
 	
 	end
 	
@@ -108,7 +108,7 @@ return function(inst, stats)
 	local finalWalk = nil
 	local finalRun = nil
 
-	if not nerfSpeed then
+	if not nerfSpeed and not levelSetting == "disabled" then
 		initialHealth = stats.initialHealth
 		initialHunger = stats.initialHunger
 		initialSanity = stats.initialSanity
@@ -123,7 +123,7 @@ return function(inst, stats)
 		finalInsulation = stats.finalInsulation
 		finalWalk = stats.finalWalk
 		finalRun = stats.finalRun
-	else
+	elseif nerfSpeed and not levelSetting == "disabled" then
 		initialHealth = stats.initialHealthNerf
 		initialHunger = stats.initialHungerNerf
 		initialSanity = stats.initialSanityNerf
@@ -144,7 +144,7 @@ return function(inst, stats)
 	local health_percent = inst.components.health:GetPercent()
 	local sanity_percent = inst.components.sanity:GetPercent()
 	
-	if levelSetting > 0 and initialHealth or initialHunger or initialSanity or initialDamage or initialInsulation or initialWalk or initialRun then
+	if not levelSetting == "disabled" and initialHealth or initialHunger or initialSanity or initialDamage or initialInsulation or initialWalk or initialRun then
 		
 		if not levelBase then
 			levelBase = 0
@@ -197,19 +197,16 @@ return function(inst, stats)
 			inst.components.sanity:SetPercent(sanity_percent)
 		end
 		
-		if foodType then
-			local function oneat(inst, food)
-			
-				if food and food.components.edible and food.components.edible.foodtype=="foodType" then
-					inst.level = inst.level + 1
+		local function oneat(inst, food)
+
+			if foodType and levelPerFood1 then
+				if food and food.components.edible and food.components.edible.foodtype == foodType then
+					inst.level = inst.level + levelPerFood1
 					applyUpgrades(inst)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
 				end
-				
 			end
-		end
-		
-		local function oneat(inst, food)
+
 			if foodPrefab1 and levelPerFood1 then -- If the variables exist
 				if food and food.components.edible and food.prefab == foodPrefab1 then -- If its a food, edible and has the specified prefab
 					inst.level = inst.level + levelPerFood1 -- Level up according to the variable levelPerFood
@@ -217,6 +214,7 @@ return function(inst, stats)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup") -- Play a sound
 				end
 			end
+
 			if foodPrefab2 and levelPerFood2 then
 				if food and food.components.edible and food.prefab == foodPrefab2 then
 					inst.level = inst.level + levelPerFood2
@@ -224,6 +222,7 @@ return function(inst, stats)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
 				end
 			end
+
 			if foodPrefab3 and levelPerFood3 then
 				if food and food.components.edible and food.prefab == foodPrefab3 then
 					inst.level = inst.level + levelPerFood3
@@ -231,6 +230,7 @@ return function(inst, stats)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
 				end
 			end
+
 			if foodPrefab4 and levelPerFood4 then
 				if food and food.components.edible and food.prefab == foodPrefab4 then
 					inst.level = inst.level + levelPerFood4
@@ -238,6 +238,7 @@ return function(inst, stats)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
 				end
 			end
+
 			if foodPrefab5 and levelPerFood5 then
 				if food and food.components.edible and food.prefab == foodPrefab5 then
 					inst.level = inst.level + levelPerFood5
@@ -245,6 +246,7 @@ return function(inst, stats)
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
 				end
 			end
+
 		end
 			
 		local function onpreload(inst, data)
@@ -275,27 +277,27 @@ return function(inst, stats)
 		inst.OnPreLoad = onpreload
 	end
 
-		if health then
+		if health and not initialHealth then
 			inst.components.health:SetMaxHealth(health)
 		end
 		
-		if hunger then
+		if hunger and not initialHunger then
 			inst.components.hunger:SetMax(hunger)
 		end
 		
-		if sanity then
+		if sanity and not initialSanity then
 			inst.components.sanity:SetMax(sanity)
 		end
 		
-		if damage then
+		if damage and not initialDamage then
 			inst.components.combat.damagemultiplier = damage
 		end
 		
-		if insulation then
+		if insulation and not initialInsulation then
 			inst.components.temperature.inherentinsulation = insulation
 		end
 		
-		if walkSpeed and runSpeed then
+		if walkSpeed and runSpeed and not initialWalk and not initialRun then
 			inst.components.locomotor.walkspeed = TUNING.WILSON_WALK_SPEED * walkSpeed
 			inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED * runSpeed
 		end
