@@ -5,9 +5,9 @@ end)
 
 function KeyHandler:OnRawKey(key, down)
 	local player = ThePlayer
-  	if (key and not down) and not IsPaused() then
+  	if player and (key and not down) and not IsPaused() then
       	player:PushEvent("keypressed", {inst = self.inst, player = player, key = key})
-    elseif key and down and not IsPaused() then
+    elseif player and key and down and not IsPaused() then
       	player:PushEvent("keydown", {inst = self.inst, player = player, key = key})
   	end
 end
