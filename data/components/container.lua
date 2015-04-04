@@ -36,10 +36,10 @@ local function ContainerPostInit(inst)
 		if self.slots ~= nil then
 			item = self.slots[slot]
 		elseif self._items ~= nil then
-				item = self._items[slot]
+			item = self._items[slot]
 		end
 
-		if item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(self.opener) then
+		if item and item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(self.opener) then
 			inst.opener.components.talker:Say(item.components.characterspecific:GetComment())
     		return 
     	end
@@ -55,10 +55,10 @@ local function ContainerPostInit(inst)
 		if self.slots ~= nil then
 			item = self.slots[slot]
 		elseif self._items ~= nil then
-				item = self._items[slot]
+			item = self._items[slot]
 		end
 
-		if item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(self.opener) then
+		if item and item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(self.opener) then
 			inst.opener.components.talker:Say(item.components.characterspecific:GetComment())
     		return 
     	end
@@ -74,10 +74,10 @@ local function ContainerPostInit(inst)
 		if self.slots ~= nil then
 			item = self.slots[slot]
 		elseif self._items ~= nil then
-				item = self._items[slot]
+			item = self._items[slot]
 		end
 
-		if item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(self.opener) then
+		if item and item.components and item.components.characterspecific and not item.components.characterspecific:CanPickUp(self.opener) then
 			inst.opener.components.talker:Say(item.components.characterspecific:GetComment())
     		return 
     	end

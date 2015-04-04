@@ -2,7 +2,7 @@
 name = "Mod Character Rebalancing"
 description = "Configure everything! Balance your characters, new leveling systems, items for new players, customize your experience. Basically GregTech."
 author = "DrSmugleaf"
-version = "3.0.0"
+version = "3.1.0"
 
 priority = -100
 
@@ -409,6 +409,18 @@ configuration_options =
 		default = true,
 	},
 	
+	{
+		name = "TAMAMO_PRESET",
+		label = "Tamamo Preset",
+		hover = "Set Tamamo's Preset for custom balancing",
+		options =	{
+						{description = "Preset 1", data = 1, hover = "Birds no longer run away from Tamamo"},
+						{description = "None", data = false},
+					},
+
+		default = false,
+	},
+
 	{
 		name = "WARK_BALANCED",
 		label = "Wark, the Chocobo",
