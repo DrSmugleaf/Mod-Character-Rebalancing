@@ -410,6 +410,18 @@ configuration_options =
 	},
 	
 	{
+		name = "TAMAMO_PRESET",
+		label = "Tamamo Preset",
+		hover = "Set Tamamo's Preset for custom balancing",
+		options =	{
+						{description = "Preset 1", data = 1, hover = "Birds no longer run away from Tamamo"},
+						{description = "None", data = false},
+					},
+
+		default = false,
+	},
+
+	{
 		name = "WARK_BALANCED",
 		label = "Wark, the Chocobo",
 		hover = "Balance Wark, the Chocobo",

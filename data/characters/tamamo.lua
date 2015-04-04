@@ -1,4 +1,5 @@
 local tamamoBalanced = GetModConfigData("TAMAMO_BALANCED")
+local tamamoPreset = GetModConfigData("TAMAMO_PRESET")
 
 local function FeralFn(inst)
 	if inst:HasTag("playerghost") then return end
@@ -95,7 +96,10 @@ local function balanceTamamoStats(inst)
 	inst.feral = false
 	
 	inst:RemoveTag('<span class="searchlite">birdwhisperer</span>')
-	inst:AddTag("scarytoprey")
+
+	if not tamamoPreset then
+		inst:AddTag("scarytoprey")
+	end
 	
 	inst.components.eater.ignorespoilage = false
 	function inst.components.eater:Eat(food)
